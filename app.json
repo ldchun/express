@@ -1,0 +1,48 @@
+{
+    "pages": [
+        "pages/index/index",
+		"pages/take/take",
+		"pages/task/task",
+		"pages/reg/reg",
+		"pages/me/me",
+		"pages/meinfo/meinfo",
+		"pages/meedit/meedit",
+		"pages/wallet/wallet",
+		"pages/record/record",
+        "pages/search/search",
+		"pages/input/input"
+    ],
+	"tabBar": {
+		"color": "#999",
+		"selectedColor": "#3986FE",
+		"backgroundColor": "#FFF",
+		"borderStyle": "white",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "asset/img/icon_tabhome.png",
+				"selectedIconPath": "asset/img/icon_tabhome_on.png"
+			},
+			{
+				"pagePath": "pages/me/me",
+				"text": "我的",
+				"iconPath": "asset/img/icon_tabme.png",
+				"selectedIconPath": "asset/img/icon_tabme_on.png"
+			}
+		]
+	},
+    "window": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "快递智能助手",
+        "navigationBarBackgroundColor": "#FFFFFF",
+        "backgroundColor": "#EDEEF1"
+    },
+    "networkTimeout": {
+        "request": 10000,
+        "connectSocket": 10000,
+        "uploadFile": 100000,
+        "downloadFile": 10000
+    },
+    "debug": false
+}

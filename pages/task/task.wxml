@@ -1,0 +1,58 @@
+<view class='input-form'>
+	<view class='field-row'>
+		<view class='field-tit'>请选择快递公司</view>
+		<view class='field-con'>
+			<view class="swipe-company">
+				<view class="swipe-card">
+					<swiper class='swipe-box' current="{{companyIndex}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" circular="{{circular}}" interval="5000" duration="1000" bindchange="swipeItemChange">
+						<block wx:for="{{companyArr}}" wx:key="{{index}}">
+							<swiper-item>
+								<view class='swipe-item company-info textcenter'>
+									<view class='company-logo'>
+										<image class='hang' src="{{item.logo}}" mode="widthFix"></image>
+									</view>
+									<view class='company-name'>{{item.name}}</view>
+								</view>
+							</swiper-item>
+						</block>
+					</swiper>
+					 <image class="swipe-img swipe-prev" src="../../asset/image/icon_left.png" mode="aspectFit"></image> 
+					 <image class="swipe-img swipe-next" src="../../asset/image/icon_right.png" mode="aspectFit"></image> 
+				</view>
+				 <!-- <view class='swipe-tip'> -- 左右滑动选择 -- </view>  -->
+			</view>
+		</view>
+	</view>
+	<view class='field-row'>
+		<view class='field-tit'>请输入快递数量</view>
+		<view class='field-con'>
+			<input class="sl-input input-num" type="number" value='{{totalNum}}' bindinput='inNumber' focus="{{numberFocus}}" placeholder=""/>
+		</view>
+	</view>
+	<view class='form-submit textcenter'>
+		<button class='slbtn btnblock' bindtap='submitNewTask'>确 定</button>
+	</view>
+</view>
+<!-- pop -->
+<view class="popover {{popShow}}" id="popover"></view>
+<view class="popup {{popShow}}" id="popup">
+	<view class='pop'>
+		<view class="pop-bd">
+			<view class='popinfo'>
+				<view class='popinfo-hd'>
+					{{infoCompanyName}}
+				</view>
+				<view class='popinfo-bd'>
+					<view>快递数量：{{infoTotalNumber}}</view>
+                    <view class="pop-tips markcolor">（请和快递员核对数量，确保准确无误）</view>
+				</view>
+			</view>
+		</view>
+		<view class="pop-ft" id="popFt">
+			<view class='flex-box popft-btn'>
+				<view class='flex-item btn-item btn-cancle' bindtap='popWinCancle'>取 消</view>
+				<view class='flex-item btn-item btn-ok' bindtap='popWinOk'>开始录入</view>
+			</view>
+		</view>
+	</view>
+</view>

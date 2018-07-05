@@ -1,0 +1,57 @@
+<view class='reg-title'>请选择角色</view>
+<view class="reg-opt">
+	<!-- <view class='opt-tips'>请选择角色</view> -->
+	<view class='opt-hd'>
+		<block wx:for="{{optList}}" wx:key="{{index}}">
+			<view class="opt-nav {{optIndex == index ? 'on' : ''}}" id="{{index}}" bindtap="optClick">
+				<view class="opt-item">
+					<view class="opt-img">
+						<image src="{{item.logo}}" mode="widthFix"></image>
+					</view>
+					<view class="opt-tit">{{item.name}}</view>
+				</view>
+			</view>
+		</block>
+	</view>
+</view>
+<view class="reg-form">
+<!-- 商户 -->
+	<view class="reg-con {{optIndex == 0 ? 'on' : ''}}">
+	<view class="weui-cells weui-cells_after-title wxcells">
+        <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+                <view class="weui-label"><text class='mustsign'>*</text>商户电话：</view>
+            </view>
+            <view class="weui-cell__bd">
+                <input type="number" class="weui-input" value='{{phoneNumber}}' bindinput='inPhoneNumber' placeholder="请输入商户手机号码"/>
+            </view>
+        </view>
+        <view class="weui-cell cell-address">
+            <view class="weui-cell__hd">
+                <view class="weui-label"><text class='mustsign'>*</text>商户地址：</view>
+            </view>
+            <view class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder-class="phclass" bindinput='inAddress' value='{{address}}' placeholder="请输入商户详细地址" style="height:3.2em"/>
+            </view>
+        </view>
+        <view class="weui-cell cell-address">
+            <view class="weui-cell__hd">
+                <view class="weui-label"><text class='mustsign'>*</text>短信地址：</view>
+            </view>
+            <view class="weui-cell__bd">
+                <textarea class="weui-textarea" bindinput='inSmsAddress' value='{{smsAddress}}' placeholder="请输入发送短信取件地址" style="height:3.2em"/>
+            </view>
+        </view>
+    </view>
+	<view class="slcard nobg">
+		<button class='slbtn btnblock' open-type="getUserInfo" bindgetuserinfo='getUserInfoForShop' bindtap='canILogin'>注 册</button>
+	</view>
+	</view>
+<!-- 快递员 -->
+	<view class="reg-con {{optIndex == 1 ? 'on' : ''}}">
+	<view class="slcard nobg">
+		<!-- <button class='slbtn btnblock' open-type="getUserInfo" bindgetuserinfo='submitCourierReg'>注 册</button> -->
+		<view class="textcenter">敬请期待...</view>
+	</view>
+	</view>
+</view>

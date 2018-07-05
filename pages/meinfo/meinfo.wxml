@@ -1,0 +1,31 @@
+<view class="me-top slcard">
+	<view class="user-box">
+		<view class="user-face">
+			<open-data type="userAvatarUrl"></open-data>
+		</view>
+		<view class="user-more">
+			<view class="user-name">
+				<open-data type="userNickName"></open-data>
+			</view>
+		</view>
+	</view>
+</view>
+<view class="info-list">
+	<view class="weui-cells weui-cells_after-title wxcells wxcells-info">
+		<view class="weui-cell">
+			<view class="weui-cell__bd">商户电话</view>
+			<view class="weui-cell__ft">{{infoPhoneNumber}}</view>
+		</view>
+		<view class="weui-cell">
+			<view class="weui-cell__bd">商户地址</view>
+			<view class="weui-cell__ft">{{infoAddress}}</view>
+		</view>
+		<view class="weui-cell">
+			<view class="weui-cell__bd">短信地址</view>
+			<view class="weui-cell__ft">{{infoSmsAddress}}</view>
+		</view>
+    </view>
+	<view class="slcard nobg">
+		<button class="slbtn btnblock" bindtap="editMeInfo">修 改</button>
+	</view>
+</view>

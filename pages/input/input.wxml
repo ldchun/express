@@ -1,0 +1,122 @@
+<view class="flex-box input-top">
+	<view class='flex-item input-company'>
+		<image class='company-logo' src="{{companyLogo}}" mode="widthFix"></image>
+		<view class='company-name'>{{companyName}}</view>
+	</view>
+	<view class="flex-item clearfix input-count slhide">
+		<view class='count-info textcenter'>
+			<view class='count-item item-not'>
+				<view class='item-val'>{{countNot}}</view>
+				<view class='item-tit'>未录</view>
+			</view>
+			<view class='count-line'></view>
+			<view class='count-item item-all'>
+				<view class='item-val'>{{countAll}}</view>
+				<view class='item-tit'>总数</view>
+			</view>
+		</view>
+	</view>
+</view>
+<view class="input-scan">
+    <view class="scan-btn" bindtap="scanStart">
+        <image class="scan-icon" src="../../asset/img/icon-scan.png" mode="widthFix"></image>
+        <text class="scan-txt">扫一扫</text>
+    </view>
+</view>
+<view class='input-form'>
+	<view class='field-row'>
+		<view class='field-tit slhide'>快递单号</view>
+		<view class='flex-box field-con'>
+            <view class="inrow-hd">
+                <image class="inrow-icon" src="../../asset/img/icon-barcode.png" mode="widthFix"></image>
+            </view>
+			<input class="flex-item sl-input" type="number" value="{{parcelNumber}}" bindinput="inputParcelNumber" bindfocus="onParcelFocus" bindblur="onParcelBlur" focus="{{parcelFocus}}" placeholder="请扫描或输入单号"/>
+            <view class="input-clear {{parcelClearClass}}" bindtap="clearParcelNumber">
+                <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
+            </view>
+		</view>
+	</view>
+    <view class="field-row textcenter {{goMobileClass}}">
+		<button class='slbtn btnblock' bindtap="parcelGoMobile">下一步</button>
+	</view>
+	<view class="field-row {{mobileClass}}">
+		<view class='field-tit slhide'>手机号码</view>
+		<view class='flex-box field-con'>
+            <view class="inrow-hd">
+                <image class="inrow-icon" src="../../asset/img/icon-mobile.png" mode="widthFix"></image>
+            </view>
+			<input class="sl-input flex-item" type="number" value='{{phoneNumber}}' bindinput='inputPhoneNumber'  bindfocus="onMobileFocus" bindblur="onMobileBlur" focus="{{mobileFocus}}" placeholder="请扫描或输入手机号"/>
+            <view class="input-clear {{mobileClearClass}}" bindtap="clearPhoneNumber">
+                <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
+            </view>
+		</view>
+	</view>
+    <view class="field-row {{positionClass}}">
+		<view class="inrow-pos">
+            <view class="pos-txt">位置编号: <text class="val">{{posNumber}}</text></view>
+            <view class="pos-tips">（可将此编号标于快递上，方便找件）</view>
+		</view>
+	</view>
+	<view class="form-submit textcenter {{submitClass}}">
+		<button class='slbtn btnblock' bindtap='addParcel'>
+			完成录入<text>（{{countCurrent}}/{{countAll}}）</text>
+		</button>
+	</view>
+</view>
+
+<camera class="camera {{cameraClass}}" device-position="back" flash="off">
+	<cover-view class="cover">
+		<cover-view class="cover-top">
+			<cover-view class="cover-title coverbg input-company">
+				{{companyName}}
+			</cover-view>
+			<cover-view class="flex-box cover-frame">
+				<cover-view class="flex-item frame-left coverbg"></cover-view>
+				<cover-view class="frame-screen">
+					<cover-view class="screen-sign sign-top"></cover-view>
+					<cover-view class="screen-sign sign-bottom"></cover-view>
+					<cover-view class="screen-sign sign-left"></cover-view>
+					<cover-view class="screen-sign sign-right"></cover-view>
+                    <cover-view class="screen-sign sign-line"></cover-view>
+				</cover-view>
+				<cover-view class="flex-item frame-right coverbg"></cover-view>
+			</cover-view>
+			<cover-view class="cover-more coverbg"></cover-view>
+		</cover-view>
+
+		<cover-view class="cover-body">
+			<cover-view class="cover-con coverbg">
+				<cover-view class="con-top"></cover-view>
+			</cover-view>
+		</cover-view>
+	</cover-view>
+    <cover-view class="cover-close">
+        <cover-image class="close-icon" bindtap="scanClose" src="../../asset/img/icon-close.png" mode="widthFix"></cover-image>
+    </cover-view>
+</camera>
+<canvas class="canvas-box" canvas-id="myCanvas"></canvas>
+
+<!-- pop -->
+<view class="popover {{popShow}}" id="popover"></view>
+<view class="popup {{popShow}}" id="popup">
+	<view class='pop'>
+		<view class="pop-bd">
+			<view class='popinfo'>
+				<view class='popinfo-hd'>{{companyName}}</view>
+				<view class='popinfo-bd'>
+					<view class='popinfo-con'>
+						<view class='con-row'>位置编号：<text class="pos-value">{{posNumber}}</text></view>
+						<view class='con-row'>快递单号：{{parcelNumber}}</view>
+						<view class='con-row'>手机号码：{{phoneNumber}}</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="pop-ft">
+			<view class='flex-box popft-btn'>
+				<view class='flex-item btn-item btn-cancle' bindtap='popWinCancle'>取 消</view>
+				<view class='flex-item btn-item btn-ok' bindtap='popWinOk'>完成录入</view>
+			</view>
+		</view>
+	</view>
+</view>

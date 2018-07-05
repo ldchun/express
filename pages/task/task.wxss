@@ -1,0 +1,19 @@
+/*E6F1ED 2F5191 */
+page{background:#F5F8FA;}
+.hang{-webkit-box-shadow:0 26px 40px -24px rgba(0, 36, 100, 0.3);box-shadow:0 26px 40px -24px rgba(0, 36, 100, 0.3);}
+.input-form{margin:10px 0;padding:10px 15px;}
+.swipe-card{position:relative;width:200px;height:120px;margin:0 auto;padding:10px;border-radius:2px;}
+.swipe-box{position:relative;width:180px;height:100px;border-radius:2px;}
+.swipe-box swiper-item{text-align:center;}
+.swipe-item{display:inline-block;color:#fff;}
+.company-info{text-align:center;}
+.company-info .company-logo image{width:60px;height:60px;}
+.company-info .company-name{color:#3986FE;font-size:24px;font-weight:bold;}
+.swipe-img{width:40px;}
+.swipe-prev,.swipe-next{position:absolute;z-index:10;top:0;height:100%;line-height:1;text-align:center;color:#FFF;}
+.swipe-prev{left:-35px;}
+.swipe-next{right:-35px;}
+.swipe-tip{position:relative;z-index:1;margin-top:5px;font-size:13px;line-height:1;color:#868686;text-align:center;}
+.form-submit{margin-top:35px;}
+.input-num{width:70px;padding:0;font-size:20px;font-weight:bold;text-align:center;border:1px solid #3986FE;}
+.pop-tips{font-size:13px;text-align:center;margin-top:10px;}

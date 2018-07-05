@@ -1,0 +1,27 @@
+.me-top{padding:10px 15px;background:#3986FE;color:#FFF;}
+.user-info{margin-bottom:10px;padding:0 10px;}
+.user-face{width:70px;height:70px;border-radius:50%;overflow:hidden;}
+.user-more{padding-left:10px;}
+.user-name{font-size:20px;}
+.statu-wrap{padding:10px 5px;background:#FFF;}
+.statu-item ~ .statu-item{border-left:1px solid #E2E2E2;}
+.statu-info{text-align:center;}
+.statu-info .info-img{display:inline-block;width:24px;vertical-align:middle;}
+.statu-info .info-con{display:inline-block;margin-left:10px;line-height:1.6;vertical-align:middle;}
+.statu-info .info-con .info-value{font-size:24px;color:#3986FE;}
+.statu-info .info-con .info-name{font-size:13px;color:#868686;}
+.recharge .hd-tit{padding:0 10px;line-height:1.2;border-left:2px solid #3986FE;}
+.opt-list .opt-tab{width:25%;padding:0 2px;text-align:center;font-size:14px;}
+.opt-list .opt-tab .opt-total{font-size:12px;color:#868686;}
+.opt-list .opt-tab .nav{position:relative;padding:15px 5px 10px 5px;background:#EEE;border:1px solid #E2E2E2;border-radius:3px;overflow:hidden;}
+.opt-list .opt-tab .nav.on{color:#3986FE;border-color:#3986FE;}
+.opt-list .opt-tab .nav.on .opt-total{color:#3986FE;}
+.opt-tab .nav .opt-tip{position:absolute;z-index:10;left:0;top:0;width:100%;height:16px;font-size:12px;color:#FFF;text-align:center;line-height:16px;background:#F00;}
+.opt-res{margin-top:15px;font-size:14px;}
+.opt-res .res-txt{float:left;font-size:12px;}
+.opt-res .res-money{float:right;color:#FF570A;}
+.pay-item{font-size:15px;}
+.pay-item .pay-name{float:left;}
+.pay-item .pay-value{float:right;}
+.pay-img{display:block;width:100px;}
+.buy-res .res-money{font-size:22px;color:#FF570A;}

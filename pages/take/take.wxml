@@ -1,0 +1,75 @@
+<view class='take-form'>
+	<view class='take-title'>
+		请输入取件码
+	</view>
+	<view class='onein-box'>
+		<view class='onein-con' bindtap='enableOneInput'>
+			<view class='onein-item'>
+				<text class='onein-val {{inVal0Class}}'>{{inVal0}}</text>
+			</view>
+			<view class='onein-item'>
+				<text class='onein-val {{inVal1Class}}'>{{inVal1}}</text>
+			</view>
+			<view class='onein-item'>
+				<text class='onein-val {{inVal2Class}}'>{{inVal2}}</text>
+			</view>
+			<view class='onein-item'>
+				<text class='onein-val {{inVal3Class}}'>{{inVal3}}</text>
+			</view>
+		</view>
+		<view class='onein-input'>
+			<input type="number" class='slhide' focus="{{inputFocus}}" value="{{takeNumber}}" bindinput='inputTakeNumber' maxlength="{{inputMaxLen}}"/>
+		</view>
+	</view>
+</view>
+<!-- pop -->
+<view class="popover {{popShow}}"></view>
+<view class="popup {{popShow}}">
+	<view class='pop'>
+		<view class="pop-bd">
+            <view class='popinfo takeinfo'>
+				<view class='popinfo-hd'>
+                    {{infoCompanyName}}  <text class="info-pos markcolor">{{infoPosNumber}}</text>
+                </view>
+				<view class='popinfo-bd'>
+                    <view class='takeinfo-tel slcolor'>
+					    {{infoPhoneNumber}}
+				    </view>
+					<view class='popinfo-con'>
+						<view class='con-row'>快递单号：{{infoParcelNumber}}</view>
+						<view class='con-row'>创建时间：{{infoCreateTime}}</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="pop-ft" id="popFt">
+			<view class='flex-box popft-btn'>
+				<view class='flex-item btn-item btn-cancle' bindtap='popWinCancle'>取 消</view>
+				<view class='flex-item btn-item btn-ok' bindtap='popWinOk'>确 定</view>
+			</view>
+		</view>
+	</view>
+</view>
+<!-- success -->
+<view class="popover {{popOkShow}}"></view>
+<view class="popup {{popOkShow}}">
+	<view class='pop'>
+		<view class="pop-bd">
+			<view class='popinfo'>
+				<view class='popinfo-hd'>取件成功</view>
+				<view class='popinfo-bd'>
+					<view class='popinfo-con'>
+						<view class='con-row'>收件人：{{takePhoneNumber}}</view>
+						<view class='con-row'>快递单号：{{takeParcelNumber}}</view>
+						<view class='con-row'>快递公司：{{takeCompanyName}}</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="pop-ft">
+			<view class='flex-box popft-btn'>
+				<view class='flex-item btn-item btn-ok' bindtap='popOkWinOk'>确 定</view>
+			</view>
+		</view>
+	</view>
+</view>

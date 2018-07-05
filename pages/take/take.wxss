@@ -1,0 +1,12 @@
+/*E6F1ED 2F5191 */
+page{background:#F5F8FA;}
+.take-form{margin:20px 0;padding:10px 15px;}
+.take-title{margin-bottom:30px;font-size:26px;text-align:center;letter-spacing:1px;}
+.onein-con{text-align:center;font-size:0;white-space:nowrap;}
+.onein-con .onein-item{display:inline-block;padding:0 2px;font-size:36px;vertical-align:top;}
+.onein-con .onein-item .onein-val{display:block;width:62px;height:62px;line-height:60px;border:1px solid #D2D2D2;background:#FFF;}
+.onein-item .onein-val.on{border-color:#3986FE;}
+.onein-input{display:none;}
+.takeinfo .popinfo-bd{margin:0;}
+.takeinfo-tel{margin-bottom:5px;font-size:22px;text-align:center;}
+.info-pos{font-weight:bold;}

@@ -1,0 +1,5 @@
+.user-box{padding:5px 0;}
+.user-box .user-face, .user-box .user-more{display:inline-block;vertical-align:middle;}
+.user-face{width:60px;height:60px;border-radius:50%;overflow:hidden;}
+.user-box .user-more{padding-left:15px;}
+.user-name{font-size:22px;}

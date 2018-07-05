@@ -1,0 +1,31 @@
+<view class="info-list">
+	<view class="weui-cells weui-cells_after-title wxcells">
+        <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+                <view class="weui-label"><text class='mustsign'>*</text>商户电话：</view>
+            </view>
+            <view class="weui-cell__bd">
+                <input type="number" class="weui-input" value='{{phoneNumber}}' bindinput='inPhoneNumber' placeholder="请输入商户手机号码"/>
+            </view>
+        </view>
+        <view class="weui-cell cell-address">
+            <view class="weui-cell__hd">
+                <view class="weui-label"><text class='mustsign'>*</text>商户地址：</view>
+            </view>
+            <view class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder-class="phclass" bindinput='inAddress' value='{{address}}' placeholder="请输入商户详细地址" style="height:3.2em"/>
+            </view>
+        </view>
+        <view class="weui-cell cell-address">
+            <view class="weui-cell__hd">
+                <view class="weui-label"><text class='mustsign'>*</text>短信地址：</view>
+            </view>
+            <view class="weui-cell__bd">
+                <textarea class="weui-textarea" bindinput='inSmsAddress' value='{{smsAddress}}' placeholder="请输入发送短信取件地址" style="height:3.2em"/>
+            </view>
+        </view>
+    </view>
+	<view class="slcard nobg">
+		<button class="slbtn btnblock" open-type="getUserInfo" bindgetuserinfo="saveUserInfoShop" bindtap="canIUse">保 存</button>
+	</view>
+</view>

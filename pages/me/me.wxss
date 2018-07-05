@@ -1,0 +1,16 @@
+.me-top{padding:10px 15px;background:#3986FE;color:#FFF;}
+.user-info{margin-bottom:10px;padding:0 10px;}
+.user-face{width:60px;height:60px;border-radius:50%;overflow:hidden;border:1px solid #FFF;}
+.user-link{padding:10px 5px;border-radius:5px;}
+.user-link:active{background:#2776EA;}
+.user-link .link-icon, .user-link .user-face{display:inline-block;vertical-align:middle;}
+.user-link .link-icon{margin-left:8px;font-size:16px;color:#FFF;}
+.user-name{font-size:24px;}
+.statu-wrap{padding:10px 5px;background:#FFF;}
+.statu-item ~ .statu-item{border-left:1px solid #E2E2E2;}
+.statu-info{text-align:center;}
+.statu-info .info-img{display:inline-block;width:24px;vertical-align:middle;}
+.statu-info .info-con{display:inline-block;margin-left:10px;line-height:1.6;vertical-align:middle;}
+.statu-info .info-con .info-value{font-size:24px;color:#3986FE;}
+.statu-info .info-con .info-name{font-size:13px;color:#868686;}
+.statu-cart .statu-info .info-con .info-value{color:#FF570A;}

@@ -1,0 +1,49 @@
+<view class="statu-wrap">
+	<view class="flex-box statu-box">
+		<view class="flex-item statu-item statu-cart">
+			<view class="statu-info">
+				 <image class="info-img" src="../../asset/img/icon-cart.png" mode="widthFix"></image> 
+				<view class="info-con">
+					<view class="info-value">{{smsRemain}}</view>
+					<view class="info-name">剩余次数</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+<view class="slbox recharge">
+	<view class="slbox-hd with-bd">
+		<view class="hd-tit">请选择充值套餐</view>
+	</view>
+	<view class="slbox-bd">
+		<view class="opt-list flex-box">
+		<block wx:for="{{rechargeOpts}}" wx:key="index">
+			<view class="opt-tab">
+				<view class="nav {{optIndex == index ? 'on' : ''}} " id="{{index}}" bindtap="optClick">
+					<view class="opt-price"><text>{{item.price}}分/次</text></view>
+					<view class="opt-total"><text>{{item.count}}次</text></view>
+					<view class="opt-tip" wx:if="{{item.desc != ''}}" >{{item.desc}}</view>
+				</view>
+			</view>
+		</block>
+		</view>
+		<view class="opt-res clearfix">
+			<view class="res-txt">{{optResTxt}}</view>
+			<view class="res-money">共<text>{{moneyTotal}}</text>元</view>
+		</view>
+	</view>
+</view>
+<view class="slcard">
+	<view class="pay-item clearfix">
+		<view class="pay-name">支付方式</view>
+		<view class="pay-value">
+			<image class="pay-img" src="../../asset/img/pay-weixin.png" mode="widthFix"></image>
+		</view>
+	</view>
+</view>
+<view class="slcard nobg pay-submit textcenter">
+	<view class="buy-res">
+		支付总金额：<text class="res-money">¥ {{moneyTotal}}</text>
+	</view>
+	<button class='slbtn btnblock' bindtap='submitOrder'>立即购买</button>
+</view>

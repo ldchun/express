@@ -1,0 +1,58 @@
+<view class="me-top">
+	<view class="flex-box user-info">
+		<view class="flex-item user-more">
+			<view class="user-name">
+				<open-data type="userNickName"></open-data>
+			</view>
+		</view>
+		<view class="user-link" bindtap="linkPageMeInfo">
+			<view class="user-face">
+				<open-data type="userAvatarUrl"></open-data>
+			</view>
+			<view class="weui-cell__ft_in-access link-icon"></view>
+		</view>
+	</view>
+</view>
+<view class="statu-wrap">
+	<view class="flex-box statu-box">
+		<view class="flex-item statu-item statu-wallet">
+			<view class="statu-info">
+				<image class="info-img" src="../../asset/img/icon-tongji.png" mode="widthFix"></image>
+				<view class="info-con">
+					<view class="info-value">{{countTotal}}</view>
+					<view class="info-name">总计数量</view>
+				</view>
+			</view>
+		</view>
+		<view class="flex-item statu-item statu-cart">
+			<view class="statu-info">
+				<image class="info-img" src="../../asset/img/icon-cart.png" mode="widthFix"></image>
+				<view class="info-con">
+					<view class="info-value">{{smsRemain}}</view>
+					<view class="info-name">剩余次数</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+
+<view class="wxlinks">
+	<view class="weui-cells weui-cells_after-title">
+		<navigator url="/pages/record/record" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+			<view class="weui-cell__hd">
+				 <image src="../../asset/img/icon-record.png" class="weui-cell_icon"></image> 
+			</view>
+			<view class="weui-cell__bd">我的记录</view>
+			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
+		</navigator>
+		<navigator url="/pages/wallet/wallet" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+			<view class="weui-cell__hd">
+				 <image src="../../asset/img/icon-money.png" class="weui-cell_icon"></image> 
+			</view>
+			<view class="weui-cell__bd">我的钱包</view>
+			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
+		</navigator>
+	</view>
+</view>
+
+
