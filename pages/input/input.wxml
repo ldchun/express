@@ -23,51 +23,48 @@
         <text class="scan-txt">扫一扫</text>
     </view>
 </view>
-<view class='input-form'>
-	<view class='field-row'>
-		<view class='field-tit slhide'>快递单号</view>
-		<view class='flex-box field-con'>
+<view class="input-form">
+	<view class="field-row {{parcelShow ? '' : 'slhide'}}">
+		<view class="flex-box field-con">
             <view class="inrow-hd">
                 <image class="inrow-icon" src="../../asset/img/icon-barcode.png" mode="widthFix"></image>
             </view>
 			<input class="flex-item sl-input" type="number" value="{{parcelNumber}}" bindinput="inputParcelNumber" bindfocus="onParcelFocus" bindblur="onParcelBlur" focus="{{parcelFocus}}" placeholder="请扫描或输入单号"/>
-            <view class="input-clear {{parcelClearClass}}" bindtap="clearParcelNumber">
+            <view class="input-clear {{parcelClearShow ? '' : 'slhide'}}" bindtap="clearParcelNumber">
                 <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
             </view>
 		</view>
 	</view>
-    <view class="field-row textcenter {{goMobileClass}}">
+    <view class="field-row textcenter {{goMobileShow ? '' : 'slhide'}}">
 		<button class='slbtn btnblock' bindtap="parcelGoMobile">下一步</button>
 	</view>
-	<view class="field-row {{mobileClass}}">
-		<view class='field-tit slhide'>手机号码</view>
+	<view class="field-row {{mobileShow ? '' : 'slhide'}}">
 		<view class='flex-box field-con'>
             <view class="inrow-hd">
                 <image class="inrow-icon" src="../../asset/img/icon-mobile.png" mode="widthFix"></image>
             </view>
 			<input class="sl-input flex-item" type="number" value='{{phoneNumber}}' bindinput='inputPhoneNumber'  bindfocus="onMobileFocus" bindblur="onMobileBlur" focus="{{mobileFocus}}" placeholder="请扫描或输入手机号"/>
-            <view class="input-clear {{mobileClearClass}}" bindtap="clearPhoneNumber">
+            <view class="input-clear {{mobileClearShow ? '' : 'slhide'}}" bindtap="clearPhoneNumber">
                 <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
             </view>
 		</view>
 	</view>
-    <view class="field-row {{positionClass}}">
+    <view class="field-row {{positionShow ? '' : 'slhide'}}">
 		<view class="inrow-pos">
             <view class="pos-txt">位置编号: <text class="val">{{posNumber}}</text></view>
             <view class="pos-tips">（可将此编号标于快递上，方便找件）</view>
 		</view>
 	</view>
-	<view class="form-submit textcenter {{submitClass}}">
+	<view class="form-submit textcenter {{submitShow ? '' : 'slhide'}}">
 		<button class='slbtn btnblock' bindtap='addParcel'>
 			完成录入<text>（{{countCurrent}}/{{countAll}}）</text>
 		</button>
 	</view>
 </view>
-
-<camera class="camera {{cameraClass}}" device-position="back" flash="off">
+<camera class="camera {{cameraShow ? 'up': ''}}" device-position="back" flash="off">
 	<cover-view class="cover">
 		<cover-view class="cover-top">
-			<cover-view class="cover-title coverbg input-company">
+			<cover-view class="cover-title coverbg">
 				{{companyName}}
 			</cover-view>
 			<cover-view class="flex-box cover-frame">
@@ -95,28 +92,3 @@
     </cover-view>
 </camera>
 <canvas class="canvas-box" canvas-id="myCanvas"></canvas>
-
-<!-- pop -->
-<view class="popover {{popShow}}" id="popover"></view>
-<view class="popup {{popShow}}" id="popup">
-	<view class='pop'>
-		<view class="pop-bd">
-			<view class='popinfo'>
-				<view class='popinfo-hd'>{{companyName}}</view>
-				<view class='popinfo-bd'>
-					<view class='popinfo-con'>
-						<view class='con-row'>位置编号：<text class="pos-value">{{posNumber}}</text></view>
-						<view class='con-row'>快递单号：{{parcelNumber}}</view>
-						<view class='con-row'>手机号码：{{phoneNumber}}</view>
-					</view>
-				</view>
-			</view>
-		</view>
-		<view class="pop-ft">
-			<view class='flex-box popft-btn'>
-				<view class='flex-item btn-item btn-cancle' bindtap='popWinCancle'>取 消</view>
-				<view class='flex-item btn-item btn-ok' bindtap='popWinOk'>完成录入</view>
-			</view>
-		</view>
-	</view>
-</view>

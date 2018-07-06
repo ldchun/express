@@ -40,7 +40,7 @@ function downLoadAudioFile() {
     wx.downloadFile({
         url: serverAudioSrc["success"],
         success: function (res) {
-            if (res.statusCode === 200) {
+            if (res.statusCode == 200) {
                 localAudioSrc["success"] = res.tempFilePath;
             }
         }
@@ -74,40 +74,6 @@ function tipVoiceFun(handle) {
             innerAudioContext.seek(0);
     }
 }
-// 语音识别
-function recogniAudio(fileUrl, self) {
-    wx.uploadFile({
-        url: Server["audioCover"] + "?openId=" + UserIdFun.get(),
-        method: "POST",
-        filePath: fileUrl,
-        name: 'audio',
-        success: function (res) {
-			wx.hideLoading();
-			var jsonData = JSON.parse(res.data);
-			console.log(jsonData);
-			var dataObj = jsonData['data'];
-			var code = jsonData['code'];
-			switch (parseInt(code)) {
-				case CODEOK:
-                    var mobile = MobileFun.fat(dataObj["mobile"]);
-					self.setData({
-                        phoneNumber: mobile
-					});
-					break;
-				default:
-					var msg = jsonData['msg'];
-					wxShowToast({
-						title: "未识别到手机号码",
-						flag: "fail"
-					});
-			}
-        },
-        fail: function (err) {
-			wx.hideLoading();
-            console.log(err);
-        }
-    });
-}
 // 获取请求参数
 function getInData() {
 	var inData = {};
@@ -116,115 +82,125 @@ function getInData() {
 }
 // 清除输入内容
 function clearInputContent(self) {
-	self.setData({
-		parcelNumber: "",
-		phoneNumber: ""
-	});
+    self.setData({
+        parcelNumber: "",
+        phoneNumber: "",
+        posNumber: ""
+    });
+}
+// 摄像头显示
+function cameraShow(self, flag){
+    self.setData({
+        cameraShow: flag
+    })
 }
 // 同步录入状态
-function syncInputStatu(self, statu){
+function syncInputStatu(self, statu) {
     var inputStatu = statu;
-    var mobileClass = "slhide";
-    var positionClass = "slhide";
-    var submitClass = "slhide";
+    var parcelShow = false;
+    var mobileShow = false;
+    var positionShow = false;
+    var submitShow = false;
     var parcelFocus = false;
-    var mobileFocus = true;
-    switch(statu){
+    var mobileFocus = false;
+    switch (statu) {
         case -1:   // 初始状态
-            mobileClass = "slhide";
-            positionClass = "slhide";
-            submitClass = "slhide";
+            parcelShow = false;
+            mobileShow = false;
+            positionShow = false;
+            submitShow = false;
             parcelFocus = false;
             mobileFocus = false;
             break;
-        case 0: // 全部录入完成
-            mobileClass = "";
-            positionClass = "";
-            submitClass = "";
+        case 0: // 全部完成
+            parcelShow = true;
+            mobileShow = true;
+            positionShow = true;
+            submitShow = true;
             parcelFocus = false;
             mobileFocus = false;
             break;
         case 1: // 单号
-            mobileClass = "slhide";
-            positionClass = "slhide";
-            submitClass = "slhide";
+            parcelShow = true;
+            mobileShow = false;
+            positionShow = false;
+            submitShow = false;
             parcelFocus = true;
             mobileFocus = false;
             break;
         case 2: // 手机号
-            mobileClass = "";
-            positionClass = "slhide";
-            submitClass = "slhide";
+            parcelShow = true;
+            mobileShow = true;
+            positionShow = false;
+            submitShow = false;
             parcelFocus = false;
             mobileFocus = true;
             break;
-        case 3: // 位置
-            mobileClass = "";
-            positionClass = "";
-            submitClass = "";
-            parcelFocus = false;
-            mobileFocus = false;
-            break;
     }
+    // 设置
     self.setData({
         inputStatu: inputStatu,
-        mobileClass: mobileClass,
-        positionClass: positionClass,
-        submitClass: submitClass,
+        parcelShow: parcelShow,
+        mobileShow: mobileShow,
+        positionShow: positionShow,
+        submitShow: submitShow,
         parcelFocus: parcelFocus,
         mobileFocus: mobileFocus
     });
-    if (inputStatu != 1) {
+    var isInParcel = (inputStatu == 1);
+    if (!isInParcel) {
         nextGoMobile(self, false);
     }
-}
-// 切换输入板块
-function switchInputBox(self, statu) {
-    var inputStatu = statu;
-    var mobileClass = "slhide";
-    var positionClass = "slhide";
-    var submitClass = "slhide";
-    switch (statu) {
-        case -1:   // 初始状态
-            mobileClass = "slhide";
-            positionClass = "slhide";
-            submitClass = "slhide";
-            break;
-        case 0: // 全部录入完成
-            mobileClass = "";
-            positionClass = "";
-            submitClass = "";
-            break;
-        case 1: // 单号
-            mobileClass = "slhide";
-            positionClass = "slhide";
-            submitClass = "slhide";
-            break;
-        case 2: // 手机号
-            mobileClass = "";
-            positionClass = "slhide";
-            submitClass = "slhide";
-            break;
-        case 3: // 位置
-            mobileClass = "";
-            positionClass = "";
-            submitClass = "";
-            break;
-    }
-    self.setData({
-        mobileClass: mobileClass,
-        positionClass: positionClass,
-        submitClass: submitClass
-    });
+    scanImgStart(self, false);
 }
 // 下一步
 function nextGoMobile(self, flag) {
-    var isShow = !(flag == false);
-    var showClass = isShow ? "" : "slhide";
     self.setData({
-        goMobileClass: showClass
+        goMobileShow: flag
     });
 }
+// 切换输入行
+function switchInputRow(self, statu) {
+    var inputStatu = statu;
+    var parcelShow = false;
+    var mobileShow = false;
+    var positionShow = false;
+    var submitShow = false;
+    switch (statu) {
+        case -1:   // 初始状态
+            parcelShow = false;
+            mobileShow = false;
+            positionShow = false;
+            submitShow = false;
+            break;
+        case 0: // 全部完成
+            parcelShow = true;
+            mobileShow = true;
+            positionShow = true;
+            submitShow = true;
+            break;
+        case 1: // 单号
+            parcelShow = true;
+            mobileShow = false;
+            positionShow = false;
+            submitShow = false;
+            break;
+        case 2: // 手机号
+            parcelShow = true;
+            mobileShow = true;
+            positionShow = false;
+            submitShow = false;
+            break;
+    }
+    // 设置
+    self.setData({
+        parcelShow: parcelShow,
+        mobileShow: mobileShow,
+        positionShow: positionShow,
+        submitShow: submitShow,
+    });
+}
+
 /************ 初始加载 ***********/
 
 // 判断是否允许录入
@@ -326,7 +302,7 @@ function setBatchInfo(self, data) {
 	notCount = (notCount <= 0) ? 0 : notCount;
 	var countCurrent = completeCount + 1;
 	countCurrent = (countCurrent > parcelCount) ? parcelCount : countCurrent;
-	if (notCount == 0){
+	if (notCount <= 0){
 		// 已录完
 		wx.navigateBack({
 			delta: 1
@@ -338,33 +314,19 @@ function setBatchInfo(self, data) {
 			countCurrent: countCurrent,
 			countAll: parcelCount
 		});
-        // 
+        // 同步状态
         syncInputStatu(self, 1);
 	}
 }
-// 弹窗信息
-function popWinShow(self, data) {
-	var jsonData = data;
-	var flag = !(jsonData == false);
-	var popShowClass = flag ? "on" : "";
-	var companyName = "";
-	var posNumber = flag ? jsonData["posNumber"] : "";
-	// 设置
-	self.setData({
-		posNumber: posNumber,
-		popShow: popShowClass
-	});
-}
 
-/***************************/
-// 显示相机
-function cameraShow(self, flag) {
-    var isShow = !(flag == false);
-    var showClass = isShow ? "up" : "";
-    recogImgOcrEnable = isShow;
+/************** 识别图像 *************/
+
+// 扫描图片开始
+function scanImgStart(self, flag) {
+    recogImgOcrEnable = flag;
     clearTimeout(recogImgOcrTimer);
     // 打开
-    if (isShow){
+    if (recogImgOcrEnable) {
         // 授权
         wx.getSetting({
             success: function (res) {
@@ -397,38 +359,36 @@ function cameraShow(self, flag) {
                 }
                 else {
                     if (recogImgOcrEnable) {
+						cameraShow(self, true);
                         recogImgOcrTimer = setTimeout(function () {
                             startRecogImgOcr(self);
                         }, 500);
-                        self.setData({
-                            cameraClass: showClass
-                        });
                     }
                 }
             }
         });
     }
-    // 关闭
-    else{
-        self.setData({
-            cameraClass: showClass
-        });
-    }
+	// 关闭
+	else{
+		cameraShow(self, false);
+	}
 }
 // 启动识别图片
 function startRecogImgOcr(self) {
     clearTimeout(recogImgOcrTimer);
-	var cameraCtx = wx.createCameraContext();
-	cameraCtx.takePhoto({
-		quality: 'high',
-        success: function(res){
+    if (!self.data.cameraShow) { return; }
+    var cameraCtx = wx.createCameraContext();
+    cameraCtx.takePhoto({
+        quality: 'high',
+        success: function (res) {
             var imgFile = res.tempImagePath;
             drawImgToCanvas(self, imgFile);
-        }
+        },
+        complete: function(res){ }
     });
 }
 // 颠倒图片数据
-function reverseImgData(res){
+function reverseImgData(res) {
     var w = res.width;
     var h = res.height;
     for (var i = 0; i < h / 2; i++) {
@@ -440,6 +400,24 @@ function reverseImgData(res){
         }
     }
     return res;
+}
+// rgba -> gray
+function imgDataRgbaToGray(data){
+    var imgData = data;
+    var index = 255 / 2;    //阈值
+    for (var i = 0; i < imgData.length; i += 4) {
+        var R = imgData[i];     //R(0-255)
+        var G = imgData[i + 1]; //G(0-255)
+        var B = imgData[i + 2]; //B(0-255)
+        var Alpha = imgData[i + 3]; //Alpha(0-255)
+        var sum = (R + G + B) / 3;
+        var gray = (sum > index) ? 255 : 0;
+        imgData[i] = gray;
+        imgData[i + 1] = gray;
+        imgData[i + 2] = gray;
+        imgData[i + 3] = Alpha;
+    }
+    return imgData;
 }
 // 图片到画布
 function drawImgToCanvas(self, imgsrc){
@@ -501,24 +479,6 @@ function drawImgToCanvas(self, imgsrc){
         });
     });
 }
-// rgba -> gray
-function imgDataRgbaToGray(data){
-    var imgData = data;
-    var index = 255 / 2;    //阈值
-    for (var i = 0; i < imgData.length; i += 4) {
-        var R = imgData[i];     //R(0-255)
-        var G = imgData[i + 1]; //G(0-255)
-        var B = imgData[i + 2]; //B(0-255)
-        var Alpha = imgData[i + 3]; //Alpha(0-255)
-        var sum = (R + G + B) / 3;
-        var gray = (sum > index) ? 255 : 0;
-        imgData[i] = gray;
-        imgData[i + 1] = gray;
-        imgData[i + 2] = gray;
-        imgData[i + 3] = Alpha;
-    }
-    return imgData;
-}
 // 图片识别号码
 function recogImgOcrMobile(self, imgData) {
     var inData = new getInData();
@@ -535,7 +495,6 @@ function recogImgOcrMobile(self, imgData) {
             var code = jsonData['code'];
             switch (code) {
                 case CODEOK:
-                    recogImgOcrEnable = false;
                     // 结果
                     recogMobileSuccess(self, dataObj);
                     break;
@@ -551,7 +510,7 @@ function recogImgOcrMobile(self, imgData) {
         fail: function (err) {
             wx.hideLoading();
             console.log(err);
-            cameraShow(self, false);
+            scanImgStart(self, false);
         }
     })
 }
@@ -559,29 +518,31 @@ function recogImgOcrMobile(self, imgData) {
 function recogMobileSuccess(self, data){
     var jsonData = data;
     var phoneNumber = jsonData["mobile"];
-    cameraShow(self, false);
+    scanImgStart(self, false);
     self.setData({
         phoneNumber: MobileFun.fat(phoneNumber)
     });
     // 提示
     scanTipFun("start");
+    // 状态
+    syncInputStatu(self, 3);
     // 获取位置编号
     getParcelPosCode(self);
 }
 
 Page({
     data:{
-        loadok: 'slhide',
         inputStatu: -1,
-        goMobileClass: "slhide",
-        mobileClass: "slhide",
-        positionClass: "slhide",
-        submitClass: "slhide",
+        cameraShow: false,
+        parcelShow: false,
+        goMobileShow: false,
+        mobileShow: false,
+        positionShow: false,
+        submitShow: false,
         parcelFocus: false,
         mobileFocus: false,
-        parcelClearClass: "slhide",
-        mobileClearClass: "slhide",
-		popShow: "",
+        parcelClearShow: false,
+        mobileClearShow: false,
 		batchId: "",
         companyId: "",
 		companyLogo: "",
@@ -591,9 +552,7 @@ Page({
 		posNumber: "",
 		countNot: 0,
 		countCurrent: 0,
-		countAll: 0,
-        imgBase64: "",
-        cameraClass: ""
+        countAll: 0
     },
     onLoad: function (options) {
         var self = this;
@@ -609,9 +568,10 @@ Page({
             }
         });
 		clearInputContent(self);
+        scanImgStart(self, false);
         syncInputStatu(self, -1);
         nextGoMobile(self, false);
-
+        // 加载
 		if (typeof (options["batchid"]) != "undefined"){
 			var theBatchId = options["batchid"];
 			self.setData({
@@ -645,36 +605,37 @@ Page({
     onParcelFocus: function(e){
         var self = this;
         var inValue = self.data.parcelNumber;
-        var clearClass = (inValue.length > 0) ? "" : "slhide";
+        var clearShow = (inValue.length > 0);
+        switchInputRow(self, 1);
         self.setData({
-            mobileClass: "slhide",
-            positionClass: "slhide",
-            submitClass: "slhide",
-            parcelClearClass: clearClass
+            parcelClearShow: clearShow
         });
+        nextGoMobile(self, clearShow);
+        scanImgStart(self, false);
         focusStatu = 1;
-        // 下一步
-        nextGoMobile(self, true);
     },
     onParcelBlur: function(e){
         var self = this;
         var theStatu = self.data.inputStatu;
-        if (theStatu != 1){
+        var isInParcel = (theStatu == 1);
+        var isInMobile = (theStatu == 2);
+        if (!isInParcel) {
             nextGoMobile(self, false);
         }
         self.setData({
-            parcelClearClass: "slhide"
+            parcelClearShow: false
         });
         focusStatu = -1;
-        switchInputBox(self, theStatu);
+        switchInputRow(self, theStatu);
     },
     clearParcelNumber: function(e){
         var self = this;
         self.setData({
             parcelNumber: "",
             parcelFocus: true,
-            parcelClearClass: "slhide"
+            parcelClearShow: false
         });
+        nextGoMobile(self, false);
     },
     parcelGoMobile: function(e){
         var self = this;
@@ -699,25 +660,24 @@ Page({
     onMobileFocus: function (e) {
         var self = this;
         var inValue = self.data.phoneNumber;
-        var clearClass = (inValue.length > 0) ? "" : "slhide";
+        var clearShow = (inValue.length > 0);
+        switchInputRow(self, 2);
         self.setData({
-            mobileClass: "",
-            positionClass: "slhide",
-            submitClass: "slhide",
             phoneNumber: MobileFun.fat(inValue),
-            mobileClearClass: clearClass
+            mobileClearShow: clearShow
         });
         focusStatu = 2;
     },
     onMobileBlur: function (e) {
         var self = this;
         var theStatu = self.data.inputStatu;
-        switchInputBox(self, theStatu);
+        var isInMobile = (theStatu == 2);
         var inValue = self.data.phoneNumber;
         self.setData({
             phoneNumber: MobileFun.fat(inValue),
-            mobileClearClass: "slhide"
+            mobileClearShow: false
         });
+        switchInputRow(self, theStatu);
         focusStatu = -1;
     },
     clearPhoneNumber: function (e) {
@@ -725,7 +685,7 @@ Page({
         self.setData({
             phoneNumber: "",
             mobileFocus: true,
-            mobileClearClass: "slhide"
+            mobileClearShow: false
         });
     },
     scanStart: function (e) {
@@ -735,130 +695,38 @@ Page({
             scanParcelNumber(self);
         }
         else if (statu == 2 || focusStatu == 2) {
-            cameraShow(self, true);
+            scanImgStart(self, true);
         }
     },
     scanClose: function (e) {
         var self = this;
-		cameraShow(self, false);
+        scanImgStart(self, false);
     },
 	inputParcelNumber: function(e){
         var self = this;
         var inValue = e.detail.value;
-        var clearClass = (inValue.length > 0) ? "" : "slhide";
+        var clearShow = (inValue.length > 0);
         self.setData({
             parcelNumber: inValue,
-            parcelClearClass: clearClass,
+            parcelClearShow: clearShow
 		});
+        nextGoMobile(self, clearShow);
 	},
 	inputPhoneNumber: function (e) {
         var self = this;
         var inValue = e.detail.value;
         inValue = MobileFun.reset(inValue);
         inValue = (inValue.length > 11) ? inValue.slice(0, 11) : inValue;
-        var clearClass = (inValue.length > 0) ? "" : "slhide";
+        var clearShow = (inValue.length > 0);
         self.setData({
             phoneNumber: MobileFun.fat(inValue),
-            mobileClearClass: clearClass
-		});
+            mobileClearShow: clearShow
+        });
         if (checkPhoneNumber(inValue)) {
             // 获取位置编号
             getParcelPosCode(self);
         }
 	},
-    recogniPhoneNumber: function(){
-        var self = this;
-		// 录音授权
-		wx.getSetting({
-			success: function(res) {
-				if (!res.authSetting['scope.record']) {
-					wx.authorize({
-						scope: 'scope.record',
-						success: function (res) {
-							console.log("scope.record: ok");
-						},
-						fail: function (err) {
-							console.log("scope.record: fail");
-							console.log(err);
-							wx.showModal({
-								title: '提示',
-								content: '念号码需要设置录音功能',
-								showCancel: false,
-								success: function (res) {
-									wx.openSetting({
-										success: function (res) {
-											console.log("openSetting : ok");
-										},
-										fail: function (res) {
-											console.log("openSetting : err");
-										}
-									})
-								}
-							})
-						}
-					});
-				}
-				else {
-					
-                    var canUseRecorder = wx.canIUse('getRecorderManager') && (typeof (wx.getRecorderManager().start) != null);
-                    var mang = wx.getRecorderManager();
-                    mang = {};
-                    console.log(typeof (mang.start));
-
-                    if (!canUseRecorder) {
-						// 使用 wx.startRecord
-						var recordTimer;
-						self.setData({
-							phoneNumber: ""
-						});
-						wx.startRecord({
-							success: function (res) {
-								console.log(res);
-								var tempFilePath = res.tempFilePath;
-								recogniAudio(tempFilePath, self);
-							},
-							fail: function (res) {
-								//录音失败
-								console.log(res);
-							}
-						})
-						if (recordTimer){
-							clearTimeout(recordTimer);
-						}
-						recordTimer = setTimeout(function () {
-							//结束录音  
-							wx.stopRecord();
-						}, 5000);
-					}
-					else{
-						// 使用 getRecorderManager
-						var recorderManager = wx.getRecorderManager();
-                        console.log(recorderManager);
-						recorderManager.onStart(function () {
-							console.log('recorder start');
-							self.setData({
-								phoneNumber: ""
-							});
-						});
-						recorderManager.onStop(function (res) {
-							console.log('recorder stop', res);
-							var tempFilePath = res["tempFilePath"];
-							recogniAudio(tempFilePath, self);
-						});
-						var options = {
-							duration: 5000,
-							sampleRate: 16000,
-							numberOfChannels: 1,
-							encodeBitRate: 96000,
-							format: 'aac',
-							frameSize: 50
-						};
-						recorderManager.start(options);
-					}
-				}
-			}
-		});
-    },
 	addParcel: function (e) {
 		var self = this;
 		var inParcelNumber = self.data.parcelNumber;
@@ -892,17 +760,9 @@ Page({
             // 提交服务器
             submitParcel(self);
 		} while (0);
-	},
-	popWinCancle: function (e) {
-		var self = this;
-		popWinShow(self, false);
-	},
-	popWinOk: function (e) {
-		var self = this;
-		// 提交服务器
-		submitParcel(self);
-	},
+	}
 });
+
 // 扫描单号
 function scanParcelNumber(self){
     wx.scanCode({
@@ -956,10 +816,9 @@ function getParcelPosCode(self) {
 			wx.hideLoading();
 			console.log(err);
 			wxShowToast({
-				title: "提交失败",
+                title: "加载失败",
 				flag: "fail"
 			});
-			popWinShow(self, false);
 		}
 	})
 }
@@ -1048,8 +907,6 @@ function updateBatchInfo(self, data){
 		countCurrent: countCurrent,
 		countAll: parcelCount
 	});
-	clearInputContent(self);
-    syncInputStatu(self, 1);
 	//判断是否全部录入完成
 	if (notCount == 0) {
 		// 已录完
@@ -1068,6 +925,140 @@ function updateBatchInfo(self, data){
 		})
 	}else{
         // 检查是否允许继续录入
-        checkIsAllowInput(self);
+        checkIsAllowInput(self, function(){
+            clearInputContent(self);
+            syncInputStatu(self, 1);
+        });
     }
+}
+
+/*************** 识别语音 *******************/
+
+// 语音识别
+function recogniAudio(fileUrl, self) {
+    wx.uploadFile({
+        url: Server["audioCover"] + "?openId=" + UserIdFun.get(),
+        method: "POST",
+        filePath: fileUrl,
+        name: 'audio',
+        success: function (res) {
+			wx.hideLoading();
+			var jsonData = JSON.parse(res.data);
+			console.log(jsonData);
+			var dataObj = jsonData['data'];
+			var code = jsonData['code'];
+			switch (parseInt(code)) {
+				case CODEOK:
+                    var mobile = MobileFun.fat(dataObj["mobile"]);
+					self.setData({
+                        phoneNumber: mobile
+					});
+					break;
+				default:
+					var msg = jsonData['msg'];
+					wxShowToast({
+						title: "未识别到手机号码",
+						flag: "fail"
+					});
+			}
+        },
+        fail: function (err) {
+			wx.hideLoading();
+            console.log(err);
+        }
+    });
+}
+// 识别语音
+function recogniPhoneNumber(){
+    var self = this;
+	// 录音授权
+	wx.getSetting({
+		success: function(res) {
+			if (!res.authSetting['scope.record']) {
+				wx.authorize({
+					scope: 'scope.record',
+					success: function (res) {
+						console.log("scope.record: ok");
+					},
+					fail: function (err) {
+						console.log("scope.record: fail");
+						console.log(err);
+						wx.showModal({
+							title: '提示',
+							content: '念号码需要设置录音功能',
+							showCancel: false,
+							success: function (res) {
+								wx.openSetting({
+									success: function (res) {
+										console.log("openSetting : ok");
+									},
+									fail: function (res) {
+										console.log("openSetting : err");
+									}
+								})
+							}
+						})
+					}
+				});
+			}
+			else {
+					
+                var canUseRecorder = wx.canIUse('getRecorderManager') && (typeof (wx.getRecorderManager().start) != null);
+                var mang = wx.getRecorderManager();
+                mang = {};
+                console.log(typeof (mang.start));
+
+                if (!canUseRecorder) {
+					// 使用 wx.startRecord
+					var recordTimer;
+					self.setData({
+						phoneNumber: ""
+					});
+					wx.startRecord({
+						success: function (res) {
+							console.log(res);
+							var tempFilePath = res.tempFilePath;
+							recogniAudio(tempFilePath, self);
+						},
+						fail: function (res) {
+							//录音失败
+							console.log(res);
+						}
+					})
+					if (recordTimer){
+						clearTimeout(recordTimer);
+					}
+					recordTimer = setTimeout(function () {
+						//结束录音  
+						wx.stopRecord();
+					}, 5000);
+				}
+				else{
+					// 使用 getRecorderManager
+					var recorderManager = wx.getRecorderManager();
+                    console.log(recorderManager);
+					recorderManager.onStart(function () {
+						console.log('recorder start');
+						self.setData({
+							phoneNumber: ""
+						});
+					});
+					recorderManager.onStop(function (res) {
+						console.log('recorder stop', res);
+						var tempFilePath = res["tempFilePath"];
+						recogniAudio(tempFilePath, self);
+					});
+					var options = {
+						duration: 5000,
+						sampleRate: 16000,
+						numberOfChannels: 1,
+						encodeBitRate: 96000,
+						format: 'aac',
+						frameSize: 50
+					};
+					recorderManager.start(options);
+				}
+			}
+		}
+	});
 }
