@@ -151,6 +151,7 @@ Page({
 		sumTodayHas: 0,
 		sumTodayNot: 0,
 		sumMonthAll: 0,
+        takeNotListArr: [],
 		taskNotListArr: [],
 		isLoading: false,
 		isLoadComplete: false,
@@ -183,7 +184,7 @@ Page({
 	onReachBottom: function (e) {
 		var self = this;
 		// 加载更多
-		loadListData(self, false);
+		// loadListData(self, false);
 	},
     linkSearch: function (e) {
         wx.navigateTo({
@@ -192,7 +193,7 @@ Page({
     },
 	linkPageTask: function (e) {
 		wx.navigateTo({
-			url: AppPages.pageTask
+			url: AppPages.pageInput
 		})
 	},
 	linkPageTake: function (e) {
@@ -204,7 +205,7 @@ Page({
 		var self = this;
 		var dataset = e.currentTarget.dataset;
 		wx.navigateTo({
-            url: AppPages.pageInput + "?batchid=" + dataset["batchid"]
+            url: AppPages.pageRecord
 		})
 	},
 	touchStart: function(e){
@@ -293,7 +294,7 @@ function loadPageInfo(self) {
 	// 统计信息
 	getSumInfo(self);
 	// 未完成录入列表
-	taskNotListLoad(self);
+    loadNotTakeList(self);
 }
 // 设置信息
 function setSumInfo(self, jsonData) {
@@ -328,6 +329,70 @@ function getSumInfo(self) {
 			console.log(err);
 		}
 	})
+}
+// 列表加载
+function loadNotTakeList(self) {
+    var inData = new getInData();
+    // 提交
+    wx.request({
+        url: Server["fastParcelInfo"],
+        data: inData,
+        success: function (res) {
+            wx.hideLoading();
+            var jsonData = res.data;
+            var dataObj = jsonData['data'];
+            var code = jsonData['code'];
+            switch (code) {
+                case CODEOK:
+                    updateNotTakeList(self, dataObj);
+                    break;
+                default:
+                    var msg = jsonData['msg'];
+                    wxShowToast({
+                        title: msg,
+                        flag: "fail"
+                    });
+            }
+        },
+        fail: function (err) {
+            wx.hideLoading();
+            console.log(err);
+            wxShowToast({
+                title: "加载失败",
+                flag: "fail"
+            });
+        }
+    })
+}
+// 处理未领取数据
+function fatNotTakeListData(dataArr) {
+    var resArr = [];
+    var listArr = [].concat(dataArr);
+    var arrLen = listArr.length;
+    for (var i = 0; i < arrLen; i++) {
+        var dataObj = listArr[i];
+        var dataTmp = {};
+        var companyInfo = CompanyFun.get(dataObj["fastName"]);
+        dataTmp.companyName = companyInfo["name"];
+        dataTmp.companyLogo = companyInfo["logo"];
+        dataTmp.allCount = dataObj["allCount"];
+        dataTmp.notCount = dataObj["notTakeCount"];
+        if (dataTmp.notCount <= 0){
+            continue ;
+        }
+        var timeObj = DateFun.fat(dataObj["time"], { mode: "yyyymmdd", join: "-" });
+        dataTmp.createTime = timeObj.val;
+        dataTmp.allowDel = false;
+        resArr.push(dataTmp);
+    }
+    return resArr;
+}
+// 设置处理
+function updateNotTakeList(self, data) {
+    var dataArr = fatNotTakeListData(data);
+    self.setData({
+        takeNotListArr: dataArr
+    });
 }
 // 处理未录入列表数据
 function handleListData(dataArr){

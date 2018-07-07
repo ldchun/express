@@ -26,6 +26,8 @@ var config = {
         
 		// 统计信息
 		parcelSum: `${host}/parcel/stat`,
+        // 未领取快递列表
+        fastParcelInfo: `${host}/parcel/fastParcelInfo`,
 		// 任务列表
 		batchList: `${host}/parcel/pageBatch`,
 		// 提交任务
