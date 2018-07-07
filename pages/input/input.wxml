@@ -1,7 +1,9 @@
 <view class="flex-box input-top">
 	<view class='flex-item input-company'>
 		<image class='company-logo' src="{{companyLogo}}" mode="widthFix"></image>
-		<view class='company-name'>{{companyName}}</view>
+        <picker bindchange="bindPickerChange" value="{{companyIndex}}" range="{{companyArray}}">
+            <view class='company-name'>{{companyArray[companyIndex]}}</view>
+        </picker>
 	</view>
 	<view class="flex-item clearfix input-count slhide">
 		<view class='count-info textcenter'>
@@ -56,9 +58,7 @@
 		</view>
 	</view>
 	<view class="form-submit textcenter {{submitShow ? '' : 'slhide'}}">
-		<button class='slbtn btnblock' bindtap='addParcel'>
-			完成录入<text>（{{countCurrent}}/{{countAll}}）</text>
-		</button>
+		<button class='slbtn btnblock' bindtap='addParcel'>完成录入</button>
 	</view>
 </view>
 <camera class="camera {{cameraShow ? 'up': ''}}" device-position="back" flash="off">

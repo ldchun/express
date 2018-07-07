@@ -13,9 +13,84 @@ var UPNG = require('../../asset/vendor/upng/UPNG.js');
 var CODEOK = 200;
 var CODEERR = 500;
 var companyList = CompanyFun.list();
+var companyArr = CompanyFun.arr();
 var recogImgOcrTimer;
 var recogImgOcrEnable = false;
 var focusStatu = -1;
+var companyAutoUrl = "https://biz.trace.ickd.cn/auto.php";
+// 快递公司 id
+function fatCompanyAutoId(id){
+    var idMap = {
+        "yuantong": "yuantong",
+        "zhongtong": "zhongtong",
+        "yunda": "yunda",
+        "huitong": "baishi",
+        "shentong": "shentong",
+        "shunfeng": "shunfeng",
+        "post": "youzheng",
+        "tiantian": "tiantian",
+        "ems": "ems",
+        "debang": "debang"
+    };
+    var idVal = idMap[id];
+    return (typeof (idVal) != "undefined") ? idVal : false;
+}
+// 自动识别快递公司
+function companyAutoFun(self, callback){
+    var inData = {};
+    inData.mailNo = self.data.parcelNumber;
+    inData.callback = "callback";
+    wx.request({
+        url: companyAutoUrl,
+        data: inData,
+        dataType: "jsonp",
+        success: function (res) {
+            wx.hideLoading();
+            var jsonData = res.data;
+            jsonData = JSON.parse(jsonData.slice(9, -2));
+            console.log(jsonData);
+            var index = 0;
+            var coms = jsonData['coms'];
+            var status = jsonData['status'];
+            if (status > 0){
+                var companyId = coms[0]["com"];
+                var companyId = fatCompanyAutoId(companyId);
+                if (companyId != false){
+                    var companyName = CompanyFun.get(companyId)["name"];
+                    var theIndex = indexOfArray(companyArr, companyName);
+                    index = (theIndex != -1) ? theIndex : index;
+                }
+            }
+            self.setData({
+                companyArray: companyArr,
+                companyIndex: index
+            });
+            if (typeof(callback) != "undefinded"){
+                callback();
+            }
+        },
+        fail: function (err) {
+            wx.hideLoading();
+            console.log(err);
+        }
+    })
+}
+//数组元素下标
+function indexOfArray(arr, val) {
+    if (!Array.indexOf) {
+        Array.prototype.indexOf = function (el) {
+            var index = -1;
+            for (var i = 0, n = this.length; i < n; i++) {
+                if (this[i] === el) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+    }
+    return arr.indexOf(val);
+}
 // 提示音
 var innerAudioContext;
 var serverAudioSrc = {
@@ -83,6 +158,8 @@ function getInData() {
 // 清除输入内容
 function clearInputContent(self) {
     self.setData({
+        companyArray: [],
+        companyIndex: 0,
         parcelNumber: "",
         phoneNumber: "",
         posNumber: ""
@@ -533,6 +610,8 @@ function recogMobileSuccess(self, data){
 Page({
     data:{
         inputStatu: -1,
+        companyArray: [],
+        companyIndex: 0,
         cameraShow: false,
         parcelShow: false,
         goMobileShow: false,
@@ -571,27 +650,11 @@ Page({
         scanImgStart(self, false);
         syncInputStatu(self, -1);
         nextGoMobile(self, false);
-        // 加载
-		if (typeof (options["batchid"]) != "undefined"){
-			var theBatchId = options["batchid"];
-			self.setData({
-				batchId: theBatchId
-			});
-            // 检查是否允许
-            checkIsAllowInput(self, function(){
-                // 获取任务信息
-                loadBatchInfo(self);
-            });
-		}else{
-			wxShowToast({
-				title: "无效的快递录入任务",
-				flag: "fail"
-			});
-			// 返回
-			wx.navigateBack({
-				delta: 1
-			});
-		}
+        // 检查是否允许
+        checkIsAllowInput(self, function(){
+            // 进入录入状态
+            syncInputStatu(self, 1);
+        });
     },
     onUnload: function (e) {
         innerAudioContext.destroy();
@@ -601,6 +664,11 @@ Page({
     },
     onHide: function(e){
         clearTimeout(recogImgOcrTimer);
+    },
+    bindPickerChange: function (e) {
+        this.setData({
+            companyIndex: e.detail.value
+        })
     },
     onParcelFocus: function(e){
         var self = this;
@@ -652,9 +720,12 @@ Page({
                 });
                 break;
             }
-            // 切换号码
-            nextGoMobile(self, false);
-            syncInputStatu(self, 2);
+            // 识别快递公司
+            companyAutoFun(self, function(){
+                // 切换号码
+                nextGoMobile(self, false);
+                syncInputStatu(self, 2);
+            });
         } while (0);
     },
     onMobileFocus: function (e) {
@@ -691,6 +762,7 @@ Page({
     scanStart: function (e) {
         var self = this;
         var statu = self.data.inputStatu;
+        console.log(statu + " -- " + focusStatu);
         if (statu == 1 || focusStatu == 1) {
             scanParcelNumber(self);
         }
@@ -762,7 +834,6 @@ Page({
 		} while (0);
 	}
 });
-
 // 扫描单号
 function scanParcelNumber(self){
     wx.scanCode({
@@ -774,8 +845,11 @@ function scanParcelNumber(self){
             setTimeout(function(){
                 // 提示
                 scanTipFun("start");
+                // 识别快递公司
+                companyAutoFun(self, function(){
+                    syncInputStatu(self, 2);
+                });
             }, 500);
-            syncInputStatu(self, 2);
         },
         fail: function (err) {
             console.log(err);
@@ -788,7 +862,7 @@ function getParcelPosCode(self) {
 		title: '加载中...',
 	});
 	var inData = new getInData();
-	inData.fastName = self.data.companyId;
+	inData.fastName = companyList[self.data.companyIndex]["id"];
 	wx.request({
 		url: Server["getParcelPosition"],
 		data: inData,
@@ -825,8 +899,8 @@ function getParcelPosCode(self) {
 // 提交新包裹
 function submitParcel(self){
 	var inData = new getInData();
-	inData.batchId = self.data.batchId;
-    inData.fastName = self.data.companyId;
+	// inData.batchId = self.data.batchId;
+    inData.fastName = companyList[self.data.companyIndex]["id"];
 	inData.parcelNumber = self.data.parcelNumber;
     inData.mobile = MobileFun.reset(self.data.phoneNumber);
 	inData.positionCode = self.data.posNumber;
@@ -858,7 +932,7 @@ function submitParcel(self){
 							title: "录入成功",
 							flag: "success"
 						});
-						updateBatchInfo(self, dataObj);
+                        updateParcelInput(self, dataObj);
 						break;
 					default:
 						var msg = jsonData['msg'];
@@ -889,6 +963,15 @@ function submitParcel(self){
 			}
 		})
 	} while (0);
+}
+// 更新包裹输入
+function updateParcelInput(self, data) {
+    var jsonData = data;
+    // 检查是否允许继续录入
+    checkIsAllowInput(self, function () {
+        clearInputContent(self);
+        syncInputStatu(self, 1);
+    });
 }
 // 更新任务单信息
 function updateBatchInfo(self, data){

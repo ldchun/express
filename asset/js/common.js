@@ -288,24 +288,32 @@ function ExpressCompanyFun(){
         "baishi": { name: "百世快递", briefname: "百世", logo: logoImgPath + "logo_baishi.png" },
         "shentong": { name: "申通快递", briefname: "申通", logo: logoImgPath + "logo_shentong.png" },
         "shunfeng": { name: "顺丰快递", briefname: "顺丰", logo: logoImgPath + "logo_shunfeng.png" },
-		// "youzheng": { name: "中国邮政", briefname: "邮政",  logo: logoImgPath + "logo_youzheng.png" },
-		// "tiantian": { name: "天天快递", briefname: "天天",  logo: logoImgPath + "logo_tiantian.png" },
-		// "ems": { name: "EMS", briefname: "EMS",  logo: logoImgPath + "logo_ems.png" },
-		// "debang": { name: "德邦物流", briefname: "德邦",  logo: logoImgPath + "logo_debang.png" }
+		"youzheng": { name: "中国邮政", briefname: "邮政",  logo: logoImgPath + "logo_youzheng.png" },
+		"tiantian": { name: "天天快递", briefname: "天天",  logo: logoImgPath + "logo_tiantian.png" },
+		"ems": { name: "EMS", briefname: "EMS",  logo: logoImgPath + "logo_ems.png" },
+		"debang": { name: "德邦物流", briefname: "德邦",  logo: logoImgPath + "logo_debang.png" }
 	};
 	// 获取快递信息
 	this.get = function(companyId){
 		return companyListObj[companyId];
 	};
-	this.list = function (companyId) {
+	this.arr = function (companyId) {
 		var listArr = [];
 		for (var para in companyListObj){
 			var companyObj = companyListObj[para];
-			companyObj.label = para;
-			listArr.push(companyObj);
+			listArr.push(companyObj["name"]);
 		}
 		return listArr;
 	};
+    this.list = function (companyId) {
+        var listArr = [];
+        for (var para in companyListObj) {
+            var companyObj = companyListObj[para];
+            companyObj.id = para;
+            listArr.push(companyObj);
+        }
+        return listArr;
+    };
 };
 // 电话号码格式化
 var MobileFun = {
