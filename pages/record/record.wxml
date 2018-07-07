@@ -166,7 +166,7 @@
 </view>
 <!-- 弹窗 -->
 <view class="popover {{popShow ? 'on' : ''}}" bindtap="timePopCancle"></view>
-<view class="popup {{popShow ? 'on' : ''}}">
+<view class="popdown {{popShow ? 'on' : ''}}">
     <view class="pophd clearfix">
         <view class="pop-btn btn-cancle" bindtap="timePopCancle">取消</view>
         <view class="pop-btn btn-ok" bindtap="timePopOk">确定</view>
