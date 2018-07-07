@@ -16,6 +16,37 @@ var pageCurrentNot = 1;
 var pageCurrentHas = 1;
 var screenHeight;
 var hasReqFlag = [false, false, false];	// 请求标志位
+// 时间选择
+var choiceTimeOptions = [
+    { name: 0, value: '全部时间', checked: 'true' },
+    { name: 1, value: '选择时间段' }
+];
+// 快递
+var companyList = CompanyFun.list();
+var companyArr = CompanyFun.arr();
+// 增加全部选项
+function addCompanyAllOption(){
+    var allOption = { id: "", name: "全部快递", briefname: "全部" };
+    companyList.unshift(allOption);
+    companyArr.unshift(allOption["name"]);
+}
+addCompanyAllOption();
+//数组元素下标
+function indexOfArray(arr, val) {
+    if (!Array.indexOf) {
+        Array.prototype.indexOf = function (el) {
+            var index = -1;
+            for (var i = 0, n = this.length; i < n; i++) {
+                if (this[i] === el) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+    }
+    return arr.indexOf(val);
+}
 // 获取请求参数
 function getInData() {
 	var inData = {};
@@ -58,12 +89,89 @@ function checkParcelIsTake(status) {
     status = parseInt(status);
     return (status == 1) ? true : false;
 }
+// 内容初始化
+function clearTabContent(self) {
+    hasReqFlag = [false, false, false];
+    self.setData({
+        recordListAll: [],
+        recordListNot: [],
+        recordListHas: [],
+        countTotalAll: 0,
+        countTotalNot: 0,
+        countTotalHas: 0,
+        isLoadingAll: false,
+        isLoadCompleteAll: false,
+        isLoadingNot: false,
+        isLoadCompleteNot: false,
+        isLoadingHas: false,
+        isLoadCompleteHas: false
+    });
+}
+// 时间picker列表
+function getTimePickerList(self, rangStart, rangEnd){
+    var maxDays = 60;
+    var nowTimeVal = DateFun.fat(new Date())["val"];
+    var nowTimeMs = new Date(nowTimeVal).getTime();
+    var minTimeMs = nowTimeMs - 24 * 60 * 60 * 1000 * maxDays;
+    // 需要取到 00:00的毫秒数
+    var rangStartTimeVal = (typeof (rangStart) != 'undefined') ? DateFun.fat(rangStart)["val"] : nowTimeVal;
+    var rangStartTimeMs = new Date(rangStartTimeVal).getTime();
+    var rangEndTimeVal = (typeof (rangEnd) != 'undefined') ? DateFun.fat(rangEnd)["val"] : minTimeMs;
+    var rangEndTimeMs = new Date(rangEndTimeVal).getTime();
+
+    var timeList = [];
+    for (var i = 0; i < maxDays; i++){
+        var theTimeMs = rangStartTimeMs - 24 * 60 * 60 * 1000 * i;
+        if (theTimeMs < rangEndTimeMs){
+            break;
+        }
+        var theTime = DateFun.fat(new Date(theTimeMs))["val"];
+        timeList.push(theTime);
+    }
+    return timeList;
+}
+// 设置时间选择
+function setChoiceTimeItem(self, item) {
+    var timeOptions = [].concat(choiceTimeOptions);
+    for (var i = 0, len = timeOptions.length; i<len; i++){
+        delete timeOptions[i]["checked"];
+    }
+    timeOptions[item]["checked"] = true;
+    // 设置
+    self.setData({
+        choiceType: item,
+        choiceItems: timeOptions
+    });
+}
+
+// 弹窗显示
+function timePopUpShow(self, flag) {
+    var startTimeList = [];
+    var endTimeList = [];
+    if(flag){
+        var nowTime = DateFun.fat(new Date())["val"];
+        startTimeList = getTimePickerList(self);
+        endTimeList = getTimePickerList(self, nowTime, nowTime);
+        self.setData({
+            startTime: nowTime,
+            endTime: nowTime
+        });
+    }
+    // 设置
+    self.setData({
+        startTimeList: startTimeList,
+        endTimeList: endTimeList,
+        popShow: flag
+    });
+}
 
 Page({
 	data: {
 		loadok: 'slhide',
 		tabList: ["全部", "未取", "已取"],
 		tabIndex: 0,
+        companyArray: companyArr,
+        companyIndex: 0,
 		recordListAll: [],
 		recordListNot: [],
 		recordListHas: [],
@@ -75,12 +183,24 @@ Page({
 		isLoadingNot: false,
 		isLoadCompleteNot: false,
 		isLoadingHas: false,
-		isLoadCompleteHas: false
+		isLoadCompleteHas: false,
+        isChoiceTimeAll: true,
+        choiceTimeStart: "",
+        choiceTimeEnd: "",
+        popShow: false,
+        startTime: "",
+        endTime: "",
+        timeValue: ['', ''],
+        startTimeList: [],
+        endTimeList: [],
+        choiceType: 0,
+        choiceItems: choiceTimeOptions
 	},
 	onLoad: function (options) {
 		var self = this;
-		// 清空标志位
-		hasReqFlag = [false, false, false];
+		// 清空内容
+        clearTabContent(self);
+        timePopUpShow(self, false);
 		wx.getSystemInfo({
 			success: function(res) {
 				screenHeight = res.windowHeight;
@@ -100,15 +220,8 @@ Page({
     },
 	tabClick: function (e) {
 		var self = this;
-		var curIndex = parseInt(e.currentTarget.id);
-		this.setData({
-			tabIndex: curIndex
-		});
-		if (!hasReqFlag[curIndex]){
-			var status = tabIndexToStatus(curIndex);
-			loadListData(self, true, status);
-			hasReqFlag[curIndex] = true;
-		}
+		var index = parseInt(e.currentTarget.id);
+        tabContentGo(self, index);
 	},
 	onReachBottom: function (e) {
 		var self = this;
@@ -121,8 +234,81 @@ Page({
         var self = this;
         var dataset = e.currentTarget.dataset;
         handleMoreFun(self, dataset);
+    },
+    bindPickerChange: function (e) {
+        var self = this;
+        self.setData({
+            companyIndex: e.detail.value,
+        });
+        // 加载内容
+        startLoadTabContent(self);
+    },
+    bindTimeChange: function (e) {
+        var self = this;
+        var value = e.detail.value;
+        if ((self.data.startTimeList.length > 0) && (self.data.startTimeList.length > 0)){
+            var startTimeVal = self.data.startTimeList[value[0]];
+            var endTimeVal = self.data.endTimeList[value[1]];
+            var diffTimeVal = (new Date(startTimeVal) - new Date(endTimeVal));
+            if (diffTimeVal >= 0){
+                endTimeVal = startTimeVal;
+            }
+            // 更新结束时间列表
+            var endTimeList = getTimePickerList(self, new Date(), startTimeVal);
+            self.setData({
+                endTimeList: endTimeList,
+                startTime: startTimeVal,
+                endTime: endTimeVal
+            });
+        }
+        console.log(this.data.startTime + " 至 " + this.data.endTime);
+    },
+    timePopShow: function(e){
+        var self = this;
+        timePopUpShow(self, true);
+    },
+    timePopCancle: function (e) {
+        var self = this;
+        timePopUpShow(self, false);
+    },
+    timePopOk: function (e) {
+        var self = this;
+        timePopUpShow(self, false);
+        var choiceType = self.data.choiceType;
+        // 设置选择结果
+        self.setData({
+            isChoiceTimeAll: (choiceType == 0),
+            choiceTimeStart: self.data.startTime,
+            choiceTimeEnd: self.data.endTime,
+        });
+        // 加载内容
+        startLoadTabContent(self);
+    },
+    radioChange: function (e) {
+        this.setData({
+            choiceType: e.detail.value
+        });
     }
 });
+// 开始加载内容
+function startLoadTabContent(self){
+    // 清空内容
+    clearTabContent(self);
+    //  加载内容
+    tabContentGo(self, 0);
+}
+// 导航触发
+function tabContentGo(self, index){
+    var curIndex = index;
+    self.setData({
+        tabIndex: curIndex
+    });
+    if (!hasReqFlag[curIndex]) {
+        var status = tabIndexToStatus(curIndex);
+        loadListData(self, true, status);
+        hasReqFlag[curIndex] = true;
+    }
+}
 // 更多操作
 function handleMoreFun(self, data) {
     var jsonData = data;
@@ -360,8 +546,15 @@ function loadListData(self, isFirstLoad, status) {
 	inData.status = status;
 	inData.currentPage = pageCurrent;
     inData.pageSize = pageSize;
-	// inData.startTime = "2018-06-02";
-	// inData.endTime = "2018-06-10";
+    var companyId = companyList[self.data.companyIndex]["id"];
+    console.log(companyId);
+    if (companyId != ""){
+        inData.fastName = companyId;
+    }
+    if (!self.data.isChoiceTimeAll){
+        inData.startTime = self.data.choiceTimeStart;
+        inData.endTime = self.data.choiceTimeEnd;
+    }
 	switch (status) {
 		case 0: // 未取
 			pageCurrentNot = pageCurrent;

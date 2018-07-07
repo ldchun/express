@@ -1,13 +1,15 @@
 <view class='record-top'>
-    <view class="search-box">
-        <view class="search-frame nobd" bindtap="linkSearch">
-            <view class="frame-btn">
-                <icon class="btn-icon" type="search" size="20" color="#B2B2B2"/>
+    <view class="top-box flex-box">
+        <view class="flex-item top-left">
+            <picker bindchange="bindPickerChange" value="{{companyIndex}}" range="{{companyArray}}">
+            <view class="top-company">
+                <text>{{companyArray[companyIndex]}}</text>
+                <image class="arrow-icon" src="../../asset/img/icon-down.png" mode="widthFix"></image>
             </view>
-            <view class="frame-input title">快递单号 / 手机号码</view>
-            <view class="frame-btn postright">
-                <image class="btn-icon" src="../../asset/img/iconbg-scan.png" mode="widthFix"></image>
-            </view>
+            </picker>
+        </view>
+        <view class="top-search" bindtap="linkSearch">
+            <icon class="btn-icon" type="search" size="20" color="#FFFFFF"/>
         </view>
     </view>
 	<view class='sltab-hd flex-box record-tab'>
@@ -27,8 +29,8 @@
 				<text class="count-val" wx:elif="{{tabIndex == 1}}">{{countTotalNot}}</text>
 				<text class="count-val" wx:else="{{tabIndex == 2}}">{{countTotalHas}}</text>
 			</view>
-			<view class="choice-time">
-				<view class="time-res">全部</view>
+			<view class="choice-time" bindtap="timePopShow">
+				<view class="time-res">{{isChoiceTimeAll ? "全部" : (choiceTimeStart + ' 至 ' + choiceTimeEnd)}}</view>
 				<image class="time-img" src="../../asset/img/icon-calendar.png" mode="widthFix"></image>
 			</view>
 		</view>
@@ -161,4 +163,30 @@
 			</view>
 		</view>
 	</view>
+</view>
+<!-- 弹窗 -->
+<view class="popover {{popShow ? 'on' : ''}}" bindtap="timePopCancle"></view>
+<view class="popup {{popShow ? 'on' : ''}}">
+    <view class="pophd clearfix">
+        <view class="pop-btn btn-cancle" bindtap="timePopCancle">取消</view>
+        <view class="pop-btn btn-ok" bindtap="timePopOk">确定</view>
+    </view>
+    <view class="popbd">
+        <radio-group class="radio-group" bindchange="radioChange" value="{{choiceType}}">
+            <label class="radio" wx:for="{{choiceItems}}" wx:key="{{index}}">
+                <radio value="{{item.name}}" checked="{{item.checked}}"/>{{item.value}}
+            </label>
+        </radio-group>
+        <block wx:if="{{choiceType == 1}}">
+        <picker-view class="time-picker" indicator-style="height:36px;" style="width:100%;height:150px;" value="{{timeValue}}" bindchange="bindTimeChange">
+            <picker-view-column>
+            <view wx:for="{{startTimeList}}" wx:key="{{timeValue[0]}}" style="line-height:36px">{{item}}</view>
+            </picker-view-column>
+            <view class="time-mid" style="line-height:150px">至</view>
+            <picker-view-column>
+            <view wx:for="{{endTimeList}}" wx:key="{{timeValue[1]}}" style="line-height:36px">{{item}}</view>
+            </picker-view-column>
+        </picker-view>
+        </block>
+    </view>
 </view>
