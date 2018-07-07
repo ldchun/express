@@ -29,6 +29,7 @@ function fatCompanyAutoId(id){
         "shunfeng": "shunfeng",
         "post": "youzheng",
         "tiantian": "tiantian",
+        "jindong": "jindong",
         "ems": "ems",
         "debang": "debang"
     };

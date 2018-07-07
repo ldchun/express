@@ -290,6 +290,7 @@ function ExpressCompanyFun(){
         "shunfeng": { name: "顺丰快递", briefname: "顺丰", logo: logoImgPath + "logo_shunfeng.png" },
 		"youzheng": { name: "中国邮政", briefname: "邮政",  logo: logoImgPath + "logo_youzheng.png" },
 		"tiantian": { name: "天天快递", briefname: "天天",  logo: logoImgPath + "logo_tiantian.png" },
+        "jindong": { name: "京东物流", briefname: "京东", logo: logoImgPath + "logo_jindong.png" },
 		"ems": { name: "EMS", briefname: "EMS",  logo: logoImgPath + "logo_ems.png" },
 		"debang": { name: "德邦物流", briefname: "德邦",  logo: logoImgPath + "logo_debang.png" }
 	};
