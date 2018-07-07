@@ -348,19 +348,11 @@ function loadNotTakeList(self) {
                     break;
                 default:
                     var msg = jsonData['msg'];
-                    wxShowToast({
-                        title: msg,
-                        flag: "fail"
-                    });
             }
         },
         fail: function (err) {
             wx.hideLoading();
             console.log(err);
-            wxShowToast({
-                title: "加载失败",
-                flag: "fail"
-            });
         }
     })
 }
