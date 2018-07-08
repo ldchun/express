@@ -14,8 +14,12 @@ var pageSize = 5;
 var pageCurrentAll = 1;
 var pageCurrentNot = 1;
 var pageCurrentHas = 1;
-var screenHeight;
 var hasReqFlag = [false, false, false];	// 请求标志位
+//系统信息
+var sysInfo = wx.getSystemInfoSync();
+var pixelRatio = sysInfo.pixelRatio;
+var screenWidth = sysInfo.windowWidth;
+var screenHeight = sysInfo.windowHeight;
 // 时间选择
 var choiceTimeOptions = [
     { name: 0, value: '全部时间', checked: 'true' },
@@ -143,25 +147,46 @@ function setChoiceTimeItem(self, item) {
         choiceItems: timeOptions
     });
 }
-
 // 弹窗显示
 function timePopUpShow(self, flag) {
     var startTimeList = [];
     var endTimeList = [];
+    var startTimeVal = "";
+    var endTimeVal = "";
     if(flag){
-        var nowTime = DateFun.fat(new Date())["val"];
-        startTimeList = getTimePickerList(self);
-        endTimeList = getTimePickerList(self, nowTime, nowTime);
-        self.setData({
-            startTime: nowTime,
-            endTime: nowTime
-        });
+        var isChoiceTimeAll = self.data.isChoiceTimeAll;
+        setChoiceTimeItem(self, isChoiceTimeAll ? 0 : 1);
     }
     // 设置
     self.setData({
+        popShow: flag
+    });
+}
+// 加载时间选择器
+function loadTimePickerList(self) {
+    var startTimeList = [];
+    var endTimeList = [];
+    var startTimeVal = "";
+    var endTimeVal = "";
+    var nowTime = DateFun.fat(new Date())["val"];
+
+    var choiceTimeStart = self.data.choiceTimeStart;
+    var choiceTimeEnd = self.data.choiceTimeEnd;
+    if ((choiceTimeStart != "") && (choiceTimeEnd != "")) {
+        startTimeVal = choiceTimeStart;
+        endTimeVal = choiceTimeEnd;
+    } else {
+        startTimeVal = nowTime;
+        endTimeVal = nowTime;
+    }
+    startTimeList = getTimePickerList(self);
+    endTimeList = getTimePickerList(self, nowTime, nowTime);
+    // 设置
+    self.setData({
+        startTime: nowTime,
+        endTime: nowTime,
         startTimeList: startTimeList,
         endTimeList: endTimeList,
-        popShow: flag
     });
 }
 
@@ -184,13 +209,13 @@ Page({
 		isLoadCompleteNot: false,
 		isLoadingHas: false,
 		isLoadCompleteHas: false,
+        popShow: false,
         isChoiceTimeAll: true,
         choiceTimeStart: "",
         choiceTimeEnd: "",
-        popShow: false,
+        timeValue: ['', ''],
         startTime: "",
         endTime: "",
-        timeValue: ['', ''],
         startTimeList: [],
         endTimeList: [],
         choiceType: 0,
@@ -198,18 +223,44 @@ Page({
 	},
 	onLoad: function (options) {
 		var self = this;
+        // 参数
+        // 快递
+        if (typeof (options["companyid"]) != "undefined"){
+            var companyInfo = CompanyFun.get(options["companyid"]);
+            var companyName = companyInfo["name"];
+            var index = indexOfArray(companyArr, companyName);
+            if (index != -1){
+                self.setData({
+                    companyIndex: index
+                });
+            }
+        }
+        // 时间
+        if ((typeof (options["starttime"]) != "undefined") && (typeof (options["endtime"]) != "undefined")) {
+            var startTime = options["starttime"];
+            var endTime = options["endtime"];
+            self.setData({
+                isChoiceTimeAll: false,
+                choiceTimeStart: startTime,
+                choiceTimeEnd: endTime,
+            });
+            setChoiceTimeItem(self, 1);
+        }
 		// 清空内容
         clearTabContent(self);
         timePopUpShow(self, false);
+        // 加载时间选择器
+        loadTimePickerList(self);
+        // 加载数据
+        var tabIndex = self.data.tabIndex;
+        var status = tabIndexToStatus(tabIndex);
+        // 默认加载当前选项
+        loadListData(self, true, status);
+        hasReqFlag[tabIndex] = true;
+        // 系统信息
 		wx.getSystemInfo({
 			success: function(res) {
 				screenHeight = res.windowHeight;
-				// 加载数据
-				var tabIndex = self.data.tabIndex;
-				var status = tabIndexToStatus(tabIndex);
-				// 默认加载当前选项
-				loadListData(self, true, status);
-				hasReqFlag[tabIndex] = true;
 			}
 		});
 	},
@@ -249,19 +300,9 @@ Page({
         if ((self.data.startTimeList.length > 0) && (self.data.startTimeList.length > 0)){
             var startTimeVal = self.data.startTimeList[value[0]];
             var endTimeVal = self.data.endTimeList[value[1]];
-            var diffTimeVal = (new Date(startTimeVal) - new Date(endTimeVal));
-            if (diffTimeVal >= 0){
-                endTimeVal = startTimeVal;
-            }
-            // 更新结束时间列表
-            var endTimeList = getTimePickerList(self, new Date(), startTimeVal);
-            self.setData({
-                endTimeList: endTimeList,
-                startTime: startTimeVal,
-                endTime: endTimeVal
-            });
+            // 同步时间选择器
+            syncTimePicker(self, startTimeVal, endTimeVal);
         }
-        console.log(this.data.startTime + " 至 " + this.data.endTime);
     },
     timePopShow: function(e){
         var self = this;
@@ -275,21 +316,45 @@ Page({
         var self = this;
         timePopUpShow(self, false);
         var choiceType = self.data.choiceType;
+        var isChoiceAll = (choiceType == 0);
+        var startTime = isChoiceAll ? "" : self.data.startTime;
+        var endTime = isChoiceAll ? "" : self.data.endTime;
         // 设置选择结果
         self.setData({
-            isChoiceTimeAll: (choiceType == 0),
-            choiceTimeStart: self.data.startTime,
-            choiceTimeEnd: self.data.endTime,
+            isChoiceTimeAll: isChoiceAll,
+            choiceTimeStart: startTime,
+            choiceTimeEnd: endTime,
         });
         // 加载内容
         startLoadTabContent(self);
     },
     radioChange: function (e) {
+        var self = this;
+        var val = e.detail.value;
         this.setData({
-            choiceType: e.detail.value
+            choiceType: val
         });
+        if (val == 1){
+            loadTimePickerList(self);
+        }
     }
 });
+// 同步时间段选择器
+function syncTimePicker(self, startTime, endTime){
+    var startTimeVal = startTime;
+    var endTimeVal = endTime;
+    var diffTimeVal = (new Date(startTimeVal) - new Date(endTimeVal));
+    if (diffTimeVal >= 0) {
+        endTimeVal = startTimeVal;
+    }
+    // 更新结束时间列表
+    var endTimeList = getTimePickerList(self, new Date(), startTimeVal);
+    self.setData({
+        endTimeList: endTimeList,
+        startTime: startTimeVal,
+        endTime: endTimeVal
+    });
+}
 // 开始加载内容
 function startLoadTabContent(self){
     // 清空内容
@@ -547,7 +612,6 @@ function loadListData(self, isFirstLoad, status) {
 	inData.currentPage = pageCurrent;
     inData.pageSize = pageSize;
     var companyId = companyList[self.data.companyIndex]["id"];
-    console.log(companyId);
     if (companyId != ""){
         inData.fastName = companyId;
     }

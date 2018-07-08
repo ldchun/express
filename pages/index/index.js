@@ -205,7 +205,7 @@ Page({
 		var self = this;
 		var dataset = e.currentTarget.dataset;
 		wx.navigateTo({
-            url: AppPages.pageRecord
+            url: AppPages.pageRecord + "?companyid=" + dataset["companyid"] + "&starttime=" + dataset["time"] + "&endtime=" + dataset["time"]
 		})
 	},
 	touchStart: function(e){
@@ -365,6 +365,7 @@ function fatNotTakeListData(dataArr) {
         var dataObj = listArr[i];
         var dataTmp = {};
         var companyInfo = CompanyFun.get(dataObj["fastName"]);
+        dataTmp.companyId = dataObj["fastName"];
         dataTmp.companyName = companyInfo["name"];
         dataTmp.companyLogo = companyInfo["logo"];
         dataTmp.allCount = dataObj["allCount"];

@@ -2,7 +2,7 @@
 .top-search{padding:5px 15px;}
 .top-left{color:#FFF;padding-left:20px;text-align:center;white-space:nowrap;}
 .top-company{display:inline-block;padding:5px;font-size:18px;}
-.top-company .arrow-icon{width:20px;margin-left:5px;vertical-align:middle;}
+.top-company .arrow-icon{width:20px;height:20px;margin-left:5px;vertical-align:middle;}
 .top-company:active,.top-search:active{background:#2972F6;}
 .search-box{position:relative;padding:5px 12px;border:0 none;background:#3986FE;}
 .record-top{position:fixed;z-index:100;top:0;left:0;width:100%;background:#F7F7F7;box-shadow:0 1px 10px rgba(0,0,0,0.1);}
