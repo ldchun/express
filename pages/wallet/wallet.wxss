@@ -6,7 +6,7 @@
 .statu-wrap{padding:10px 5px;background:#FFF;}
 .statu-item ~ .statu-item{border-left:1px solid #E2E2E2;}
 .statu-info{text-align:center;}
-.statu-info .info-img{display:inline-block;width:24px;vertical-align:middle;}
+.statu-info .info-img{display:inline-block;width:24px;height:24px;vertical-align:middle;}
 .statu-info .info-con{display:inline-block;margin-left:10px;line-height:1.6;vertical-align:middle;}
 .statu-info .info-con .info-value{font-size:24px;color:#3986FE;}
 .statu-info .info-con .info-name{font-size:13px;color:#868686;}
@@ -23,5 +23,5 @@
 .pay-item{font-size:15px;}
 .pay-item .pay-name{float:left;}
 .pay-item .pay-value{float:right;}
-.pay-img{display:block;width:100px;}
+.pay-img{display:block;width:100px;height:24px;}
 .buy-res .res-money{font-size:22px;color:#FF570A;}

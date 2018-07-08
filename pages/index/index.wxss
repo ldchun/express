@@ -7,7 +7,7 @@ page{background:#F7F7F7;}
 .nav-item{text-align:center;}
 .nav-link{display:block;padding:10px 15px;transition:all 200ms ease-in-out;}
 .nav-link .nav-icon{display:inline-block;line-height:1;border-radius:50%;background:#3986FE;}
-.nav-link .nav-icon image{display:block;width:36px;}
+.nav-link .nav-icon image{display:block;width:36px;height:36px;}
 .nav-link .nav-txt{margin-top:3px;line-height:1;color:#FFF;}
 .nav-link:focus,.nav-link:active{background:#2972F6;}
 .home-info{margin-top:0;padding:10px 0;color:#FFF;background:#2972F6;}

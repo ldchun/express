@@ -2,7 +2,10 @@
 	<view class='flex-item input-company'>
 		<image class='company-logo' src="{{companyLogo}}" mode="widthFix"></image>
         <picker bindchange="bindPickerChange" value="{{companyIndex}}" range="{{companyArray}}">
-            <view class='company-name'>{{companyArray[companyIndex]}}</view>
+            <view class="company-name" wx:if="{{companyArray.length > 0}}">
+                <text>{{companyArray[companyIndex]}}</text>
+                <image class="arrow-icon" src="../../asset/img/iconbg-down.png" mode="widthFix"></image>
+            </view>
         </picker>
 	</view>
 	<view class="flex-item clearfix input-count slhide">
