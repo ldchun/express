@@ -11,9 +11,10 @@
 .sltab-hd .tab-nav .nav{display:block;max-width:100%;padding:10px;}
 .record-body{position:relative;padding-top:120px;}
 .card-li{margin:10px 0;padding:2px 0;background:#FFF;}
-.card-hd{padding:3px 15px;line-height:1.6;font-size:17px;border-bottom:1px solid #DDD;}
-.card-hd .hd-tit{float:left;}
-.card-hd .hd-more{float:right;color:#3986FE;}
+.card-hd{padding:3px 15px;line-height:1.6;border-bottom:1px solid #DDD;}
+.card-hd .hd-tit{float:left;font-size:17px;}
+.card-hd .hd-more{float:right;color:#3986FE;font-size:16px;}
+.card-hd .hd-more .title{font-size:14px;}
 .card-bd{padding:3px 15px;}
 .card-ft{padding:3px 10px;border-top:1px solid #DDD;text-align:right;}
 .card-ft .ft-item{display:inline-block;text-align:center;color:#3986FE;}
@@ -34,7 +35,16 @@
 .pophd .pop-btn:active{background:#EEE;}
 .pophd .pop-btn.btn-cancle{float:left;}
 .pophd .pop-btn.btn-ok{float:right;color:#3986FE;}
-.popbd{padding:20px 15px;}
+.pophd{padding:10px 15px;}
+.popbd{padding:10px 15px 20px 15px;}
 .radio-group{padding:0 15px;margin-bottom:20px;white-space:nowrap;}
 .radio-group .radio{display:inline-block;padding:10px 5px;}
 .radio-group .radio ~ .radio{margin-left:15px;}
+.choice-handle{text-align:center;margin-bottom:20px;white-space:nowrap;}
+.choice-handle .choice-btn{display:inline-block;min-width:100px;padding:5px 20px;text-align:center;border:1px solid #3986FE;border-radius:2px;}
+.choice-btn.btn-ok{color:#FFF;background:#3986FE;}
+.choice-handle .choice-btn:active{color:#FFF;background:#2972F6;}
+.choice-opts{font-size:14px;text-align:center;}
+.choice-opts .opt-item{display:inline-block;padding:5px 12px;line-height:1.2;border:1px solid #D2D2D2;border-radius:35px;}
+.choice-opts .opt-item ~ .opt-item{margin-left:15px;}
+.choice-opts .opt-item:active{color:#FFF;background:#3986FE;border-color:#3986FE;}

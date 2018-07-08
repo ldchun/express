@@ -45,7 +45,7 @@
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-						<view class='hd-more slcolor'>位置编号:【{{item.posNumber}}】</view>
+						<view class='hd-more'><text class='title'>位置编号:</text>【{{item.posNumber}}】</view>
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
@@ -90,7 +90,7 @@
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-						<view class='hd-more slcolor'>位置编号:【{{item.posNumber}}】</view>
+						<view class='hd-more'><text class='title'>位置编号:</text>【{{item.posNumber}}】</view>
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
@@ -131,7 +131,7 @@
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-						<view class='hd-more slcolore'>位置编号:【{{item.posNumber}}】</view>
+						<view class='hd-more'><text class='title'>位置编号:</text>【{{item.posNumber}}】</view>
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
@@ -165,17 +165,22 @@
 <!-- 弹窗 -->
 <view class="popover {{popShow ? 'on' : ''}}" bindtap="timePopCancle"></view>
 <view class="popdown {{popShow ? 'on' : ''}}">
-    <view class="pophd clearfix">
-        <view class="pop-btn btn-cancle" bindtap="timePopCancle">取消</view>
-        <view class="pop-btn btn-ok" bindtap="timePopOk">确定</view>
-    </view>
+     <view class="pophd">
+         <view class="choice-opts">
+            <view class="opt-item" data-days="1" bindtap="timeChoicePopOpts">今天</view>
+            <view class="opt-item" data-days="3" bindtap="timeChoicePopOpts">近3天</view>
+            <view class="opt-item" data-days="7" bindtap="timeChoicePopOpts">近7天</view>
+        </view>
+    </view> 
     <view class="popbd">
-        <radio-group class="radio-group" bindchange="radioChange" value="{{choiceType}}">
-            <label class="radio" wx:for="{{choiceItems}}" wx:key="{{index}}">
-                <radio value="{{item.name}}" checked="{{item.checked}}"/>{{item.value}}
-            </label>
-        </radio-group>
-        <block wx:if="{{choiceType == 1}}">
+        <view class="flex-box choice-handle">
+            <view class="flex-item">
+                <view class="choice-btn btn-all" bindtap="timeChoicePopAll">全部时间</view>
+            </view>
+            <view class="flex-item">
+                 <view class="choice-btn btn-ok" bindtap="timeChoicePopRang">选择时间段</view>
+            </view>
+        </view>
         <picker-view class="time-picker" indicator-style="height:36px;" style="width:100%;height:150px;" value="{{timeValue}}" bindchange="bindTimeChange">
             <picker-view-column>
             <view wx:for="{{startTimeList}}" wx:key="{{timeValue[0]}}" style="line-height:36px">{{item}}</view>
@@ -185,6 +190,5 @@
             <view wx:for="{{endTimeList}}" wx:key="{{timeValue[1]}}" style="line-height:36px">{{item}}</view>
             </picker-view-column>
         </picker-view>
-        </block>
     </view>
 </view>
