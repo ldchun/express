@@ -62,13 +62,13 @@ function tabIndexToStatus(index){
 	var tabIndex = index;
 	var status;
 	switch (tabIndex) {
-		case 1:
+		case 0:
 			status = 0;
 			break;
-		case 2:
+		case 1:
 			status = 1;
 			break;
-		case 0:
+		case 2:
 		default:
 			status = -1;
 	}
@@ -193,7 +193,7 @@ function loadTimePickerList(self) {
 Page({
 	data: {
 		loadok: 'slhide',
-		tabList: ["全部", "未取", "已取"],
+        tabList: ["未取", "已取", "全部"],
 		tabIndex: 0,
         companyArray: companyArr,
         companyIndex: 0,
@@ -575,9 +575,15 @@ function handleListData(dataArr, status) {
         dataTmp.parcelStatus = fatParcelStatus(dataObj["status"]);
         dataTmp.isTake = checkParcelIsTake(dataObj["status"]);
         dataTmp.parcelId = dataObj["id"];
-        // 时间
-        var timeObj = DateFun.fat(dataObj["createTime"], { mode: "yyyymmdd hhmmss", join: "-" });
-        dataTmp.createTime = timeObj.val;
+        // 收件时间
+        var createTimeObj = DateFun.fat(dataObj["createTime"], { mode: "yyyymmdd hhmmss", join: "-" });
+        dataTmp.createTime = createTimeObj.val;
+        // 取件时间
+        dataTmp.takeTime = false;
+        if (typeof (dataObj["takeTime"]) != "undefined"){
+            var takeTimeObj = DateFun.fat(dataObj["takeTime"], { mode: "yyyymmdd hhmmss", join: "-" });
+            dataTmp.takeTime = takeTimeObj.val;
+        }
         dataTmp.batchId = dataObj["batchId"];
         listArr[i] = dataTmp;
     }
@@ -796,283 +802,4 @@ function loadListData(self, isFirstLoad, status) {
 			}
         }
     })
-}
-
-// 请求列表 全部
-function loadListDataAll(self, isFirstLoad) {
-	var isLoadComplete = self.data.isLoadCompleteAll;
-	if (isLoadComplete) {
-		return;
-	}
-	// 当前页码
-	pageCurrentAll = isFirstLoad ? 1 : pageCurrentAll + 1;
-	//  提交
-	var inData = new getInData();
-	inData.status = -1;
-	inData.currentPage = pageCurrentAll;
-	inData.pageSize = pageSize;
-	// inData.startTime = "2018-06-02";
-	// inData.endTime = "2018-06-10";
-	self.setData({
-		isLoadingAll: true,
-		isLoadCompleteAll: false
-	});
-	wx.request({
-		url: Server["getParcelPage"],
-		data: inData,
-		success: function (res) {
-			wx.hideLoading();
-			var jsonData = res.data;
-			var dataObj = jsonData['data'];
-			var code = jsonData['code'];
-			switch (code) {
-				case CODEOK:
-					var listArr = dataObj["dataList"];
-					var listLen = listArr.length;
-					var countTotal = dataObj["allCount"];
-					var countHave = (pageCurrentAll - 1) * pageSize + listLen;
-					listArr = handleListData(listArr, -1);
-					var oldListArr = self.data.recordListAll;
-					if (!isFirstLoad) {
-						listArr = oldListArr.concat(listArr);
-					}
-					// 设置数据
-					if (countHave >= countTotal) {
-						self.setData({
-							countTotalAll: countTotal,
-							recordListAll: listArr,
-							isLoadingAll: false,
-							isLoadCompleteAll: true
-						});
-					} else {
-						self.setData({
-							countTotalAll: countTotal,
-							recordListAll: listArr,
-							isLoadingAll: false,
-							isLoadCompleteAll: false
-						});
-					}
-					// 判断是否自动加载更多
-					var query = wx.createSelectorQuery();
-					query.select('#tabContent').fields({
-						size: true,
-					}, function (res) {
-						var contentHeight = res.height;
-						if (contentHeight <= screenHeight) {
-							// 加载数据
-							loadListDataAll(self, false);
-						}
-					}).exec();
-					break;
-				default:
-					var msg = jsonData['msg'];
-					wxShowToast({
-						title: msg,
-						flag: "fail"
-					});
-					self.setData({
-						isLoadingAll: false,
-						isLoadCompleteAll: false
-					});
-			}
-		},
-		fail: function (err) {
-			wx.hideLoading();
-			console.log(err);
-			wxShowToast({
-				title: "加载失败",
-				flag: "fail"
-			});
-			self.setData({
-				isLoadingAll: false,
-				isLoadCompleteAll: false
-			});
-		}
-	})
-}
-// 请求列表 未取
-function loadListDataNot(self, isFirstLoad) {
-	var isLoadComplete = self.data.isLoadCompleteNot;
-	if (isLoadComplete) {
-		return;
-	}
-	// 当前页码
-	pageCurrentNot = isFirstLoad ? 1 : pageCurrentNot + 1;
-	//  提交
-	var inData = new getInData();
-	inData.status = 0;
-	inData.currentPage = pageCurrentNot;
-	inData.pageSize = pageSize;
-	// inData.startTime = "2018-06-02";
-	// inData.endTime = "2018-06-10";
-	self.setData({
-		isLoadingNot: true,
-		isLoadCompleteNot: false
-	});
-	wx.request({
-		url: Server["getParcelPage"],
-		data: inData,
-		success: function (res) {
-			wx.hideLoading();
-			var jsonData = res.data;
-			var dataObj = jsonData['data'];
-			var code = jsonData['code'];
-			switch (code) {
-				case CODEOK:
-					var listArr = dataObj["dataList"];
-					var listLen = listArr.length;
-					var countTotal = dataObj["allCount"];
-					var countHave = (pageCurrent - 1) * pageSize + listLen;
-					listArr = handleListData(listArr, 0);
-					var oldListArr = self.data.recordListNot;
-					if (!isFirstLoad) {
-						listArr = oldListArr.concat(listArr);
-					}
-					// 设置数据
-					if (countHave >= countTotal) {
-						self.setData({
-							countTotalNot: countTotal,
-							recordListNot: listArr,
-							isLoadingNot: false,
-							isLoadCompleteNot: true
-
-						});
-					} else {
-						self.setData({
-							countTotalNot: countTotal,
-							recordListNot: listArr,
-							isLoadingNot: false,
-							isLoadCompleteNot: false
-						});
-					}
-					// 判断是否自动加载更多
-					var query = wx.createSelectorQuery();
-					query.select('#tabContent').fields({
-						size: true,
-					}, function (res) {
-						var contentHeight = res.height;
-						if (contentHeight <= screenHeight) {
-							// 加载数据
-							loadListDataNot(self, false);
-						}
-					}).exec();
-					break;
-				default:
-					var msg = jsonData['msg'];
-					wxShowToast({
-						title: msg,
-						flag: "fail"
-					});
-					self.setData({
-						isLoadingNot: false,
-						isLoadCompleteNot: false
-					});
-			}
-		},
-		fail: function (err) {
-			wx.hideLoading();
-			console.log(err);
-			wxShowToast({
-				title: "加载失败",
-				flag: "fail"
-			});
-			self.setData({
-				isLoadingNot: false,
-				isLoadCompleteNot: false
-			});
-		}
-	})
-}
-
-// 请求列表 已取
-function loadListDataHas(self, isFirstLoad, status) {
-	var isLoadComplete = self.data.isLoadCompleteHas;
-	if (isLoadComplete) {
-		return;
-	}
-	// 当前页码
-	pageCurrentHas = isFirstLoad ? 1 : pageCurrentHas + 1;
-	//  提交
-	var inData = new getInData();
-	inData.status = 1;
-	inData.currentPage = pageCurrentHas;
-	inData.pageSize = pageSize;
-	// inData.startTime = "2018-06-02";
-	// inData.endTime = "2018-06-10";
-	self.setData({
-		isLoadingHas: true,
-		isLoadCompleteHas: false
-	});
-	wx.request({
-		url: Server["getParcelPage"],
-		data: inData,
-		success: function (res) {
-			wx.hideLoading();
-			var jsonData = res.data;
-			var dataObj = jsonData['data'];
-			var code = jsonData['code'];
-			switch (code) {
-				case CODEOK:
-					var listArr = dataObj["dataList"];
-					var listLen = listArr.length;
-					var countTotal = dataObj["allCount"];
-					var countHave = (pageCurrentHas - 1) * pageSize + listLen;
-					listArr = handleListData(listArr, 1);
-					var oldListArr = self.data.recordListHas;
-					if (!isFirstLoad) {
-						listArr = oldListArr.concat(listArr);
-					}
-					// 设置数据
-					if (countHave >= countTotal) {
-						self.setData({
-							countTotalHas: countTotal,
-							recordListHas: listArr,
-							isLoadingHas: false,
-							isLoadCompleteHas: true
-						});
-					} else {
-						self.setData({
-							countTotalHas: countTotal,
-							recordListHas: listArr,
-							isLoadingHas: false,
-							isLoadCompleteHas: false
-						});
-					}
-					// 判断是否自动加载更多
-					var query = wx.createSelectorQuery();
-					query.select('#tabContent').fields({
-						size: true,
-					}, function (res) {
-						var contentHeight = res.height;
-						if (contentHeight <= screenHeight) {
-							// 加载数据
-							loadListDataHas(self, false);
-						}
-					}).exec();
-					break;
-				default:
-					var msg = jsonData['msg'];
-					wxShowToast({
-						title: msg,
-						flag: "fail"
-					});
-					self.setData({
-						isLoadingHas: false,
-						isLoadCompleteHas: false
-					});
-			}
-		},
-		fail: function (err) {
-			wx.hideLoading();
-			console.log(err);
-			wxShowToast({
-				title: "加载失败",
-				flag: "fail"
-			});
-			self.setData({
-				isLoadingHas: false,
-				isLoadCompleteHas: false
-			});
-		}
-	})
 }

@@ -13,7 +13,7 @@
         </view>
     </view>
 	<view class='sltab-hd flex-box record-tab'>
-		<block wx:for="{{tabList}}" wx:key="*this">
+		<block wx:for="{{tabList}}" wx:key="index">
 			<view class="tab-nav flex-item">
 				<view class="nav {{tabIndex == index ? 'on' : ''}} " id="{{index}}" bindtap="tabClick">
 					{{item}}
@@ -25,9 +25,9 @@
 		<view class="choice-top clearfix">
 			<view class="choice-count">
 				共计 
-				<text class="count-val" wx:if="{{tabIndex == 0}}">{{countTotalAll}}</text>
-				<text class="count-val" wx:elif="{{tabIndex == 1}}">{{countTotalNot}}</text>
-				<text class="count-val" wx:else="{{tabIndex == 2}}">{{countTotalHas}}</text>
+				<text class="count-val" wx:if="{{tabIndex == 2}}">{{countTotalAll}}</text>
+				<text class="count-val" wx:elif="{{tabIndex == 0}}">{{countTotalNot}}</text>
+				<text class="count-val" wx:else="{{tabIndex == 1}}">{{countTotalHas}}</text>
 			</view>
 			<view class="choice-time" bindtap="timePopShow">
 				<view class="time-res">{{isChoiceTimeAll ? "全部" : (choiceTimeStart + ' 至 ' + choiceTimeEnd)}}</view>
@@ -38,18 +38,18 @@
 </view>
 <view class='record-body' id="tabContent">
 	<view class='sltab-bd'>
-<!-- 全部 -->
-		<view class="tab-con {{tabIndex == 0 ? 'on' : ''}} ">
+    <!-- 全部 -->
+		<view class="tab-con {{tabIndex == 2 ? 'on' : ''}} ">
 			<view class="card-list">
                 <block wx:for="{{recordListAll}}" wx:key="*this">
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-						<view class='hd-more slcolore'>{{item.posNumber}}</view>
+						<view class='hd-more slcolor'>位置编号:【{{item.posNumber}}】</view>
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
-                            <text class="{{item.isTake ? '' : 'markcolor'}}">({{item.parcelStatus}}) </text>
+                            <text class="{{item.isTake ? 'slcolor' : 'markcolor'}}">({{item.parcelStatus}}) </text>
 							<text class='record-number'>{{item.parcelNumber}}</text>
 						</view>
 						<view class='info-row'>
@@ -58,11 +58,14 @@
 						<view class='info-row'>
 							收件时间：<text class='slcolor'>{{item.createTime}}</text>
 						</view>
+                        <view class='info-row' wx:if="{{item.isTake}}">
+							取件时间：<text class='slcolor'>{{item.takeTime}}</text>
+						</view>
 					</view>
-					<view class='card-ft clearfix'>
-						<!-- <view class='ft-item'>
-							<view class='item-link' data->领取</view>
-						</view> -->
+					<view class='card-ft clearfix' wx:if="{{!item.isTake}}">
+						<view class='ft-item' wx:if="{{!item.isTake}}">
+                            <view class='item-link' data-parcelid="{{item.parcelId}}" bindtap="takeNotParcel">领取</view>
+						</view>
 						<view class='ft-item'>
 							<view class="item-link" data-parcelid="{{item.parcelId}}" data-mobile="{{item.phoneNumber}}" data-istake="{{item.isTake}}" bindtap="handleMore">更多</view>
 						</view>
@@ -81,13 +84,13 @@
 			</view>
 		</view>
 <!-- 未取 -->
-		<view class="tab-con {{tabIndex == 1 ? 'on' : ''}} ">
+		<view class="tab-con {{tabIndex == 0 ? 'on' : ''}} ">
 			<view class="card-list">
                 <block wx:for="{{recordListNot}}" wx:key="*this">
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-						<view class='hd-more slcolore'>{{item.posNumber}}</view>
+						<view class='hd-more slcolor'>位置编号:【{{item.posNumber}}】</view>
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
@@ -101,9 +104,9 @@
 						</view>
 					</view>
 					<view class='card-ft clearfix'>
-						<!-- <view class='ft-item'>
-							<view class='item-link' data->领取</view>
-						</view> -->
+						<view class='ft-item'>
+							<view class='item-link' data-parcelid="{{item.parcelId}}" bindtap="takeNotParcel">领取</view>
+						</view>
 						<view class='ft-item'>
 							<view class="item-link" data-parcelid="{{item.parcelId}}" data-mobile="{{item.phoneNumber}}" data-istake="{{item.isTake}}" bindtap="handleMore">更多</view>
 						</view>
@@ -122,13 +125,13 @@
 			</view>
 		</view>
 <!-- 已取 -->
-		<view class="tab-con {{tabIndex == 2 ? 'on' : ''}} ">
+		<view class="tab-con {{tabIndex == 1 ? 'on' : ''}} ">
 			<view class="card-list">
                 <block wx:for="{{recordListHas}}" wx:key="*this">
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-						<view class='hd-more slcolore'>{{item.posNumber}}</view>
+						<view class='hd-more slcolore'>位置编号:【{{item.posNumber}}】</view>
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
@@ -140,13 +143,8 @@
 						<view class='info-row'>
 							收件时间：<text class='slcolor'>{{item.createTime}}</text>
 						</view>
-					</view>
-					<view class='card-ft clearfix'>
-						<!-- <view class='ft-item'>
-							<view class='item-link' data->领取</view>
-						</view> -->
-						<view class='ft-item'>
-							<view class="item-link" data-parcelid="{{item.parcelId}}" data-mobile="{{item.phoneNumber}}" data-istake="{{item.isTake}}" bindtap="handleMore">更多</view>
+                        <view class='info-row' wx:if="{{item.isTake}}">
+							取件时间：<text class='slcolor'>{{item.takeTime}}</text>
 						</view>
 					</view>
 				</view>
