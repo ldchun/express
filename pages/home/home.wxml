@@ -73,7 +73,7 @@
 								<text class='taskinfo-item not'>未取：{{item.notCount}}</text>
 							</view>
 							<view class='info-more'>
-								 <text class='pd-time'>{{item.createTime}}</text> 
+								 <text class='pd-time'>{{item.startTime}} ~ {{item.endTime}}</text>
 							</view>
 						</view>
 					</view>

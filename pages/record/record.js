@@ -7,6 +7,7 @@ var UserIdFun = common.UserIdFun;
 var wxShowToast = common.wxShowToast;
 var DateFun = new common.DateFun;
 var CompanyFun = new common.CompanyFun;
+var MobileFun = common.MobileFun;
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
@@ -20,6 +21,11 @@ var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
+// 校验电话号码
+function checkPhoneNumber(inVal) {
+    var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
+    return myreg.test(inVal);
+}
 // 快递
 var companyList = CompanyFun.list();
 var companyArr = CompanyFun.arr();
@@ -191,7 +197,12 @@ Page({
         startTime: "",
         endTime: "",
         startTimeList: [],
-        endTimeList: []
+        endTimeList: [],
+        popInShow: false,
+        popMobileFocus: false,
+        popMobileClearShow: false,
+        popMobileNumber: "",
+        popParcelId: ""
 	},
 	onLoad: function (options) {
 		var self = this;
@@ -339,8 +350,119 @@ Page({
                 }
             }
         })
+    },
+    inputMobileNumber: function(e){
+        var self = this;
+        var inValue = e.detail.value;
+        inValue = MobileFun.reset(inValue);
+        inValue = (inValue.length > 11) ? inValue.slice(0, 11) : inValue;
+        var clearShow = (inValue.length > 0);
+        self.setData({
+            popMobileNumber: MobileFun.fat(inValue),
+            popMobileClearShow: clearShow
+        });
+    },
+    clearMobileNumber: function (e) {
+        var self = this;
+        self.setData({
+            popMobileNumber: "",
+            popMobileFocus: true,
+            popMobileClearShow: false
+        });
+    },
+    popWinCancle: function (e) {
+        var self = this;
+        popWinShow(self, false);
+    },
+    popWinOk: function (e) {
+        var self = this;
+        // 修改收件人号码
+        updateParcelMoble(self);
     }
 });
+// 修改收件人号码
+function updateParcelMoble(self){
+    wx.showLoading({
+        title: '加载中...',
+    })
+    var inData = new getInData();
+    inData.parcelId = self.data.popParcelId;
+    var inMobileNumber = self.data.popMobileNumber;
+    inData.mobile = MobileFun.reset(inMobileNumber);
+    do{
+        if (inData.parcelId == "") {
+            popWinShow(self, false);
+            break;
+        }
+        if (!checkPhoneNumber(inData.mobile)) {
+            wx.showModal({
+                title: '提示',
+                content: '请填写正确的手机号',
+                showCancel: false
+            })
+            break;
+        }
+        // 提交
+        wx.request({
+            url: Server["updateParcelMobile"],
+            data: inData,
+            success: function (res) {
+                wx.hideLoading();
+                var jsonData = res.data;
+                var dataObj = jsonData['data'];
+                var code = jsonData['code'];
+                switch (code) {
+                    case CODEOK:
+                        // 修改成功
+                        wxShowToast({
+                            title: "修改手机号成功",
+                            flag: "success"
+                        });
+                        var dataInfo = { parcelid: inData.parcelId};
+                        retrySendMsm(self, dataInfo, function(){
+                            popWinShow(self, false);
+                            // 重新加载内容
+                            startLoadTabContent(self);
+                        });
+                        break;
+                    default:
+                        var msg = jsonData['msg'];
+                        wxShowToast({
+                            title: "修改手机号失败",
+                            flag: "fail"
+                        });
+                }
+            },
+            fail: function (err) {
+                wx.hideLoading();
+                console.log(err);
+                wxShowToast({
+                    title: "加载失败",
+                    flag: "fail"
+                });
+            }
+        })
+    }while(0);
+}
+// 弹窗显示
+function popWinShow(self, flag) {
+    if(flag){
+        self.setData({
+            popInShow: true,
+            popMobileFocus: true,
+            popMobileClearShow: false,
+            popMobileNumber: ""
+        });
+    }else{
+        self.setData({
+            popInShow: false,
+            popMobileFocus: false,
+            popMobileClearShow: false,
+            popMobileNumber: "",
+            popParcelId: ""
+        });
+    }
+}
 // 直接领取快件
 function submitTakeParcel(self, data) {
     var jsonData = data;
@@ -386,7 +508,6 @@ function submitTakeParcel(self, data) {
         }
     })
 }
-
 // 同步时间段选择器
 function syncTimePicker(self, startTime, endTime){
     var startTimeVal = startTime;
@@ -426,12 +547,13 @@ function tabContentGo(self, index){
 // 更多操作
 function handleMoreFun(self, data) {
     var jsonData = data;
+    var parcelid = jsonData["parcelid"];
     var mobile = jsonData["mobile"];
     var isTake = jsonData["istake"];
     // 未取包裹 增加重发信息
     if (!isTake) {
         wx.showActionSheet({
-            itemList: ["致电收件人", "重发信息", "复制收件人号码"],
+            itemList: ["致电收件人", "重发信息", "修改收件人号码并重发信息"],
             success: function (res) {
                 var tapIndex = res.tapIndex;
                 switch (tapIndex) {
@@ -445,17 +567,11 @@ function handleMoreFun(self, data) {
                             retrySendMsm(self, jsonData);
                         });
                         break;
-                    case 2: // 复制收件人号码
-                        wx.setClipboardData({
-                            data: mobile,
-                            success: function (res) {
-                                wx.showToast({
-                                    title: "复制成功",
-                                    icon: 'none',
-                                    duration: 1000
-                                });
-                            }
-                        })
+                    case 2: // 修改收件人号码
+                        popWinShow(self, true);
+                        self.setData({
+                            popParcelId: parcelid
+                        });
                         break;
                 }
             },
@@ -496,7 +612,7 @@ function handleMoreFun(self, data) {
     }
 }
 // 重发信息
-function retrySendMsm(self, data) {
+function retrySendMsm(self, data, callback) {
     var jsonData = data;
     var inData = new getInData();
     inData.parcelId = jsonData["parcelid"];
@@ -513,9 +629,13 @@ function retrySendMsm(self, data) {
             switch (code) {
                 case CODEOK:
                     wxShowToast({
-                        title: "发送成功",
+                        title: "发送信息成功",
                         flag: "success"
                     });
+                    // 回调
+                    if (typeof (callback) != 'undefined') {
+                        callback();
+                    }
                     break;
                 default:
                     var msg = jsonData['msg'];

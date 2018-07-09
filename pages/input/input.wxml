@@ -34,7 +34,7 @@
             <view class="inrow-hd">
                 <image class="inrow-icon" src="../../asset/img/icon-barcode.png" mode="widthFix"></image>
             </view>
-			<input class="flex-item sl-input" type="text" value="{{parcelNumber}}" bindinput="inputParcelNumber" bindfocus="onParcelFocus" bindblur="onParcelBlur" focus="{{parcelFocus}}" placeholder="请扫描或输入单号"/>
+			<input class="flex-item sl-input" type="number" value="{{parcelNumber}}" bindinput="inputParcelNumber" bindfocus="onParcelFocus" bindblur="onParcelBlur" focus="{{parcelFocus}}" placeholder="请扫描或输入单号"/>
             <view class="input-clear {{parcelClearShow ? '' : 'slhide'}}" bindtap="clearParcelNumber">
                 <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
             </view>

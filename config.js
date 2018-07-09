@@ -59,6 +59,8 @@ var config = {
         searchParcel: `${host}/parcel/searchParcel`,
         // 包裹重发信息
         resendSmsParcel: `${host}/parcel/resendSms`,
+        // 修改包裹收件人号码
+        updateParcelMobile: `${host}/parcel/updateParcelMobile`,
 
 		// 充值套餐列表
 		payRechargeList: `${host}/pay/recharge/list`,

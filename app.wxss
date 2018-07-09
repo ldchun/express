@@ -240,7 +240,7 @@ button.formbtn::before, button.formbtn::after{display:none;}
 .field-row .field-titsub{font-size:14px;}
 .field-row .field-tit ~ .field-con{margin-top:5px;}
 /*popup*/
-.popover{position:fixed;z-index:800;left:0;top:120%;bottom:0;right:0;width:100%;height:100%;opacity:0;background:rgba(0,0,0,0.5);-webkit-transition:opacity 200ms ease-in-out,top 10ms ease-in-out;transition:opacity 200ms ease-in-out,top 10ms ease-in-out;}
+.popover{position:fixed;z-index:800;left:0;top:120%;bottom:0;right:0;width:100%;height:100%;opacity:0;background:rgba(0,0,0,0.6);-webkit-transition:opacity 200ms ease-in-out,top 10ms ease-in-out;transition:opacity 200ms ease-in-out,top 10ms ease-in-out;}
 .popover.on{top:0;opacity:1;}
 .popup{display:none;position:fixed;z-index:802;left:0;right:0;top:0;bottom:0;width:100%;height:100%;
 -webkit-transform:translate(0, 100%);transform:translate(0, 100%);

@@ -165,7 +165,7 @@
 <!-- 弹窗 -->
 <view class="popover {{popShow ? 'on' : ''}}" bindtap="timePopCancle"></view>
 <view class="popdown {{popShow ? 'on' : ''}}">
-     <view class="pophd">
+    <view class="pophd">
          <view class="choice-opts">
             <view class="opt-item" data-days="1" bindtap="timeChoicePopOpts">今天</view>
             <view class="opt-item" data-days="3" bindtap="timeChoicePopOpts">近3天</view>
@@ -191,4 +191,26 @@
             </picker-view-column>
         </picker-view>
     </view>
+</view>
+
+<!-- pop -->
+<view class="popover {{popInShow ? 'on' : ''}}"></view>
+<view class="popup pop-mobile {{popInShow ? 'on' : ''}}">
+	<view class='pop'>
+        <view class="pop-hd">修改收件人号码</view>
+		<view class="pop-bd">
+            <view class='flex-box field-con'>
+                <input class="sl-input" type="number" value='{{popMobileNumber}}' bindinput='inputMobileNumber' focus="{{popMobileFocus}}" placeholder="输入手机号"/>
+                <view class="input-clear {{popMobileClearShow ? '' : 'slhide'}}" bindtap="clearMobileNumber">
+                    <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
+                </view>
+            </view>
+		</view>
+		<view class="pop-ft" id="popFt">
+			<view class='flex-box popft-btn'>
+				<view class='flex-item btn-item btn-cancle' bindtap='popWinCancle'>取 消</view>
+				<view class='flex-item btn-item btn-ok' data-parcelid="{{popParcelId}}" bindtap='popWinOk'>确 定</view>
+			</view>
+		</view>
+	</view>
 </view>

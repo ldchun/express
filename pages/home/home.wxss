@@ -17,7 +17,7 @@ page{background:#F7F7F7;}
 .sum-box .sum-item ~ .sum-item::before{display:inline-block;} 
 .sum-item .item-tit{font-size:12px;color:#D2D2D2;margin-top:10px;}
 .sum-item .item-con{font-size:24px;line-height:1;}
-.task-logo{width:52px;height:auto;margin-top:10px;border-radius:50%;overflow:hidden;border:1px solid #EEE;}
+.task-logo{width:52px;max-height:52px;margin-top:10px;border-radius:50%;overflow:hidden;border:1px solid #EEE;}
 .taskinfo-item{display:inline-block;}
 .taskinfo-item ~ .taskinfo-item{margin-left:15px;}
 button.task-btn{margin-top:15px;font-size:14px;line-height:1.4;}

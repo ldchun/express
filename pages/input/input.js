@@ -938,7 +938,7 @@ function getParcelPosCode(self) {
 		title: '加载中...',
 	});
 	var inData = new getInData();
-    inData.fastName = self.data.companyArray[self.data.companyIndex]["id"];
+	inData.fastName = companyList[self.data.companyIndex]["id"];
 	wx.request({
 		url: Server["getParcelPosition"],
 		data: inData,
@@ -975,7 +975,7 @@ function getParcelPosCode(self) {
 // 提交新包裹
 function submitParcel(self){
 	var inData = new getInData();
-    inData.fastName = self.data.companyArray[self.data.companyIndex]["id"];
+    inData.fastName = companyList[self.data.companyIndex]["id"];
 	inData.parcelNumber = self.data.parcelNumber;
     inData.mobile = MobileFun.reset(self.data.phoneNumber);
 	inData.positionCode = self.data.posNumber;

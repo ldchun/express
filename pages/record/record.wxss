@@ -48,3 +48,11 @@
 .choice-opts .opt-item{display:inline-block;padding:5px 12px;line-height:1.2;border:1px solid #D2D2D2;border-radius:35px;}
 .choice-opts .opt-item ~ .opt-item{margin-left:15px;}
 .choice-opts .opt-item:active{color:#FFF;background:#3986FE;border-color:#3986FE;}
+.pop-mobile .pop{top:35%;}
+.pop-mobile .pop-hd{padding:10px 15px;font-size:18px;color:#333;text-align:center;}
+.pop-mobile .pop-bd{margin-bottom:10px;padding:10px 15px;}
+.pop-mobile input{height:42px;line-height:44px;padding:0 40px 0 10px;font-size:18px;}
+.pop-mobile input:active{border-color:#3986FE;}
+.field-con{position:relative;}
+.input-clear{position:absolute;z-index:10;right:0;top:0;width:42px;height:42px;line-height:40px;text-align:center;}
+.input-clear .clear-icon{display:inline-block;width:20px;height:20px;vertical-align:middle;}
