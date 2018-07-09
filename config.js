@@ -5,7 +5,7 @@
 var host = 'https://renxingstyle.xyz/express'; // prod生产地址
 // host = "http://192.168.0.107:9000";
 // host = "http://10.111.121.10:9000";
-host = "http://10.111.121.114:9000";
+// host = "http://10.111.121.114:9000";
 var config = {
     // 服务端
     service: {
@@ -30,6 +30,8 @@ var config = {
 		parcelSum: `${host}/parcel/stat`,
         // 未领取快递列表
         fastParcelInfo: `${host}/parcel/fastParcelInfo`,
+        // 快递公司识别
+        getFastInfo: `${host}/parcel/getFastInfo`,
 		// 任务列表
 		batchList: `${host}/parcel/pageBatch`,
 		// 提交任务

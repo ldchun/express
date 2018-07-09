@@ -17,7 +17,6 @@ var companyArr = CompanyFun.arr();
 var recogImgOcrTimer;
 var recogImgOcrEnable = false;
 var focusStatu = -1;
-var companyAutoUrl = "https://biz.trace.ickd.cn/auto.php";
 // 快递公司 id
 function fatCompanyAutoId(id){
     var idMap = {
@@ -37,37 +36,39 @@ function fatCompanyAutoId(id){
     return (typeof (idVal) != "undefined") ? idVal : false;
 }
 // 自动识别快递公司
-function companyAutoFun(self, callback){
-    var inData = {};
-    inData.mailNo = self.data.parcelNumber;
-    inData.callback = "callback";
+function discernCompanyAuto(self, callback){
+    var inData = new getInData();
+    inData.parcelNumber = self.data.parcelNumber;
     wx.request({
-        url: companyAutoUrl,
+        url: Server["getFastInfo"],
         data: inData,
-        dataType: "jsonp",
         success: function (res) {
             wx.hideLoading();
             var jsonData = res.data;
-            jsonData = JSON.parse(jsonData.slice(9, -2));
-            console.log(jsonData);
+            var dataObj = jsonData['data'];
+            var code = jsonData['code'];
             var index = 0;
-            var coms = jsonData['coms'];
-            var status = jsonData['status'];
-            if (status > 0){
-                var companyId = coms[0]["com"];
-                var companyId = fatCompanyAutoId(companyId);
-                if (companyId != false){
-                    var companyName = CompanyFun.get(companyId)["name"];
-                    var theIndex = indexOfArray(companyArr, companyName);
-                    index = (theIndex != -1) ? theIndex : index;
-                }
-            }
-            self.setData({
-                companyArray: companyArr,
-                companyIndex: index
-            });
-            if (typeof(callback) != "undefinded"){
-                callback();
+            switch (code) {
+                case CODEOK:
+                    var companyId = dataObj["fastName"];
+                    if (typeof (CompanyFun.get(companyId)) != "undefined"){
+                        var companyName = CompanyFun.get(companyId)["name"];
+                        var theIndex = indexOfArray(companyArr, companyName);
+                        index = (theIndex != -1) ? theIndex : index;
+                    }
+                    // 填充选择器列表
+                    loadPickerPopList(self, index);
+                    pickerPopShow(self, false);
+                    // 回调
+                    if (typeof (callback) != "undefinded") {
+                        callback();
+                    }
+                    break;
+                default:
+                    var msg = jsonData['msg'];
+                    // 填充选择器列表
+                    loadPickerPopList(self, index);
+                    pickerPopShow(self, true);
             }
         },
         fail: function (err) {
@@ -105,6 +106,11 @@ var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
+// 校验快递单号
+function checkParcelNumber(inVal) {
+    var myreg = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
+    return myreg.test(inVal);
+}
 // 校验电话号码
 function checkPhoneNumber(inVal){
 	var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
@@ -607,6 +613,29 @@ function recogMobileSuccess(self, data){
     // 获取位置编号
     getParcelPosCode(self);
 }
+/* 选择器 */
+// 弹窗显示
+function pickerPopShow(self, flag) {
+    if(flag){
+        self.setData({
+            pickerIndex: [self.data.companyIndex]
+        });
+    }
+    // 设置
+    self.setData({
+        popShow: flag
+    });
+}
+// 加载时间选择器
+function loadPickerPopList(self, index) {
+    var arrIndex = (typeof (index) != "undefined") ? index : self.data.companyIndex;
+    // 设置
+    self.setData({
+        companyArray: companyArr,
+        companyIndex: arrIndex,
+        pickerIndex: [arrIndex]
+    });
+}
 
 Page({
     data:{
@@ -632,7 +661,9 @@ Page({
 		posNumber: "",
 		countNot: 0,
 		countCurrent: 0,
-        countAll: 0
+        countAll: 0,
+        popShow: false,
+        pickerIndex: [0]
     },
     onLoad: function (options) {
         var self = this;
@@ -665,6 +696,30 @@ Page({
     },
     onHide: function(e){
         clearTimeout(recogImgOcrTimer);
+    },
+    loadCompanyPicker: function(e){
+        var self = this;
+        pickerPopShow(self, true);
+    },
+    pickerPopCancle: function (e) {
+        var self = this;
+        pickerPopShow(self, false);
+    },
+    pickerPopOk: function (e) {
+        var self = this;
+        pickerPopShow(self, false);
+        // 设置
+        self.setData({
+            companyIndex: self.data.pickerIndex[0]
+        });
+    },
+    pickerPopChange: function(e){
+        var self = this;
+        var value = e.detail.value;
+        // 设置
+        self.setData({
+            pickerIndex: value
+        })
     },
     bindPickerChange: function (e) {
         this.setData({
@@ -710,19 +765,20 @@ Page({
         var self = this;
         var inParcelNumber = self.data.parcelNumber;
         do {
-            if (inParcelNumber == "") {
+            if (!checkParcelNumber(inParcelNumber)) {
                 wx.showModal({
                     title: '提示',
-                    content: '快递单号不能为空',
+                    content: '快递单号格式不正确',
                     showCancel: false
                 });
                 self.setData({
+                    parcelNumber: "",
                     parcelFocus: true
                 });
                 break;
             }
             // 识别快递公司
-            companyAutoFun(self, function(){
+            discernCompanyAuto(self, function(){
                 // 切换号码
                 nextGoMobile(self, false);
                 syncInputStatu(self, 2);
@@ -763,7 +819,6 @@ Page({
     scanStart: function (e) {
         var self = this;
         var statu = self.data.inputStatu;
-        console.log(statu + " -- " + focusStatu);
         if (statu == 1 || focusStatu == 1) {
             scanParcelNumber(self);
         }
@@ -778,11 +833,16 @@ Page({
 	inputParcelNumber: function(e){
         var self = this;
         var inValue = e.detail.value;
+        inValue = common.trim(inValue);
+        // 输入校验
+        if (inValue.length > 0){
+            inValue = (checkParcelNumber(inValue)) ? inValue : self.data.parcelNumber;
+        }
         var clearShow = (inValue.length > 0);
         self.setData({
             parcelNumber: inValue,
             parcelClearShow: clearShow
-		});
+        });
         nextGoMobile(self, clearShow);
 	},
 	inputPhoneNumber: function (e) {
@@ -840,17 +900,27 @@ function scanParcelNumber(self){
     wx.scanCode({
         onlyFromCamera: true,
         success: function (res) {
-            self.setData({
-                parcelNumber: res["result"]
-            });
-            setTimeout(function(){
-                // 提示
-                scanTipFun("start");
-                // 识别快递公司
-                companyAutoFun(self, function(){
-                    syncInputStatu(self, 2);
+            var inValue = res["result"];
+            if (checkParcelNumber(inValue) && inValue.length > 0){
+                self.setData({
+                    parcelNumber: inValue
                 });
-            }, 500);
+                setTimeout(function () {
+                    // 提示
+                    scanTipFun("start");
+                    // 识别快递公司
+                    discernCompanyAuto(self, function () {
+                        syncInputStatu(self, 2);
+                    });
+                }, 500);
+            }
+            else{
+                wx.showModal({
+                    title: '提示',
+                    content: '快递单号格式错误',
+                    showCancel: false
+                })
+            }
         },
         fail: function (err) {
             console.log(err);

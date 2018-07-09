@@ -56,3 +56,10 @@ background:#D2D2D2;border:1px solid #C2C2C2;border-left:0 none;}
 .scan-btn .scan-icon{width:26px;height:26px;vertical-align:middle;}
 .scan-txt{display:inline-block;margin-left:8px;vertical-align:middle;}
 .scan-btn:active{background:#2776EA;}
+/* pop */
+.pophd .pop-btn{padding:10px 15px;line-height:1.4;}
+.pophd .pop-btn:active{background:#EEE;}
+.pophd .pop-btn.btn-cancle{float:left;}
+.pophd .pop-btn.btn-ok{float:right;color:#3986FE;}
+.popbd{padding:10px 15px 20px 15px;}
+.picker-box{text-align:center;}
