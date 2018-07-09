@@ -103,9 +103,9 @@
     </view> 
     <view class="popbd">
         <picker-view class="picker-box" indicator-style="height:50px;" style="width:100%;height:150px;" value="{{pickerIndex}}" bindchange="pickerPopChange">
-            <picker-view-column> 
-            <view wx:for="{{companyArray}}" wx:key="{{companyIndex}}" style="line-height:50px">{{item}}</view>
-            </picker-view-column> 
+            <picker-view-column>
+            <view class="picker-item" wx:for="{{companyArray}}" wx:key="{{companyIndex}}" style="line-height:50px">{{item}}</view>
+            </picker-view-column>
         </picker-view>
     </view>
 </view>

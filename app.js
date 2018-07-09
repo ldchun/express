@@ -11,7 +11,7 @@ var CompanyFun = new common.CompanyFun;
 var CODEOK = 200;
 var CODEERR = 500;
 // 默认快递
-var logoImgPath = "./asset/image/";
+var logoImgPath = "../../asset/image/";
 var expressListClient = {
     "yuantong": { id:"yuantong", name: "圆通快递", briefname: "圆通", logo: logoImgPath + "logo_yuantong.png" },
     "zhongtong": { id: "zhongtong", name: "中通快递", briefname: "中通", logo: logoImgPath + "logo_zhongtong.png" },

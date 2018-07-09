@@ -16,9 +16,9 @@ var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
 // 快递列表
-var logoImgPath = "./asset/image/";
+var logoImgPath = "../../asset/image/";
 var expressLogo = {
-    "none": "./asset/img/logo.png",
+    "none": "../../asset/img/logo.png",
     "yuantong": logoImgPath + "logo_yuantong.png",
     "zhongtong": logoImgPath + "logo_zhongtong.png",
     "yunda": logoImgPath + "logo_yunda.png",

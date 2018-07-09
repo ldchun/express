@@ -169,7 +169,9 @@ function clearInputContent(self) {
         companyIndex: 0,
         parcelNumber: "",
         phoneNumber: "",
-        posNumber: ""
+        posNumber: "",
+        popShow: false,
+        pickerIndex: [0]
     });
 }
 // 摄像头显示
@@ -712,6 +714,9 @@ Page({
         self.setData({
             companyIndex: self.data.pickerIndex[0]
         });
+        // 切换号码输入
+        nextGoMobile(self, false);
+        syncInputStatu(self, 2);
     },
     pickerPopChange: function(e){
         var self = this;
@@ -933,7 +938,7 @@ function getParcelPosCode(self) {
 		title: '加载中...',
 	});
 	var inData = new getInData();
-	inData.fastName = companyList[self.data.companyIndex]["id"];
+    inData.fastName = self.data.companyArray[self.data.companyIndex]["id"];
 	wx.request({
 		url: Server["getParcelPosition"],
 		data: inData,
@@ -970,8 +975,7 @@ function getParcelPosCode(self) {
 // 提交新包裹
 function submitParcel(self){
 	var inData = new getInData();
-	// inData.batchId = self.data.batchId;
-    inData.fastName = companyList[self.data.companyIndex]["id"];
+    inData.fastName = self.data.companyArray[self.data.companyIndex]["id"];
 	inData.parcelNumber = self.data.parcelNumber;
     inData.mobile = MobileFun.reset(self.data.phoneNumber);
 	inData.positionCode = self.data.posNumber;
