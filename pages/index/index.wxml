@@ -1,4 +1,4 @@
-<view class="index">
+<view class="index animated anim-index">
     <image class="index-logo" src="../../asset/img/logo.png" mode="widthFix"></image>
     <text class="index-title">快递智能助手</text>
 </view>
