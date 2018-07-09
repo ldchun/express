@@ -76,7 +76,7 @@ Page({
 		var self = this;
 		var dataset = e.currentTarget.dataset;
 		wx.navigateTo({
-            url: AppPages.pageRecord + "?companyid=" + dataset["companyid"] + "&starttime=" + dataset["time"] + "&endtime=" + dataset["time"]
+            url: AppPages.pageRecord + "?companyid=" + dataset["companyid"] + "&starttime=" + dataset["starttime"] + "&endtime=" + dataset["endtime"]
 		})
 	},
 	touchStart: function(e){
@@ -244,8 +244,10 @@ function fatNotTakeListData(dataArr) {
         if (dataTmp.notCount <= 0){
             continue ;
         }
-        var timeObj = DateFun.fat(dataObj["time"], { mode: "yyyymmdd", join: "-" });
-        dataTmp.createTime = timeObj.val;
+        var startTimeObj = DateFun.fat(dataObj["startTime"], { mode: "yyyymmdd", join: "-" });
+        dataTmp.startTime = startTimeObj.val;
+        var endTimeObj = DateFun.fat(dataObj["endTime"], { mode: "yyyymmdd", join: "-" });
+        dataTmp.endTime = endTimeObj.val;
         dataTmp.allowDel = false;
         resArr.push(dataTmp);
     }

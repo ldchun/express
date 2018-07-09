@@ -77,7 +77,7 @@
 							</view>
 						</view>
 					</view>
-                    <view class="flex-item task-right" bindtap="linkTaskNotGoOn" data-companyid="{{item.companyId}}" data-time="{{item.createTime}}">
+                    <view class="flex-item task-right" bindtap="linkTaskNotGoOn" data-companyid="{{item.companyId}}" data-starttime="{{item.startTime}}" data-endtime="{{item.endTime}}">
 						<button class="slbtn with-arc task-btn">查看详情</button>
 					</view>
 				</view>
