@@ -5,6 +5,7 @@ var proName = "";
 // 页面
 var AppPages = {
 	pageIndex: "/pages/index/index",
+    pageHome: "/pages/home/home",
 	pageInput: "/pages/input/input",
 	pageTask: "/pages/task/task",
 	pageTake: "/pages/take/take",
@@ -280,37 +281,33 @@ var FormIdFun = {
 };
 // 快递公司
 function ExpressCompanyFun(){
-	var logoImgPath = "../../asset/image/";
-	var companyListObj = {
-        "yuantong": { name: "圆通快递", briefname:"圆通", logo: logoImgPath + "logo_yuantong.png" },
-        "zhongtong": { name: "中通快递", briefname: "中通", logo: logoImgPath + "logo_zhongtong.png" },
-        "yunda": { name: "韵达快递", briefname: "韵达", logo: logoImgPath + "logo_yunda.png" },
-        "baishi": { name: "百世快递", briefname: "百世", logo: logoImgPath + "logo_baishi.png" },
-        "shentong": { name: "申通快递", briefname: "申通", logo: logoImgPath + "logo_shentong.png" },
-        "shunfeng": { name: "顺丰快递", briefname: "顺丰", logo: logoImgPath + "logo_shunfeng.png" },
-		"youzheng": { name: "中国邮政", briefname: "邮政",  logo: logoImgPath + "logo_youzheng.png" },
-		"tiantian": { name: "天天快递", briefname: "天天",  logo: logoImgPath + "logo_tiantian.png" },
-        "jindong": { name: "京东物流", briefname: "京东", logo: logoImgPath + "logo_jindong.png" },
-		"ems": { name: "EMS", briefname: "EMS",  logo: logoImgPath + "logo_ems.png" },
-		"debang": { name: "德邦物流", briefname: "德邦",  logo: logoImgPath + "logo_debang.png" }
-	};
+    // 快递列表
+    this.express = function () {
+        return getApp().globalData.expressList;
+    };
 	// 获取快递信息
 	this.get = function(companyId){
+        var companyListObj = this.express();
 		return companyListObj[companyId];
 	};
-	this.arr = function (companyId) {
+    this.arr = function (key) {
+        var field = (typeof(key) != "undefined") ? key : "name";
+        var companyListObj = this.express();
 		var listArr = [];
 		for (var para in companyListObj){
 			var companyObj = companyListObj[para];
-			listArr.push(companyObj["name"]);
+            listArr.push(companyObj[field]);
 		}
 		return listArr;
 	};
     this.list = function (companyId) {
+        var companyListObj = this.express();
         var listArr = [];
         for (var para in companyListObj) {
             var companyObj = companyListObj[para];
-            companyObj.id = para;
+            if (typeof (companyObj["id"]) == "undefined"){
+                companyObj.id = para;
+            }
             listArr.push(companyObj);
         }
         return listArr;

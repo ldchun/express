@@ -1,0 +1,98 @@
+<view class="home" id="homeElem">
+<view class="home-search">
+    <view class="search-box">
+        <view class="search-frame" bindtap="linkSearch">
+            <view class="frame-btn">
+                <icon class="btn-icon" type="search" size="20" color="#F2F2F2"/>
+            </view>
+            <view class="frame-input">快递单号 / 手机号码</view>
+            <view class="frame-btn postright">
+                <image class="btn-icon" src="../../asset/img/icon-scan.png" mode="widthFix"></image>
+            </view>
+        </view>
+    </view>
+</view>
+<view class='home-nav'>
+	<view class='flex-box nav-row'>
+		<view class='flex-item nav-item'>
+			<view class='nav-link' bindtap='linkPageTask'>
+                <view class='nav-icon'>
+                    <image src="../../asset/img/icon-in.png" mode="widthFix"></image>
+                </view>
+				<view class='nav-txt'>快递录入</view>
+			</view>
+		</view>
+		<view class='flex-item nav-item'>
+			<view class='nav-link' bindtap='linkPageTake'>
+                <view class='nav-icon'>
+                    <image src="../../asset/img/icon-get.png" mode="widthFix"></image>
+                </view>
+				<view class='nav-txt'>快递领取</view>
+			</view>
+		</view>
+	</view>
+</view>
+<view class='slbox home-info'>
+	<view class='slbox-bd'>
+		<view class='flex-box sum-box'>
+			<view class='flex-item sum-item'>
+				<view class='item-con'>{{sumTodayAll}}</view>
+                <view class='item-tit'>今日总计</view>
+			</view>
+			<view class='flex-item sum-item'>
+				<view class='item-con'>{{sumTodayHas}}</view>
+				<view class='item-tit'>今日已取</view>
+			</view>
+			<view class='flex-item sum-item'>
+				<view class='item-con'>{{sumTodayNot}}</view>
+				<view class='item-tit'>今日未取</view>
+			</view>
+			<view class='flex-item sum-item'>
+				<view class='item-con'>{{sumMonthAll}}</view>
+				<view class='item-tit'>本月累计</view>
+			</view>
+		</view>
+	</view>
+</view>
+<view class='slbox home-task'>
+	<view class='task-body'>
+		<view class='pd-list task-list'>
+		<block wx:for="{{takeNotListArr}}" wx:key="{{index}}">
+			<view class='pd-li' data-index="{{index}}">
+				<view class='flex-box task-link'>
+					<view class='task-left'>
+						<image class="task-logo" src="{{item.companyLogo}}" mode="widthFix"></image>
+					</view>
+					<view class='task-mid'>
+						<view class='pd-info'>
+							<view class='info-tit'>
+								<text>{{item.companyName}}</text>
+							</view>
+							<view class='info-con'>
+								<text class='taskinfo-item all'>总数：{{item.allCount}}</text>
+								<text class='taskinfo-item not'>未取：{{item.notCount}}</text>
+							</view>
+							<view class='info-more'>
+								 <text class='pd-time'>{{item.createTime}}</text> 
+							</view>
+						</view>
+					</view>
+                    <view class="flex-item task-right" bindtap="linkTaskNotGoOn" data-companyid="{{item.companyId}}" data-time="{{item.createTime}}">
+						<button class="slbtn with-arc task-btn">查看详情</button>
+					</view>
+				</view>
+			</view>
+		</block>
+		</view>
+	</view>
+</view>
+<view class="load-more">
+	<view class="load-anim" hidden="{{!isLoading}}">
+		<view class="weui-loading"></view>
+		<view class="weui-loadmore__tips">正在加载...</view>
+	</view>
+	<view class="load-complete" hidden="{{!isLoadComplete}}">
+		—  已加载全部  —
+	</view>
+</view>
+</view>
