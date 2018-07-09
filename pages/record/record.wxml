@@ -64,7 +64,7 @@
 					</view>
 					<view class='card-ft clearfix' wx:if="{{!item.isTake}}">
 						<view class='ft-item' wx:if="{{!item.isTake}}">
-                            <view class='item-link' data-parcelid="{{item.parcelId}}" bindtap="takeNotParcel">领取</view>
+                            <view class='item-link' data-takecode="{{item.takeCode}}" bindtap="takeNotParcel">领取</view>
 						</view>
 						<view class='ft-item'>
 							<view class="item-link" data-parcelid="{{item.parcelId}}" data-mobile="{{item.phoneNumber}}" data-istake="{{item.isTake}}" bindtap="handleMore">更多</view>
@@ -105,7 +105,7 @@
 					</view>
 					<view class='card-ft clearfix'>
 						<view class='ft-item'>
-							<view class='item-link' data-parcelid="{{item.parcelId}}" bindtap="takeNotParcel">领取</view>
+                            <view class='item-link' data-takecode="{{item.takeCode}}" bindtap="takeNotParcel">领取</view>
 						</view>
 						<view class='ft-item'>
 							<view class="item-link" data-parcelid="{{item.parcelId}}" data-mobile="{{item.phoneNumber}}" data-istake="{{item.isTake}}" bindtap="handleMore">更多</view>

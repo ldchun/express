@@ -323,8 +323,70 @@ Page({
         timePopUpShow(self, false);
         // 加载内容
         startLoadTabContent(self);
+    },
+    takeNotParcel: function(e){
+        var self = this;
+        var dataset = e.currentTarget.dataset;
+        wx.showModal({
+            title: '提示',
+            content: '无取件码也要领取？',
+            confirmColor: "#FF0000",
+            success: function (res) {
+                if (res.confirm) {
+                    // 取件
+                    submitTakeParcel(self, dataset);
+                } else if (res.cancel) {
+                }
+            }
+        })
     }
 });
+// 直接领取快件
+function submitTakeParcel(self, data) {
+    var jsonData = data;
+    wx.showLoading({
+        title: '加载中...',
+    })
+    var inData = new getInData();
+    inData.takeCode = jsonData["takecode"];
+    inData.status = 1; // 异常取件
+    wx.request({
+        url: Server["takeParcel"],
+        data: inData,
+        success: function (res) {
+            wx.hideLoading();
+            var jsonData = res.data;
+            var dataObj = jsonData['data'];
+            var code = jsonData['code'];
+            switch (code) {
+                case CODEOK:
+                    // 取件成功
+                    wxShowToast({
+                        title: "取件成功",
+                        flag: "success"
+                    });
+                    // 重新加载内容
+                    startLoadTabContent(self);
+                    break;
+                default:
+                    var msg = jsonData['msg'];
+                    wxShowToast({
+                        title: "取件失败",
+                        flag: "fail"
+                    });
+            }
+        },
+        fail: function (err) {
+            wx.hideLoading();
+            console.log(err);
+            wxShowToast({
+                title: "加载失败",
+                flag: "fail"
+            });
+        }
+    })
+}
+
 // 同步时间段选择器
 function syncTimePicker(self, startTime, endTime){
     var startTimeVal = startTime;
@@ -562,6 +624,7 @@ function handleListData(dataArr, status) {
         dataTmp.parcelStatus = fatParcelStatus(dataObj["status"]);
         dataTmp.isTake = checkParcelIsTake(dataObj["status"]);
         dataTmp.parcelId = dataObj["id"];
+        dataTmp.takeCode = dataObj["takeCode"];
         // 收件时间
         var createTimeObj = DateFun.fat(dataObj["createTime"], { mode: "yyyymmdd hhmmss", join: "-" });
         dataTmp.createTime = createTimeObj.val;
@@ -571,7 +634,6 @@ function handleListData(dataArr, status) {
             var takeTimeObj = DateFun.fat(dataObj["takeTime"], { mode: "yyyymmdd hhmmss", join: "-" });
             dataTmp.takeTime = takeTimeObj.val;
         }
-        dataTmp.batchId = dataObj["batchId"];
         listArr[i] = dataTmp;
     }
     return listArr;
