@@ -1,0 +1,36 @@
+<view class="content-body" id="contentElem">
+    <view class="result-con" hidden="{{!hasResult}}">
+		<view class='pd-list list-courier'>
+			<view class='pd-li' data-index="{{index}}" wx:for="{{resultList}}" wx:key="{{index}}">
+				<view class='pd-link clearfix'>
+					<view class='pd-left'>
+						<image class="company-logo" src="{{item.companyLogo}}" mode="widthFix"></image>
+					</view>
+					<view class='pd-mid'>
+						<view class='pd-info'>
+							<view class='info-tit'>
+								<text>{{item.companyName}}</text>
+							</view>
+							<view class='info-con'>
+                                <view class='info-row' wx:for="{{item.courier}}" wx:for-index="idx" wx:for-item="courier" wx:key="{{idx}}">快递员{{idx+1}}：<text class="slcolor" data-mobile="{{courier}}" bindtap="handleCourier">{{courier}}</text>
+                                </view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+        <view class="load-more slhide">
+            <view class="load-anim" hidden="{{!isLoading}}">
+                <view class="weui-loading"></view>
+                <view class="weui-loadmore__tips">正在加载...</view>
+            </view>
+            <view class="load-complete" hidden="{{!isLoadComplete}}">
+                —  无更多搜索结果  —
+            </view>
+        </view>
+	</view>
+    <view class="result-no" hidden="{{hasResult}}">
+        暂无快递员
+    </view>
+</view>

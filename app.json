@@ -10,6 +10,7 @@
 		"pages/meedit/meedit",
 		"pages/wallet/wallet",
 		"pages/record/record",
+        "pages/mycourier/mycourier",
         "pages/search/search",
 		"pages/input/input"
     ],

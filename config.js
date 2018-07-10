@@ -3,9 +3,7 @@
  */
 // 主机域名
 var host = 'https://renxingstyle.xyz/express'; // prod生产地址
-// host = "http://192.168.0.107:9000";
 // host = "http://10.111.121.10:9000";
-// host = "http://10.111.121.114:9000";
 var config = {
     // 服务端
     service: {
@@ -23,6 +21,8 @@ var config = {
         userInfo: `${host}/user/info`,
 		// 更新用户信息
 		userUpdate: `${host}/user/update`,
+        // 用户下的快递员信息
+        userCourierList: `${host}/user/courierMobiles`,
         // 快递列表
         expressList: `${host}/allFast`,
 		

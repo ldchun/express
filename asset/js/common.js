@@ -14,6 +14,7 @@ var AppPages = {
 	pageMeInfo: "/pages/meinfo/meinfo",
 	pageMeEdit: "/pages/meedit/meedit",
 	pageRecord: "/pages/record/record",
+    pageMycourier: "/pages/mycourier/mycourier",
     pageSearch: "/pages/search/search",
 	pageWallet: "/pages/wallet/wallet"
 };

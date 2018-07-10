@@ -1,0 +1,3 @@
+.list-courier{margin:10px 0;background:#FFF;}
+.list-courier .pd-link{padding:10px 15px;}
+.company-logo{width:52px;height:52px;margin-top:5px;border-radius:50%;overflow:hidden;border:1px solid #EEE;}

@@ -52,6 +52,13 @@
 			<view class="weui-cell__bd">我的钱包</view>
 			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
 		</navigator>
+        <navigator url="/pages/mycourier/mycourier" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+			<view class="weui-cell__hd">
+				 <image src="../../asset/image/icon-courier.png" class="weui-cell_icon"></image> 
+			</view>
+			<view class="weui-cell__bd">我的快递员</view>
+			<view class="weui-cell__ft weui-cell__ft_in-access"></view>
+		</navigator>
 	</view>
 </view>
 
