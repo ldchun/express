@@ -37,7 +37,8 @@
                 <view class='card-bd'>
                     <view class='info-row'>
                         <text class='record-number'>{{item.parcelNumber}}</text>
-                        <text class="{{item.isTake ? 'okcolor' : 'markcolor'}}">【{{item.parcelStatus}}】</text>
+                        <text class="record-state {{item.isTake ? 'okcolor' : 'markcolor'}}">【{{item.parcelStatus}}】</text>
+                        <icon class="record-unicon" type="warn" size="16" wx:if="{{item.isTakeUn}}"/>
                     </view>
                     <view class='info-row'>
                         联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>

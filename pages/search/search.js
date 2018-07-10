@@ -97,10 +97,15 @@ function fatParcelStatus(status) {
     }
     return statusTxt;
 }
-// 判断是否已领取
+// 是否已领取
 function checkParcelIsTake(status) {
     status = parseInt(status);
     return ((status == 1) || (status == 3)) ? true : false;
+}
+// 是否异常领取
+function isParcelTakeUn(status) {
+    status = parseInt(status);
+    return (status == 3) ? true : false;
 }
 
 Page({
@@ -617,6 +622,7 @@ function handleListData(dataArr) {
         dataTmp.posNumber = dataObj["positionCode"];
         dataTmp.parcelStatus = fatParcelStatus(dataObj["status"]);
         dataTmp.isTake = checkParcelIsTake(dataObj["status"]);
+        dataTmp.isTakeUn = isParcelTakeUn(dataObj["status"]);
         dataTmp.parcelId = dataObj["id"];
         dataTmp.takeCode = dataObj["takeCode"];
         // 收件时间
@@ -656,9 +662,6 @@ function loadListData(self, isFirstLoad) {
     inData.currentPage = pageCurrent;
     inData.pageSize = pageSize;
     // 提交
-    wx.showLoading({
-        title: '加载中...',
-    });
     self.setData({
         isLoading: true,
         isLoadComplete: false
