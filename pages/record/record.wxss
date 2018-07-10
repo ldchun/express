@@ -23,7 +23,8 @@
 .card-ft .ft-item .item-link:active{background:#D2D2D2;}
 .info-row{margin:3px 0;}
 .record-number{font-size:17px;font-weight:bold;vertical-align:middle;}
-.record-state,record-unicon{vertical-align:middle;}
+.record-state, .record-unicon{vertical-align:middle;}
+.record-number + .record-unicon{margin-left:5px;}
 .record-choice{padding:5px 12px;background:#FFF;}
 .choice-top{font-size:13px;}
 .choice-count{float:left;}

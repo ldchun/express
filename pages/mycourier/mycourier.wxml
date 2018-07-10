@@ -12,7 +12,8 @@
 								<text>{{item.companyName}}</text>
 							</view>
 							<view class='info-con'>
-                                <view class='info-row' wx:for="{{item.courier}}" wx:for-index="idx" wx:for-item="courier" wx:key="{{idx}}">快递员{{idx+1}}：<text class="slcolor" data-mobile="{{courier}}" bindtap="handleCourier">{{courier}}</text>
+                                <view class='info-row' wx:for="{{item.courier}}" wx:for-index="idx" wx:for-item="courier" wx:key="{{idx}}">
+                                快递员{{courier.sort}}：<text class="slcolor" data-mobile="{{courier.mobile}}" bindtap="handleCourier">{{courier.mobile}}</text>
                                 </view>
 							</view>
 						</view>

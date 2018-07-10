@@ -16,23 +16,6 @@ function getInData() {
 	inData.openId = UserIdFun.get();
 	return inData;
 }
-// 处理列表数据
-function fatListData(listData) {
-    var resArr = [];
-    var listArr = [].concat(listData);
-    var arrLen = listArr.length;
-    for (var i = 0; i < arrLen; i++) {
-        var dataObj = listArr[i];
-        var dataTmp = {};
-        var companyInfo = CompanyFun.get(dataObj["fastName"]);
-        dataTmp.companyId = dataObj["fastName"];
-        dataTmp.companyName = companyInfo["name"];
-        dataTmp.companyLogo = companyInfo["logo"];
-        dataTmp.courier = dataObj["courier"];
-        resArr.push(dataTmp);
-    }
-    return resArr;
-}
 
 Page({
     data:{
@@ -88,6 +71,33 @@ function handleCourierFun(self, data){
             console.log(res.errMsg)
         }
     });
+}
+// 处理列表数据
+function fatListData(listData) {
+    var resArr = [];
+    var listArr = listData;
+    var arrLen = listArr.length;
+    for (var i = 0; i < arrLen; i++) {
+        var dataObj = listArr[i];
+        var dataTmp = {};
+        // 快递员
+        var companyInfo = CompanyFun.get(dataObj["fastName"]);
+        dataTmp.companyId = dataObj["fastName"];
+        dataTmp.companyName = companyInfo["name"];
+        dataTmp.companyLogo = companyInfo["logo"];
+        // 快递员
+        var courierList = dataObj["courier"];
+        var courierArr = [];
+        for (var j = 0, num = courierList.length; j < num; j++){
+            var courierObj = {};
+            courierObj.sort = j + 1;
+            courierObj.mobile = courierList[j];
+            courierArr.push(courierObj);
+        }
+        dataTmp.courier = courierArr;
+        resArr.push(dataTmp);
+    }
+    return resArr;
 }
 // 设置数据
 function setPageInfo(self, data) {
