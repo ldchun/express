@@ -281,13 +281,14 @@ function getParcelInfo(self){
 					if (status == 0){
 						popWinShow(self, dataObj);
 					} 
-					else if (status == 1){
+                    else if ((status == 1) || (status == 3)){
 						popWinShow(self, false);
+                        var contentStr = (status == 3) ? "包裹已被无取件码领取！" : "包裹已被领取！"
 						wx.showModal({
 							title: '提示',
-							content: "包裹已被领取！",
+                            content: contentStr,
 							showCancel: false,
-							success: function (res) { 
+							success: function (res) {
 								clearOneInBox(self);
 							}
 						});
