@@ -3,7 +3,6 @@
         "pages/index/index",
         "pages/home/home",
 		"pages/take/take",
-		"pages/task/task",
 		"pages/reg/reg",
 		"pages/me/me",
 		"pages/meinfo/meinfo",
