@@ -15,7 +15,7 @@
             </view>
         </view>
         <view class="search-ft" hidden="{{!submitHide}}" bindtap="searchCancle">取消</view>
-        <view class="search-ft search-submit" hidden="{{submitHide}}"  bindtap="searchSubmit">搜索</view>
+        <view class="search-ft search-submit" hidden="{{submitHide}}" bindtap="searchSubmit">搜索</view>
     </view>
     <view class="record-choice slhide">
 		<view class="choice-top clearfix">
@@ -28,16 +28,16 @@
 <view class="search-body" id="contentElem">
     <view class="search-con" hidden="{{!noResult}}">
         <view class="card-list">
-            <block wx:for="{{resultList}}" wx:key="index">
+            <block wx:for="{{resultList}}" wx:key="{{index}}">
             <view class="card-li">
                 <view class='card-hd clearfix'>
                     <view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
-                    <view class='hd-more slcolore'>{{item.posNumber}}</view>
+                    <view class='hd-more'><text class='title'>位置编号:</text>【{{item.posNumber}}】</view>
                 </view>
                 <view class='card-bd'>
                     <view class='info-row'>
-                        <text class="{{item.isTake ? '' : 'markcolor'}}">({{item.parcelStatus}}) </text>
-                        <text class="record-number">{{item.parcelNumber}}</text>
+                        <text class='record-number'>{{item.parcelNumber}}</text>
+                        <text class="{{item.isTake ? 'okcolor' : 'markcolor'}}">【{{item.parcelStatus}}】</text>
                     </view>
                     <view class='info-row'>
                         联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>
@@ -45,8 +45,14 @@
                     <view class='info-row'>
                         收件时间：<text class='slcolor'>{{item.createTime}}</text>
                     </view>
+                    <view class='info-row' wx:if="{{item.isTake}}">
+                        取件时间：<text class='slcolor'>{{item.takeTime}}</text>
+                    </view>
                 </view>
-                <view class='card-ft clearfix'>
+                <view class='card-ft clearfix' wx:if="{{!item.isTake}}">
+                    <view class='ft-item' wx:if="{{!item.isTake}}">
+                        <view class='item-link' data-takecode="{{item.takeCode}}" bindtap="takeNotParcel">领取</view>
+                    </view>
                     <view class='ft-item'>
                         <view class="item-link" data-parcelid="{{item.parcelId}}" data-mobile="{{item.phoneNumber}}" data-istake="{{item.isTake}}" bindtap="handleMore">更多</view>
                     </view>
@@ -67,4 +73,25 @@
     <view class="result-no" hidden="{{noResult}}">
         未能找到相关结果
     </view>
+</view>
+<!-- pop -->
+<view class="popover {{popInShow ? 'on' : ''}}"></view>
+<view class="popup pop-mobile {{popInShow ? 'on' : ''}}">
+	<view class='pop'>
+        <view class="pop-hd">修改收件人号码</view>
+		<view class="pop-bd">
+            <view class='flex-box field-con'>
+                <input class="sl-input" type="number" value='{{popMobileNumber}}' bindinput='inputMobileNumber' focus="{{popMobileFocus}}" placeholder="输入手机号"/>
+                <view class="input-clear {{popMobileClearShow ? '' : 'slhide'}}" bindtap="clearMobileNumber">
+                    <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
+                </view>
+            </view>
+		</view>
+		<view class="pop-ft" id="popFt">
+			<view class='flex-box popft-btn'>
+				<view class='flex-item btn-item btn-cancle' bindtap='popWinCancle'>取 消</view>
+				<view class='flex-item btn-item btn-ok' data-parcelid="{{popParcelId}}" bindtap='popWinOk'>确 定</view>
+			</view>
+		</view>
+	</view>
 </view>

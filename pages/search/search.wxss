@@ -3,21 +3,30 @@ box-shadow:0 1px 10px rgba(0,0,0,0.1);}
 .search-ft{color:#FFF;}
 .search-ft:active{background:#2972F6;}
 .search-body{position:relative;padding-top:50px;}
-.card-li{margin:10px 0;background:#FFF;}
-.card-hd{padding:3px 15px;line-height:1.6;font-size:17px;border-bottom:1px solid #DDD;}
-.card-hd .hd-tit{float:left;}
-.card-hd .hd-more{float:right;color:#3986FE;}
+.card-li{margin:10px 0;padding:2px 0;background:#FFF;}
+.card-hd{padding:3px 15px;line-height:1.6;border-bottom:1px solid #DDD;}
+.card-hd .hd-tit{float:left;font-size:17px;}
+.card-hd .hd-more{float:right;color:#3986FE;font-size:16px;}
+.card-hd .hd-more .title{font-size:14px;}
 .card-bd{padding:3px 15px;}
-.card-ft{padding:3px 15px;border-top:1px solid #DDD;text-align:right;}
+.card-ft{padding:3px 10px;border-top:1px solid #DDD;text-align:right;}
 .card-ft .ft-item{display:inline-block;text-align:center;color:#3986FE;}
-.card-ft .ft-item ~ .ft-item{margin-left:20px;}
-.card-ft .ft-item .item-link{display:inline-block;padding:2px 10px;}
-.card-ft .ft-item .item-link:active{background:#E2E2E2;}
+.card-ft .ft-item ~ .ft-item{margin-left:10px;}
+.card-ft .ft-item .item-link{display:inline-block;padding:2px 15px;}
+.card-ft .ft-item .item-link:active{background:#D2D2D2;}
 .info-row{margin:3px 0;}
 .record-number{font-size:17px;font-weight:bold;}
-.record-choice{padding:5px 12px;}
+.record-choice{padding:5px 12px;background:#FFF;}
 .choice-top{font-size:13px;}
 .choice-count{float:left;}
 .choice-time{float:right;color:#3986FE;line-height:1;font-size:14px;}
 .choice-time .time-res{display:inline-block;margin-right:5px;vertical-align:middle;}
 .choice-time .time-img{display:inline-block;width:22px;height:22px;vertical-align:middle;}
+.pop-mobile .pop{top:35%;}
+.pop-mobile .pop-hd{padding:10px 15px;font-size:18px;color:#333;text-align:center;}
+.pop-mobile .pop-bd{margin-bottom:10px;padding:10px 15px;}
+.pop-mobile input{height:42px;line-height:44px;padding:0 40px 0 10px;font-size:18px;}
+.pop-mobile input:active{border-color:#3986FE;}
+.field-con{position:relative;}
+.input-clear{position:absolute;z-index:10;right:0;top:0;width:42px;height:42px;line-height:40px;text-align:center;}
+.input-clear .clear-icon{display:inline-block;width:20px;height:20px;vertical-align:middle;}

@@ -41,7 +41,7 @@
     <!-- 全部 -->
 		<view class="tab-con {{tabIndex == 2 ? 'on' : ''}} ">
 			<view class="card-list">
-                <block wx:for="{{recordListAll}}" wx:key="*this">
+                <block wx:for="{{recordListAll}}" wx:key="{{index}}">
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
@@ -49,8 +49,8 @@
 					</view>
 					<view class='card-bd'>
 						<view class='info-row'>
-                            <text class="{{item.isTake ? 'slcolor' : 'markcolor'}}">({{item.parcelStatus}}) </text>
 							<text class='record-number'>{{item.parcelNumber}}</text>
+                            <text class="{{item.isTake ? 'okcolor' : 'markcolor'}}">【{{item.parcelStatus}}】</text>
 						</view>
 						<view class='info-row'>
 							联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>
@@ -86,7 +86,7 @@
 <!-- 未取 -->
 		<view class="tab-con {{tabIndex == 0 ? 'on' : ''}} ">
 			<view class="card-list">
-                <block wx:for="{{recordListNot}}" wx:key="*this">
+                <block wx:for="{{recordListNot}}" wx:key="{{index}}">
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
@@ -127,7 +127,7 @@
 <!-- 已取 -->
 		<view class="tab-con {{tabIndex == 1 ? 'on' : ''}} ">
 			<view class="card-list">
-                <block wx:for="{{recordListHas}}" wx:key="*this">
+                <block wx:for="{{recordListHas}}" wx:key="{{index}}">
 				<view class="card-li">
 					<view class='card-hd clearfix'>
 						<view class='hd-tit'>{{item.sordId}}、{{item.companyName}}</view>
@@ -192,7 +192,6 @@
         </picker-view>
     </view>
 </view>
-
 <!-- pop -->
 <view class="popover {{popInShow ? 'on' : ''}}"></view>
 <view class="popup pop-mobile {{popInShow ? 'on' : ''}}">

@@ -44,7 +44,7 @@
 .choice-handle .choice-btn{display:inline-block;min-width:100px;padding:5px 20px;text-align:center;border:1px solid #3986FE;border-radius:2px;}
 .choice-btn.btn-ok{color:#FFF;background:#3986FE;}
 .choice-handle .choice-btn:active{color:#FFF;background:#2972F6;}
-.choice-opts{font-size:14px;text-align:center;}
+.choice-opts{margin-top:5px;font-size:14px;text-align:center;}
 .choice-opts .opt-item{display:inline-block;padding:5px 12px;line-height:1.2;border:1px solid #D2D2D2;border-radius:35px;}
 .choice-opts .opt-item ~ .opt-item{margin-left:15px;}
 .choice-opts .opt-item:active{color:#FFF;background:#3986FE;border-color:#3986FE;}

@@ -323,6 +323,7 @@ function submitTakeParcel(self){
 	var inTakeNumber = self.data.takeNumber;
 	var inData = new getInData();
 	inData.takeCode = inTakeNumber;
+    inData.status = 0; // 正常取件
 	wx.request({
 		url: Server["takeParcel"],
 		data: inData,

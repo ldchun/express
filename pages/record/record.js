@@ -84,6 +84,7 @@ function fatParcelStatus(status) {
             statusTxt = "未领取";
             break;
         case 1:
+        case 3:
             statusTxt = "已领取";
             break;
     }
@@ -92,7 +93,7 @@ function fatParcelStatus(status) {
 // 判断是否已领取
 function checkParcelIsTake(status) {
     status = parseInt(status);
-    return (status == 1) ? true : false;
+    return ((status == 1) || (status == 3)) ? true : false;
 }
 // 内容初始化
 function clearTabContent(self) {
@@ -339,14 +340,16 @@ Page({
         var self = this;
         var dataset = e.currentTarget.dataset;
         wx.showModal({
-            title: '提示',
-            content: '无取件码也要领取？',
-            confirmColor: "#FF0000",
+            title: '警告',
+            content: '无取件码也要领取？一定要慎重哦！！',
+            cancelText: "确定",
+            cancelColor: "#FF0000",
+            confirmText: "取消",
             success: function (res) {
                 if (res.confirm) {
+                } else if (res.cancel) {
                     // 取件
                     submitTakeParcel(self, dataset);
-                } else if (res.cancel) {
                 }
             }
         })
@@ -382,9 +385,6 @@ Page({
 });
 // 修改收件人号码
 function updateParcelMoble(self){
-    wx.showLoading({
-        title: '加载中...',
-    })
     var inData = new getInData();
     inData.parcelId = self.data.popParcelId;
     var inMobileNumber = self.data.popMobileNumber;
@@ -403,6 +403,9 @@ function updateParcelMoble(self){
             break;
         }
         // 提交
+        wx.showLoading({
+            title: '加载中...',
+        })
         wx.request({
             url: Server["updateParcelMobile"],
             data: inData,
