@@ -8,6 +8,7 @@ var wxShowToast = common.wxShowToast;
 var DateFun = new common.DateFun;
 var CompanyFun = new common.CompanyFun;
 var MobileFun = common.MobileFun;
+var CheckFun = common.CheckFun;
 var UPNG = require('../../asset/vendor/upng/UPNG.js');
 // 设置
 var CODEOK = 200;
@@ -106,16 +107,6 @@ var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
-// 校验快递单号
-function checkParcelNumber(inVal) {
-    var myreg = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
-    return myreg.test(inVal);
-}
-// 校验电话号码
-function checkPhoneNumber(inVal){
-	var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
-	return myreg.test(inVal);
-}
 // 下载音频文件，生成本地路径
 function downLoadAudioFile() {
     // 正确
@@ -770,7 +761,7 @@ Page({
         var self = this;
         var inParcelNumber = self.data.parcelNumber;
         do {
-            if (!checkParcelNumber(inParcelNumber)) {
+            if (!CheckFun.parcel(inParcelNumber)) {
                 wx.showModal({
                     title: '提示',
                     content: '快递单号格式不正确',
@@ -841,7 +832,7 @@ Page({
         inValue = common.trim(inValue);
         // 输入校验
         if (inValue.length > 0){
-            inValue = (checkParcelNumber(inValue)) ? inValue : self.data.parcelNumber;
+            inValue = (CheckFun.parcel(inValue)) ? inValue : self.data.parcelNumber;
         }
         var clearShow = (inValue.length > 0);
         self.setData({
@@ -853,16 +844,36 @@ Page({
 	inputPhoneNumber: function (e) {
         var self = this;
         var inValue = e.detail.value;
+        inValue = common.trim(inValue);
         inValue = MobileFun.reset(inValue);
+        // 输入校验
+        if (inValue.length > 0) {
+            inValue = (CheckFun.number(inValue)) ? inValue : self.data.phoneNumber;
+        }
         inValue = (inValue.length > 11) ? inValue.slice(0, 11) : inValue;
         var clearShow = (inValue.length > 0);
         self.setData({
             phoneNumber: MobileFun.fat(inValue),
             mobileClearShow: clearShow
         });
-        if (checkPhoneNumber(inValue)) {
+        if (CheckFun.phone(inValue)) {
             // 获取位置编号
             getParcelPosCode(self);
+        }else{
+            if (inValue.length >= 11) {
+                wx.showModal({
+                    title: '提示',
+                    content: '手机号格式错误',
+                    showCancel: false,
+                    success: function(res) {
+                        self.setData({
+                            phoneNumber: "",
+                            mobileFocus: true,
+                            mobileClearShow: false
+                        });
+                    }
+                });
+            }
         }
 	},
 	addParcel: function (e) {
@@ -887,7 +898,7 @@ Page({
 				})
 				break;
 			}
-			if (!checkPhoneNumber(inPhoneNumber)) {
+            if (!CheckFun.phone(inPhoneNumber)) {
 				wx.showModal({
 					title: '提示',
 					content: '请填写正确的手机号',
@@ -906,7 +917,7 @@ function scanParcelNumber(self){
         onlyFromCamera: true,
         success: function (res) {
             var inValue = res["result"];
-            if (checkParcelNumber(inValue) && inValue.length > 0){
+            if (CheckFun.parcel(inValue) && inValue.length > 0){
                 self.setData({
                     parcelNumber: inValue
                 });

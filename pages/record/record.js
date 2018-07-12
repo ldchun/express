@@ -8,6 +8,7 @@ var wxShowToast = common.wxShowToast;
 var DateFun = new common.DateFun;
 var CompanyFun = new common.CompanyFun;
 var MobileFun = common.MobileFun;
+var CheckFun = common.CheckFun;
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
@@ -21,11 +22,6 @@ var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
-// 校验电话号码
-function checkPhoneNumber(inVal) {
-    var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
-    return myreg.test(inVal);
-}
 // 快递
 var companyList = CompanyFun.list();
 var companyArr = CompanyFun.arr();
@@ -363,6 +359,10 @@ Page({
         var self = this;
         var inValue = e.detail.value;
         inValue = MobileFun.reset(inValue);
+        // 输入校验
+        if (inValue.length > 0) {
+            inValue = (CheckFun.number(inValue)) ? inValue : self.data.popMobileNumber;
+        }
         inValue = (inValue.length > 11) ? inValue.slice(0, 11) : inValue;
         var clearShow = (inValue.length > 0);
         self.setData({
@@ -399,7 +399,7 @@ function updateParcelMoble(self){
             popWinShow(self, false);
             break;
         }
-        if (!checkPhoneNumber(inData.mobile)) {
+        if (!CheckFun.phone(inData.mobile)) {
             wx.showModal({
                 title: '提示',
                 content: '请填写正确的手机号',

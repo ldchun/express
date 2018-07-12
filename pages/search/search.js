@@ -8,6 +8,7 @@ var wxShowToast = common.wxShowToast;
 var DateFun = new common.DateFun;
 var CompanyFun = new common.CompanyFun;
 var MobileFun = common.MobileFun;
+var CheckFun = common.CheckFun;
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
@@ -18,16 +19,6 @@ var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
-// 校验快递单号
-function checkParcelNumber(inVal) {
-    var myreg = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
-    return myreg.test(inVal);
-}
-// 校验电话号码
-function checkPhoneNumber(inVal) {
-    var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
-    return myreg.test(inVal);
-}
 // 提示音
 var innerAudioContext;
 var serverAudioSrc = {
@@ -141,7 +132,7 @@ Page({
         inValue = common.trim(inValue);
         // 输入校验
         if (inValue.length > 0) {
-            inValue = (checkParcelNumber(inValue)) ? inValue : self.data.inSearchText;
+            inValue = (CheckFun.parcel(inValue)) ? inValue : self.data.inSearchText;
         }
         var clearHide = !(inValue.length > 0);
         self.setData({
@@ -174,7 +165,7 @@ Page({
         var self = this;
         // 校验
         var searchText = self.data.inSearchText;
-        if (!checkParcelNumber(searchText)) {
+        if (!CheckFun.parcel(searchText)) {
             wx.showModal({
                 title: '提示',
                 content: '搜索内容格式错误',
@@ -223,6 +214,10 @@ Page({
         var self = this;
         var inValue = e.detail.value;
         inValue = MobileFun.reset(inValue);
+        // 输入校验
+        if (inValue.length > 0) {
+            inValue = (CheckFun.number(inValue)) ? inValue : self.data.popMobileNumber;
+        }
         inValue = (inValue.length > 11) ? inValue.slice(0, 11) : inValue;
         var clearShow = (inValue.length > 0);
         self.setData({
@@ -259,7 +254,7 @@ function updateParcelMoble(self){
             popWinShow(self, false);
             break;
         }
-        if (!checkPhoneNumber(inData.mobile)) {
+        if (!CheckFun.phone(inData.mobile)) {
             wx.showModal({
                 title: '提示',
                 content: '请填写正确的手机号',
@@ -409,7 +404,7 @@ function scanInputContent(self) {
         onlyFromCamera: true,
         success: function (res) {
             var inValue = res["result"];
-            if (checkParcelNumber(inValue) && inValue.length > 0) {
+            if (CheckFun.parcel(inValue) && inValue.length > 0) {
                 self.setData({
                     inSearchText: inValue
                 });

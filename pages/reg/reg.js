@@ -5,6 +5,7 @@ var Session = common.Session;
 var AppPages = common.AppPages;
 var UserIdFun = common.UserIdFun;
 var wxShowToast = common.wxShowToast;
+var CheckFun = common.CheckFun;
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
@@ -18,11 +19,6 @@ function getInData() {
 	var inData = {};
 	inData.openId = UserIdFun.get();
 	return inData;
-}
-// 校验电话号码
-function checkPhoneNumber(inVal) {
-    var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
-    return myreg.test(inVal);
 }
 
 Page({
@@ -105,7 +101,7 @@ function submitShopReg(self, userInfo) {
 			})
 			break;
 		}
-		if (!checkPhoneNumber(inData.mobile)) {
+        if (!CheckFun.phone(inData.mobile)) {
 			wx.showModal({
 				title: '提示',
 				content: '请填写正确的商户手机号',

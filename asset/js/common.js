@@ -338,6 +338,21 @@ var MobileFun = {
         return mobile;
     }
 };
+// 校验
+var CheckFun = {
+    "number": function (value) {
+        var reg = /^[0-9]*[0-9]*$/;
+        return reg.test(value);
+    },
+    "phone": function (value) {
+        var reg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+        return reg.test(value);
+    },
+    "parcel": function (value) {
+        var reg = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
+        return reg.test(value);
+    }
+};
 
 /* 公共API接口定义 */
 module.exports = {
@@ -352,5 +367,6 @@ module.exports = {
     UserIdFun: UserIdFun,
     FormIdFun: FormIdFun,
 	CompanyFun: ExpressCompanyFun,
-    MobileFun: MobileFun
+    MobileFun: MobileFun,
+    CheckFun: CheckFun
 }
