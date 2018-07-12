@@ -65,12 +65,15 @@ textarea{z-index:0;}
 .slmarg-b{margin-bottom:10px;}
 .sl-textarea{width:100%;height:auto;word-break:break-all;}
 /*input*/
-.slin-row ~ .slin-row {margin-top:10px;}
+.slin-row{position:relative;}
+.slin-row ~ .slin-row{margin-top:15px;}
 .slin-label{font-weight:bold;font-size:15px;}
 .sl-input,.sl-select, .sl-textarea{border:1px solid #D2D2D2;-webkit-transition:all 200ms ease-in-out;transition:all 200ms ease-in-out;}
-.sl-input,.sl-select{height:34px;line-height:32px;padding:0 10px;}
+.sl-input,.sl-select{height:40px;line-height:38px;padding:0 10px;}
+.slin-static{height:40px;line-height:38px;}
 .sl-textarea{padding:5px 10px;min-height:60px;line-height:1.6;resize:vertical;}
-.sl-input::focus,.sl-select:focus,.sl-textarea:focus{border-color:#00AF2C;}
+
+.sl-input::focus,.sl-select:focus,.sl-textarea:focus{border-color:#3986FE;}
 .sl-input.size1,.sl-select.size1,.sl-textarea.size1{width:200px;}
 .sl-input.allw, .sl-select.allw, .sl-textarea.allw{width:100%;}
 .sl-input.sizemin,.sl-select.sizemin, .sl-textarea.sizemin{min-width:200px;}
@@ -270,16 +273,16 @@ button.formbtn::before, button.formbtn::after{display:none;}
 /*common*/
 .hang{-webkit-box-shadow:0 26px 40px -24px rgba(0, 36, 100, 0.3);box-shadow:0 26px 40px -24px rgba(0, 36, 100, 0.3);}
 /* wxcells */
-.wxcells{margin:10px 0;padding:5px 12px;background:#FFF;}
+.wxcells{margin:10px 0;padding:5px 12px;font-size:16px;background:#FFF;}
 .wxcells .weui-cell{padding:10px 0;line-height:1.6;align-items:flex-start;}
 .wxcells .weui-cell::before{left:0;}
-.wxcells .weui-cell__hd .weui-label{min-width:90px;width:auto;font-weight:bold;white-space:nowrap;}
+.wxcells .weui-cell__hd .weui-label{min-width:90px;width:auto;font-weight:normal;white-space:nowrap;}
 .wxcells .weui-label{line-height:1.6em;}
 .wxcells .weui-input{height:1.6em;min-height:1.6em;line-height:1.6em;}
 .wxcells .weui-textarea{line-height:1.6em;}
 .wxcells .textarea-placeholder{line-height:1.6em;}
-.wxcells .weui-cell__hd{min-width:90px;}
-.wxcells .weui-cell__bd{min-width:90px;}
+.wxcells .weui-cell__hd{min-width:100px;}
+.wxcells .weui-cell__bd{min-width:100px;}
 .wxcells-info .weui-cell__ft{text-align:left;color:#666;}
 .wxlinks{margin:10px 0;}
 .weui-cell_icon{width:22px;height:22px;margin-right:8px;vertical-align:middle;}

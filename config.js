@@ -11,6 +11,9 @@ var config = {
     /************** 增加功能 ****************/
 		// wx登录
 		wxloginUrl: `${host}/user/getOpenId`,
+
+    /************ 商户 ***********/
+
 		// 用户是否注册
 		userIsReg: `${host}/user/needRegister`,
 		// 用户注册
@@ -70,7 +73,13 @@ var config = {
 		payOrderMoney: `${host}/pay/unifiedorder`,
         // 支付标识
         paySignTrade: `${host}/pay/signTrade`,
-		
+
+    /************* 快递员 **************/
+
+        // 快递员获取短信验证码
+        courierGetAuthCode: `${host}/courier/sendAuthCode`,
+        // 快递员注册
+        courierReg: `${host}/courier/register`,
     }
 };
 module.exports = config;
