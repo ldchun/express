@@ -76,10 +76,17 @@ var config = {
 
     /************* 快递员 **************/
 
+        // 商户列表
+        shopList: `${host}/courier/users`,
         // 快递员获取短信验证码
         courierGetAuthCode: `${host}/courier/sendAuthCode`,
         // 快递员注册
         courierReg: `${host}/courier/register`,
+        // 快递员首页信息
+        courierState: `${host}/courier/stat`,
+        // 快递员查看记录
+        courierPage: `${host}/courier/page`,
+
     }
 };
 module.exports = config;

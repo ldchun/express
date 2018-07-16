@@ -23,8 +23,8 @@ textarea{z-index:0;}
 .textcenter{text-align:center;}
 .textright{text-align:right;}
 .fontbold{font-weight:bold;}
-.nobg{background:transparent;}
-.slbg{background:#3986FE;}
+.nobg{background:transparent;color:#333;}
+.slbg{background:#3986FE;color:#FFF;}
 .slcolor{color:#3986FE;}
 .markcolor{color:#FF570A;}
 .okcolor{color:#00A82B;}
@@ -288,7 +288,7 @@ button.formbtn::before, button.formbtn::after{display:none;}
 .weui-cell_icon{width:22px;height:22px;margin-right:8px;vertical-align:middle;}
 .wxlinks .weui-cell{padding:15px;font-size:16px;line-height:1.8;}
 .load-more{margin:10px 0;padding:10px 15px;font-size:14px;color:#666;text-align:center;}
-.result-no{margin:20px 0;padding:20px 15px;color:#666;text-align:center;}
+.result-no{padding:40px 15px;color:#666;text-align:center;}
 /* search */
 .search-box{position:relative;padding:5px 0;border-bottom:1px solid #EEE;}
 .search-bd{padding-left:12px;}

@@ -22,7 +22,7 @@ function getInData() {
 }
 // 倒计时
 function CountDownFun() {
-    var countMax = 10;
+    var countMax = 60;
     var countMin = 0;
     this.timer = "";
     this.start = function (self) {

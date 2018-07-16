@@ -16,8 +16,26 @@ var AppPages = {
 	pageRecord: "/pages/record/record",
     pageMycourier: "/pages/mycourier/mycourier",
     pageSearch: "/pages/search/search",
-	pageWallet: "/pages/wallet/wallet"
+	pageWallet: "/pages/wallet/wallet",
+    pageCourier: "/pages/courier/courier",
+    pageCrrecord: "/pages/crrecord/crrecord"
 };
+//数组元素下标
+function indexOfArray(arr, val) {
+    if (!Array.indexOf) {
+        Array.prototype.indexOf = function (el) {
+            var index = -1;
+            for (var i = 0, n = this.length; i < n; i++) {
+                if (this[i] === el) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+    }
+    return arr.indexOf(val);
+}
 //判断是否为数组类型
 function isArray(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -301,7 +319,7 @@ function ExpressCompanyFun(){
 		}
 		return listArr;
 	};
-    this.list = function (companyId) {
+    this.list = function () {
         var companyListObj = this.express();
         var listArr = [];
         for (var para in companyListObj) {
@@ -353,6 +371,39 @@ var CheckFun = {
         return reg.test(value);
     }
 };
+// 商户列表
+function ShopListFun(hasAll){
+    // 商户
+    this.shop = function(){
+        var listArr = [].concat(getApp().globalData.shopList);
+        var allOption = { id: "", smsAddress: "全部商家" };
+        if ((typeof (hasAll) != "undefined") && hasAll) {
+            listArr.unshift(allOption);
+        }
+        return listArr;
+    };
+    // 获取商户信息
+    this.get = function (value, key) {
+        var field = (typeof (key) != "undefined") ? key : null;
+        var keyArr = this.arr(field);
+        var index = indexOfArray(keyArr, value);
+        return keyArr[index];
+    };
+    this.arr = function (key) {
+        var field = (typeof (key) != "undefined") ? key : "smsAddress";
+        var listArr = this.list();
+        var keyArr = [];
+        for (var i = 0, len = listArr.length; i<len; i++) {
+            var listObj = listArr[i];
+            keyArr.push(listObj[field]);
+        }
+        return keyArr;
+    };
+    this.list = function () {
+        var listArr = this.shop();
+        return listArr;
+    };
+};
 
 /* 公共API接口定义 */
 module.exports = {
@@ -367,6 +418,7 @@ module.exports = {
     UserIdFun: UserIdFun,
     FormIdFun: FormIdFun,
 	CompanyFun: ExpressCompanyFun,
+    ShopFun: ShopListFun,
     MobileFun: MobileFun,
     CheckFun: CheckFun
 }

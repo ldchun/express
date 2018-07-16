@@ -158,7 +158,7 @@ function UserIsReg(self, callback){
                     // 已注册
                     getApp().globalData.role = dataObj['role'];
                     if (typeof (callback) != 'undefined') {
-                        callback();
+                        callback(dataObj);
                     }
             }
         },
@@ -219,27 +219,11 @@ Page({
 			// APP应用登录
 			AppLogin(self, function () {
 				// 是否注册
-                UserIsReg(self, function(){
-                    // 登陆
-                    UserLogin(self, function(){
-                        pageInit(self, function(){
-                            // 跳转
-                            var role = getApp().globalData.role;
-                            switch (role){
-                                case "courier":
-                                    // 快递员
-                                    wx.reLaunch({
-                                        url: AppPages.pageHome
-                                    });
-                                    break;
-                                case "user":
-                                default:
-                                    // 商户
-                                    wx.reLaunch({
-                                        url: AppPages.pageHome
-                                    })
-                            }
-                        });
+                UserIsReg(self, function(res){
+                    var roleVal = res["role"];
+                    pageInit(self, function () {
+                        // 链接角色
+                        linkRolePage(self);
                     });
                 });
 			});
@@ -249,10 +233,38 @@ Page({
         var self = this;
     }
 });
+// 链接角色页面
+function linkRolePage(self, role){
+    // 跳转
+    var role = getApp().globalData.role;
+    switch (role) {
+        case "courier":
+            // 快递员
+            wx.reLaunch({
+                url: AppPages.pageCourier
+            });
+            break;
+        case "user":
+        default:
+            // 商户
+            wx.reLaunch({
+                url: AppPages.pageHome
+            })
+    }
+}
 // 初始化
 function pageInit(self, callback){
-    // 快递列表
-    getExpressListServer(self, callback);
+    var role = getApp().globalData.role;
+    switch (role) {
+        case "courier":
+            // 商户列表
+            getShopListServer(self, callback);
+            break;
+        case "user":
+        default:
+            // 快递列表
+            getExpressListServer(self, callback);
+    }
 }
 // 获取快递公司列表
 function getExpressListServer(self, callback){
@@ -273,6 +285,55 @@ function getExpressListServer(self, callback){
                     var listData = addExpressAllObj(dataObj);
                     if (listData != ""){
                         getApp().globalData.expressList = listData;
+                    }
+                    if (typeof (callback) != 'undefined') {
+                        callback();
+                    }
+                    break;
+                default:
+                    var msg = jsonData['msg'];
+            }
+        },
+        fail: function (err) {
+            wx.hideLoading();
+            console.log(err);
+        }
+    });
+}
+// 处理列表数据
+function fatListData(dataArr) {
+    var resArr = [];
+    var listArr = [].concat(dataArr);
+    var arrLen = listArr.length;
+    for (var i = 0; i < arrLen; i++) {
+        var dataObj = listArr[i];
+        var dataTmp = {};
+        dataTmp.id = dataObj["id"].toString();
+        dataTmp.smsAddress = dataObj["smsAddress"];
+        // add
+        resArr.push(dataTmp);
+    }
+    return resArr;
+}
+// 获取商户列表
+function getShopListServer(self, callback) {
+    // 参数userid
+    var userId = UserIdFun.get();
+    var inData = {};
+    inData.openId = userId;
+    wx.request({
+        url: Server["shopList"],
+        data: inData,
+        success: function (res) {
+            wx.hideLoading();
+            var jsonData = res.data;
+            var dataObj = jsonData['data'];
+            var code = jsonData['code'];
+            switch (code) {
+                case CODEOK:
+                    var listData = fatListData(dataObj);
+                    if ((listData != "") && (listData.length > 0)) {
+                        getApp().globalData.shopList = listData;
                     }
                     if (typeof (callback) != 'undefined') {
                         callback();

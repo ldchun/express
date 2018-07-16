@@ -1,0 +1,20 @@
+.courier-me{padding:15px;}
+.user-box{padding:5px 0;}
+.user-box .user-face, .user-box .user-more{display:inline-block;vertical-align:middle;}
+.user-face{width:60px;height:60px;border-radius:50%;overflow:hidden;}
+.user-box .user-more{padding-left:15px;}
+.user-name{font-size:24px;}
+.courier-sum{padding:10px 5px;color:#FFF;background:#3986FE;}
+.sum-box .sum-item{position:relative;width:25%;text-align:center;}
+.sum-item::before{content:"";display:none;position:absolute;left:0;top:50%;width:1px;height:30px;margin-top:-15px;background:#419EFF;}
+.sum-box .sum-item ~ .sum-item::before{display:inline-block;} 
+.sum-item .item-tit{font-size:12px;color:#D2D2D2;margin-top:10px;}
+.sum-item .item-con{font-size:24px;line-height:1;}
+.all{color:#3986FE;}
+.not{color:#FF570A;}
+.shop-list .shop-link{padding:10px 15px;}
+.info-item{display:inline-block;}
+.info-item ~ .info-item{margin-left:15px;}
+.shop-right{height:100%;padding:5px 0;text-align:right;}
+button.shop-btn{margin-top:10px;font-size:14px;line-height:1.4;}
+.info-ft{line-height:1.2;}

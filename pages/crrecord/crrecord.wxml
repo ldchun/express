@@ -1,0 +1,175 @@
+<view class='record-top'>
+    <view class="top-box flex-box">
+        <view class="flex-item top-left">
+            <picker bindchange="bindPickerChange" range="{{shopArray}}" value="{{shopIndex}}">
+            <view class="top-picker">
+                <text>{{shopArray[shopIndex]}}</text>
+                <image class="arrow-icon" src="../../asset/img/icon-down.png" mode="widthFix"></image>
+            </view>
+            </picker>
+        </view>
+        <view class="top-search" bindtap="linkSearch">
+            <icon class="btn-icon" type="search" size="20" color="#FFFFFF"/>
+        </view>
+    </view>
+	<view class='sltab-hd flex-box record-tab'>
+		<block wx:for="{{tabList}}" wx:key="index">
+			<view class="tab-nav flex-item">
+				<view class="nav {{tabIndex == index ? 'on' : ''}} " id="{{index}}" bindtap="tabClick">
+					{{item}}
+				</view>
+			</view>
+		</block>
+	</view>
+	<view class="record-choice">
+		<view class="choice-top clearfix">
+			<view class="choice-count">
+				共计 
+				<text class="count-val" wx:if="{{tabIndex == 2}}">{{countTotalAll}}</text>
+				<text class="count-val" wx:elif="{{tabIndex == 0}}">{{countTotalNot}}</text>
+				<text class="count-val" wx:else="{{tabIndex == 1}}">{{countTotalHas}}</text>
+			</view>
+			<view class="choice-time" bindtap="timePopShow">
+				<view class="time-res">{{isChoiceTimeAll ? "全部" : (choiceTimeStart + ' 至 ' + choiceTimeEnd)}}</view>
+				<image class="time-img" src="../../asset/img/icon-calendar.png" mode="widthFix"></image>
+			</view>
+		</view>
+	</view>
+</view>
+<view class='record-body' id="tabContent">
+	<view class='sltab-bd'>
+    <!-- 全部 -->
+		<view class="tab-con {{tabIndex == 2 ? 'on' : ''}} ">
+			<view class="card-list">
+                <block wx:for="{{recordListAll}}" wx:key="{{index}}">
+				<view class="card-li">
+					<view class='card-hd clearfix'>
+						<view class='hd-tit'>{{item.sortId}}、{{item.shopName}}</view>
+					</view>
+					<view class='card-bd'>
+						<view class='info-row'>
+							<text class='record-number'>{{item.parcelNumber}}</text>
+                            <text class="record-state {{item.isTake ? 'okcolor' : 'markcolor'}}">【{{item.parcelStatus}}】</text>
+						</view>
+						<view class='info-row'>
+							联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>
+						</view>
+						<view class='info-row'>
+							收件时间：<text class='slcolor'>{{item.createTime}}</text>
+						</view>
+                        <view class='info-row' wx:if="{{item.isTake}}">
+							取件时间：<text class='slcolor'>{{item.takeTime}}</text>
+						</view>
+					</view>
+				</view>
+                </block>
+			</view>
+			<view class="load-more">
+				<view class="load-anim" hidden="{{!isLoadingAll}}">
+					<view class="weui-loading"></view>
+					<view class="weui-loadmore__tips">正在加载...</view>
+				</view>
+				<view class="load-complete" hidden="{{!isLoadCompleteAll}}">
+					—  已加载全部  —
+				</view>
+			</view>
+		</view>
+<!-- 未取 -->
+		<view class="tab-con {{tabIndex == 0 ? 'on' : ''}} ">
+			<view class="card-list">
+                <block wx:for="{{recordListNot}}" wx:key="{{index}}">
+				<view class="card-li">
+					<view class='card-hd clearfix'>
+						<view class='hd-tit'>{{item.sortId}}、{{item.shopName}}</view>
+					</view>
+					<view class='card-bd'>
+						<view class='info-row'>
+							<text class='record-number'>{{item.parcelNumber}}</text>
+						</view>
+						<view class='info-row'>
+							联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>
+						</view>
+						<view class='info-row'>
+							收件时间：<text class='slcolor'>{{item.createTime}}</text>
+						</view>
+					</view>
+				</view>
+                </block>
+			</view>
+			<view class="load-more">
+				<view class="load-anim" hidden="{{!isLoadingNot}}">
+					<view class="weui-loading"></view>
+					<view class="weui-loadmore__tips">正在加载...</view>
+				</view>
+				<view class="load-complete" hidden="{{!isLoadCompleteNot}}">
+					—  已加载全部  —
+				</view>
+			</view>
+		</view>
+<!-- 已取 -->
+		<view class="tab-con {{tabIndex == 1 ? 'on' : ''}} ">
+			<view class="card-list">
+                <block wx:for="{{recordListHas}}" wx:key="{{index}}">
+				<view class="card-li">
+					<view class='card-hd clearfix'>
+						<view class='hd-tit'>{{item.sortId}}、{{item.shopName}}</view>
+					</view>
+					<view class='card-bd'>
+						<view class='info-row'>
+							<text class='record-number'>{{item.parcelNumber}}</text>
+						</view>
+						<view class='info-row'>
+							联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>
+						</view>
+						<view class='info-row'>
+							收件时间：<text class='slcolor'>{{item.createTime}}</text>
+						</view>
+                        <view class='info-row' wx:if="{{item.isTake}}">
+							取件时间：<text class='slcolor'>{{item.takeTime}}</text>
+						</view>
+					</view>
+				</view>
+                </block>
+			</view>
+			<view class="load-more">
+				<view class="load-anim" hidden="{{!isLoadingHas}}">
+					<view class="weui-loading"></view>
+					<view class="weui-loadmore__tips">正在加载...</view>
+				</view>
+				<view class="load-complete" hidden="{{!isLoadCompleteHas}}">
+					—  已加载全部  —
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+<!-- 弹窗 -->
+<view class="popover {{popShow ? 'on' : ''}}" bindtap="timePopCancle"></view>
+<view class="popdown {{popShow ? 'on' : ''}}">
+    <view class="pophd">
+         <view class="choice-opts">
+            <view class="opt-item" data-days="1" bindtap="timeChoicePopOpts">今天</view>
+            <view class="opt-item" data-days="3" bindtap="timeChoicePopOpts">近3天</view>
+            <view class="opt-item" data-days="7" bindtap="timeChoicePopOpts">近7天</view>
+        </view>
+    </view> 
+    <view class="popbd">
+        <view class="flex-box choice-handle">
+            <view class="flex-item">
+                <view class="choice-btn btn-all" bindtap="timeChoicePopAll">全部时间</view>
+            </view>
+            <view class="flex-item">
+                 <view class="choice-btn btn-ok" bindtap="timeChoicePopRang">选择时间段</view>
+            </view>
+        </view>
+        <picker-view class="time-picker" indicator-style="height:36px;" style="width:100%;height:150px;" value="{{timeValue}}" bindchange="bindTimeChange">
+            <picker-view-column>
+            <view wx:for="{{startTimeList}}" wx:key="{{timeValue[0]}}" style="line-height:36px">{{item}}</view>
+            </picker-view-column>
+            <view class="time-mid" style="line-height:150px">至</view>
+            <picker-view-column>
+            <view wx:for="{{endTimeList}}" wx:key="{{timeValue[1]}}" style="line-height:36px">{{item}}</view>
+            </picker-view-column>
+        </picker-view>
+    </view>
+</view>

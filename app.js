@@ -42,6 +42,7 @@ App({
 	},
 	globalData: {
         role: "",
+        shopList: [],
         expressList: expressListClient
 	}
 });
