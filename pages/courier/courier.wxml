@@ -8,11 +8,11 @@
 			<view class="user-name">
 				<open-data type="userNickName"></open-data>
 			</view>
-            <view class="user-tel">{{userTel}}</view>
+            <view class="user-tel">{{courierTel}}</view>
 		</view>
 	</view>
 </view>
-<view class="courier-sum">
+<view class="courier-sum slhide">
     <view class='flex-box sum-box'>
         <view class='flex-item sum-item'>
             <view class='item-con'>{{sumTodayAll}}</view>
@@ -42,16 +42,9 @@
 							<view class='info-tit'>
 								<text>{{item.smsAddress}}</text>
 							</view>
-							<view class='info-con'>
-                                <text class='info-item all'>总数：{{item.allCount}}</text>
-								<text class='info-item not'>未取：{{item.notCount}}</text>
-							</view>
-                            <view class='info-ft'>
-								 <text class='pd-time'>{{item.startTime}} ~ {{item.endTime}}</text>
-							</view>
 						</view>
 					</view>
-                    <view class="flex-item shop-right" bindtap="linkShopDetail" data-shopid="{{item.shopId}}" data-starttime="{{item.startTime}}" data-endtime="{{item.endTime}}">
+                    <view class="flex-item shop-right" bindtap="linkShopDetail" data-shopid="{{item.shopId}}">
 						<button class="slbtn with-arc shop-btn">查看详情</button>
 					</view>
 				</view>

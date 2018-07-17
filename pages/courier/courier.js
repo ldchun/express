@@ -6,6 +6,7 @@ var AppPages = common.AppPages;
 var UserIdFun = common.UserIdFun;
 var wxShowToast = common.wxShowToast;
 var DateFun = new common.DateFun;
+var ShopFun = new common.ShopFun;
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
@@ -19,7 +20,7 @@ function getInData() {
 Page({
     data:{
         loadok: 'slhide',
-        userTel: "",
+        courierTel: "",
         sumTodayAll: 0,
         sumTodayHas: 0,
         sumTodayNot: 0,
@@ -44,32 +45,39 @@ Page({
         var self = this;
         var dataset = e.currentTarget.dataset;
         wx.navigateTo({
-            url: AppPages.pageCrrecord + "?shopid=" + dataset["shopid"] + "&starttime=" + dataset["starttime"] + "&endtime=" + dataset["endtime"]
+            url: AppPages.pageCrrecord + "?shopid=" + dataset["shopid"]
         })
     }
 });
 // 加载内容
 function loadPageContent(self){
-    // 加载信息
+    // 快递员信息
     loadCourierInfo(self);
+    // 加载商户列表
+    loadShopList(self);
 }
 
-/**********  统计 ***********/
+/**********  快递员信息 ***********/
 
+// 格式化电话成部分保留
+function fatMobileToPart(mobile){
+    if (typeof (mobile) == "undefined"){return "";}
+    var mobileLeft = mobile.slice(0, 3);
+    var mobileRight = mobile.slice(-4);
+    return mobileLeft + "****" + mobileRight;
+}
 // 设置
-function setSumInfo(self, jsonData) {
+function setCourierInfo(self, jsonData) {
+    var mobile = fatMobileToPart(jsonData["mobile"]);
     self.setData({
-        sumTodayAll: jsonData["todayAllCount"],
-        sumTodayHas: jsonData["todayTakeCount"],
-        sumTodayNot: jsonData["todayNotTakeCount"],
-        sumMonthAll: jsonData["toMonthAllCount"]
+        courierTel: mobile
     });
 }
-// 统计
+// 快递员
 function loadCourierInfo(self) {
     var inData = new getInData();
     wx.request({
-        url: Server["courierState"],
+        url: Server["courierInfo"],
         data: inData,
         success: function (res) {
             wx.hideLoading();
@@ -78,11 +86,8 @@ function loadCourierInfo(self) {
             var code = jsonData['code'];
             switch (code) {
                 case CODEOK:
-                    // 统计
-                    setSumInfo(self, dataObj);
-                    // 商家
-                    var shopData = dataObj["fastDatas"];
-                    setShopList(self, shopData);
+                    // 设置信息
+                    setCourierInfo(self, dataObj);
                     break;
                 default:
                     var msg = jsonData['msg'];
@@ -105,20 +110,8 @@ function fatListData(dataArr) {
     for (var i = 0; i < arrLen; i++) {
         var dataObj = listArr[i];
         var dataTmp = {};
-        var shopInfo = dataObj["user"];
-        dataTmp.shopId = shopInfo["id"];
-        dataTmp.smsAddress = shopInfo["smsAddress"];
-        // 统计
-        dataTmp.allCount = dataObj["todayAllCount"];
-        dataTmp.notCount = dataObj["todayNotTakeCount"];
-        // 时间
-        var days = 7;
-        var nowTimeVal = DateFun.fat(new Date())["val"];
-        var nowTimeMs = new Date(nowTimeVal).getTime();
-        var minTimeMs = nowTimeMs - 24 * 60 * 60 * 1000 * (days - 1);
-        var minTimeVal = DateFun.fat(minTimeMs)["val"];
-        dataTmp.startTime = minTimeVal;
-        dataTmp.endTime = nowTimeVal;
+        dataTmp.shopId = dataObj["id"];
+        dataTmp.smsAddress = dataObj["smsAddress"];
         // add
         resArr.push(dataTmp);
     }
@@ -133,30 +126,8 @@ function setShopList(self, data) {
         resultList: dataArr
     });
 }
-
-// 列表加载
+// 列表
 function loadShopList(self) {
-    var inData = new getInData();
-    // 提交
-    wx.request({
-        url: Server["fastParcelInfo"],
-        data: inData,
-        success: function (res) {
-            wx.hideLoading();
-            var jsonData = res.data;
-            var dataObj = jsonData['data'];
-            var code = jsonData['code'];
-            switch (code) {
-                case CODEOK:
-                    setShopList(self, dataObj);
-                    break;
-                default:
-                    var msg = jsonData['msg'];
-            }
-        },
-        fail: function (err) {
-            wx.hideLoading();
-            console.log(err);
-        }
-    })
+    var listData = ShopFun.list();
+    setShopList(self, listData);
 }

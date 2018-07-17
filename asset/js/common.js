@@ -376,18 +376,23 @@ function ShopListFun(hasAll){
     // 商户
     this.shop = function(){
         var listArr = [].concat(getApp().globalData.shopList);
-        var allOption = { id: "", smsAddress: "全部商家" };
+        var allOption = { id: "", smsAddress: "全部" };
         if ((typeof (hasAll) != "undefined") && hasAll) {
             listArr.unshift(allOption);
         }
         return listArr;
     };
+    this.list = function () {
+        var listArr = this.shop();
+        return listArr;
+    };
     // 获取商户信息
     this.get = function (value, key) {
         var field = (typeof (key) != "undefined") ? key : null;
+        var listArr = this.list();
         var keyArr = this.arr(field);
         var index = indexOfArray(keyArr, value);
-        return keyArr[index];
+        return listArr[index];
     };
     this.arr = function (key) {
         var field = (typeof (key) != "undefined") ? key : "smsAddress";
@@ -398,10 +403,6 @@ function ShopListFun(hasAll){
             keyArr.push(listObj[field]);
         }
         return keyArr;
-    };
-    this.list = function () {
-        var listArr = this.shop();
-        return listArr;
     };
 };
 

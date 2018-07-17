@@ -171,6 +171,7 @@ Page({
 		loadok: 'slhide',
         tabList: ["未取", "已取", "全部"],
 		tabIndex: 0,
+        shopIdArr: [],
         shopArray: [],
         shopIndex: 0,
 		recordListAll: [],
@@ -200,13 +201,14 @@ Page({
         shopArr = ShopFun.arr();
         shopIdArr = ShopFun.arr("id");
         self.setData({
+            shopIdArr: shopIdArr,
             shopArray: shopArr
         });
         // 参数
         // id
         if (typeof (options["shopid"]) != "undefined"){
-            var index = indexOfArray(shopIdArr, options["shopid"]);
-            console.log(index);
+            var shopId = options["shopid"].toString();
+            var index = indexOfArray(shopIdArr, shopId);
             if (index != -1){
                 self.setData({
                     shopIndex: index
@@ -387,8 +389,9 @@ function handleListData(dataArr, status) {
         var dataObj = listArr[i];
         var dataTmp = {};
 		dataTmp.sortId = (pageCurrent - 1) * pageSize + i + 1;
-        var shopIdIndex = indexOfArray(shopIdArr, "15");
-        dataTmp.shopName = shopArr[shopIdIndex];
+        var shopId = dataObj["userId"].toString();
+        var shopInfo = ShopFun.get(shopId, "id");
+        dataTmp.shopName = shopInfo["smsAddress"];
         dataTmp.phoneNumber = dataObj["mobile"];
         dataTmp.parcelNumber = dataObj["parcelNumber"];
         dataTmp.posNumber = dataObj["positionCode"];
@@ -443,8 +446,8 @@ function loadListData(self, isFirstLoad, status) {
         inData.userId = shopId;
     }
     if (!self.data.isChoiceTimeAll){
-        inData.st = self.data.choiceTimeStart;
-        inData.et = self.data.choiceTimeEnd;
+        inData.startTime = self.data.choiceTimeStart;
+        inData.endTime = self.data.choiceTimeEnd;
     }
 	switch (status) {
 		case 0: // 未取
