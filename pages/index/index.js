@@ -265,6 +265,8 @@ function pageInit(self, callback){
             // 快递列表
             getExpressListServer(self, callback);
     }
+    // 加载提示音
+    loadAudioSrc();
 }
 // 获取快递公司列表
 function getExpressListServer(self, callback){
@@ -348,4 +350,21 @@ function getShopListServer(self, callback) {
             console.log(err);
         }
     });
+}
+
+/*********** 提示音 ***********/
+
+function loadAudioSrc(){
+    var audioSrcServer = {
+        "success": "https://renxingstyle.xyz/media/success.mp3"
+    };
+    // 下载音频文件，生成本地路径
+    wx.downloadFile({
+        url: audioSrcServer["success"],
+        success: function (res) {
+            if (res.statusCode === 200) {
+                getApp().globalData.audioSrc["success"] = res.tempFilePath;
+            }
+        }
+    })
 }

@@ -10,11 +10,14 @@ var CompanyFun = new common.CompanyFun;
 var MobileFun = common.MobileFun;
 var CheckFun = common.CheckFun;
 var ShopFun = new common.ShopFun;
+var HintFun = common.HintFun;
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
 var pageSize = 5;
 var pageCurrent = 1;
+// 扫描提示操作
+var scanTipFun;
 //系统信息
 var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
@@ -22,52 +25,6 @@ var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
 // 提示音
 var innerAudioContext;
-var serverAudioSrc = {
-    "success": "https://renxingstyle.xyz/media/success.mp3"
-};
-var localAudioSrc = {
-    "success": ""
-};
-// 下载音频文件，生成本地路径
-function downLoadAudioFile() {
-    // 正确
-    wx.downloadFile({
-        url: serverAudioSrc["success"],
-        success: function (res) {
-            if (res.statusCode === 200) {
-                localAudioSrc["success"] = res.tempFilePath;
-            }
-        }
-    })
-}
-// 扫描提示
-function scanTipFun(handle) {
-    // 声音提示
-    tipVoiceFun(handle);
-    // 震动
-    wx.vibrateLong();
-}
-// 成功提示音
-function tipVoiceFun(handle) {
-    // 音源
-    var voiceSrc = localAudioSrc["success"];
-    innerAudioContext.src = voiceSrc;
-    // 操作
-    switch (handle) {
-        case "start":
-            innerAudioContext.stop();
-            innerAudioContext.seek(0);
-            innerAudioContext.play();
-            break;
-        case "pause":
-            innerAudioContext.pause();
-            break;
-        case "stop":
-        default:
-            innerAudioContext.stop();
-            innerAudioContext.seek(0);
-    }
-}
 // 获取请求参数
 function getInData() {
 	var inData = {};
@@ -115,12 +72,13 @@ Page({
 	},
 	onLoad: function (options) {
 		var self = this;
-        // 清空内容
-        clearContent(self);
-        // 下载音频文件
-        downLoadAudioFile();
         // 创建音频上下文
         innerAudioContext = wx.createInnerAudioContext();
+        scanTipFun = function (handle){
+            HintFun.hint(handle, innerAudioContext);
+        };
+        // 清空内容
+        clearContent(self);
 	},
     inputSearchText: function (e) {
         var self = this;

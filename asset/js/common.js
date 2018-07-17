@@ -406,7 +406,40 @@ function ShopListFun(hasAll){
         return keyArr;
     };
 };
-
+// 提示操作
+var HintFun = {
+    shake: function () {
+        // 震动
+        wx.vibrateLong();
+    },
+    audio: function (handle, innerAudioCtx) {
+        var flagVal = (typeof (flag) != "undefined") ? flag : "success";
+        var audioSrc = getApp().globalData.audioSrc[flagVal];
+        var innerAudioContext = (typeof (innerAudioCtx) != "undefined") ? innerAudioCtx : getApp().globalData.innerAudioContext();
+        innerAudioContext.src = audioSrc;
+        // 操作
+        switch (handle) {
+            case "start":
+                innerAudioContext.stop();
+                innerAudioContext.seek(0);
+                innerAudioContext.play();
+                break;
+            case "pause":
+                innerAudioContext.pause();
+                break;
+            case "stop":
+            default:
+                innerAudioContext.stop();
+                innerAudioContext.seek(0);
+        }
+    },
+    hint: function (handle, innerAudioCtx){
+        // 声音
+        this.audio(handle, innerAudioCtx);
+        // 震动
+        this.shake();
+    } 
+};
 /* 公共API接口定义 */
 module.exports = {
     wxShowToast: wxShowToast,
@@ -422,5 +455,6 @@ module.exports = {
 	CompanyFun: ExpressCompanyFun,
     ShopFun: ShopListFun,
     MobileFun: MobileFun,
-    CheckFun: CheckFun
+    CheckFun: CheckFun,
+    HintFun: HintFun
 }

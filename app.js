@@ -42,6 +42,8 @@ App({
 	},
 	globalData: {
         role: "",
+        innerAudioContext: wx.createInnerAudioContext(),
+        audioSrc: {"success": ""},
         shopList: [],
         expressList: expressListClient
 	}
