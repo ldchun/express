@@ -25,7 +25,7 @@ Page({
         sumTodayHas: 0,
         sumTodayNot: 0,
         sumMonthAll: 0,
-        resultHas: false,
+        resultHas: true,
         resultList: []
     },
     onLoad: function (e) {

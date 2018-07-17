@@ -230,6 +230,7 @@ button.formbtn::before, button.formbtn::after{display:none;}
 .weui-cells:before, .weui-cells:after{border:0 none;}
 .weui-cell_switch{padding-top:8px;padding-bottom:8px;}
 /*list*/
+.pd-li{background:#FFF;}
 .pd-li ~ .pd-li{border-top:1px solid #E2E2E2;}
 .pd-li .pd-link{display:block;padding:12px 0;}
 .pd-li .pd-left{float:left;min-width:60px;min-height:24px;}

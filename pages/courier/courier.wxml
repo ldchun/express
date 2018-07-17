@@ -32,7 +32,7 @@
         </view>
     </view>
 </view>
-<view class="slbox">
+<view class="slbox nobg">
     <view class="result-con" hidden="{{!resultHas}}">
         <view class='pd-list shop-list'>
 			<view class='pd-li' data-index="{{index}}" wx:for="{{resultList}}" wx:key="{{index}}">
