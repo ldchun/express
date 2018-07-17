@@ -241,7 +241,7 @@ Page({
 	},
     linkSearch: function(e){
         wx.navigateTo({
-            url: AppPages.pageSearch
+            url: AppPages.pageCrsearch
         })
     },
 	tabClick: function (e) {
@@ -256,11 +256,6 @@ Page({
 		var status = tabIndexToStatus(tabIndex);
 		loadListData(self, false, status);
 	},
-    handleMore: function(e){
-        var self = this;
-        var dataset = e.currentTarget.dataset;
-        handleMoreFun(self, dataset);
-    },
     bindPickerChange: function (e) {
         var self = this;
         self.setData({

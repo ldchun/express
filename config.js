@@ -86,6 +86,8 @@ var config = {
         courierInfo: `${host}/courier/info`,
         // 快递员查看记录
         courierPage: `${host}/courier/page`,
+        // 快递员搜索包裹
+        courierSearch: `${host}/courier/searchParcel`
 
     }
 };

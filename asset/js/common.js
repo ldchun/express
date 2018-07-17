@@ -18,7 +18,8 @@ var AppPages = {
     pageSearch: "/pages/search/search",
 	pageWallet: "/pages/wallet/wallet",
     pageCourier: "/pages/courier/courier",
-    pageCrrecord: "/pages/crrecord/crrecord"
+    pageCrrecord: "/pages/crrecord/crrecord",
+    pageCrsearch: "/pages/crsearch/crsearch"
 };
 //数组元素下标
 function indexOfArray(arr, val) {

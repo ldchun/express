@@ -1,0 +1,67 @@
+<view class="search-top">
+    <view class="flex-box search-box">
+        <view class="flex-item search-bd">
+            <view class="search-frame nobd">
+                <view class="frame-btn">
+                    <icon class="btn-icon" type="search" size="20" color="#B2B2B2"/>
+                </view>
+                <input class="frame-input" type="number" value="{{inSearchText}}" bindinput="inputSearchText"  focus="{{inputFocus}}" placeholder="输入快递单号或手机号码"/>
+                <view class="frame-btn search-clear" hidden="{{clearHide}}" bindtap="searchClear">
+                    <icon class="btn-icon" type="clear" size="20" color="#C2C2C2"/>
+                </view>
+                <view class="frame-btn postright" bindtap="searchScan">
+                    <image class="btn-icon" src="../../asset/img/iconbg-scan.png" mode="widthFix"></image>
+                </view>
+            </view>
+        </view>
+        <view class="search-ft" hidden="{{!submitHide}}" bindtap="searchCancle">取消</view>
+        <view class="search-ft search-submit" hidden="{{submitHide}}" bindtap="searchSubmit">搜索</view>
+    </view>
+    <view class="record-choice slhide">
+		<view class="choice-top clearfix">
+			<view class="choice-count">
+				共计 <text class="count-val slcolor">{{countTotal}}</text>
+			</view>
+		</view>
+	</view>
+</view>
+<view class="search-body" id="contentElem">
+    <view class="search-con" hidden="{{!noResult}}">
+        <view class="card-list">
+            <block wx:for="{{resultList}}" wx:key="{{index}}">
+            <view class="card-li">
+                <view class='card-hd clearfix'>
+                    <view class='hd-tit'>{{item.sortId}}、{{item.shopName}}</view>
+                </view>
+                <view class='card-bd'>
+                    <view class='info-row'>
+                        <text class='record-number'>{{item.parcelNumber}}</text>
+                        <text class="record-state {{item.isTake ? 'okcolor' : 'markcolor'}}">【{{item.parcelStatus}}】</text>
+                    </view>
+                    <view class='info-row'>
+                        联系电话：<text class='slcolor'>{{item.phoneNumber}}</text>
+                    </view>
+                    <view class='info-row'>
+                        收件时间：<text class='slcolor'>{{item.createTime}}</text>
+                    </view>
+                    <view class='info-row' wx:if="{{item.isTake}}">
+                        取件时间：<text class='slcolor'>{{item.takeTime}}</text>
+                    </view>
+                </view>
+            </view>
+            </block>
+        </view>
+        <view class="load-more">
+            <view class="load-anim" hidden="{{!isLoading}}">
+                <view class="weui-loading"></view>
+                <view class="weui-loadmore__tips">正在加载...</view>
+            </view>
+            <view class="load-complete" hidden="{{!isLoadComplete}}">
+                —  无更多搜索结果  —
+            </view>
+        </view>
+    </view>
+    <view class="result-no" hidden="{{noResult}}">
+        未能找到相关结果
+    </view>
+</view>

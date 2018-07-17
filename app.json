@@ -13,7 +13,8 @@
         "pages/search/search",
 		"pages/input/input",
         "pages/courier/courier",
-        "pages/crrecord/crrecord"
+        "pages/crrecord/crrecord",
+        "pages/crsearch/crsearch"
     ],
 	"tabBar": {
 		"color": "#999",
