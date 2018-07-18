@@ -16,8 +16,6 @@ var CODEOK = 200;
 var CODEERR = 500;
 var pageSize = 5;
 var pageCurrent = 1;
-// 扫描提示操作
-var scanTipFun;
 //系统信息
 var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
@@ -25,6 +23,8 @@ var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
 // 提示音
 var innerAudioContext;
+// 扫描提示操作
+var scanTipFun;
 // 获取请求参数
 function getInData() {
 	var inData = {};
@@ -75,7 +75,7 @@ Page({
         // 创建音频上下文
         innerAudioContext = wx.createInnerAudioContext();
         scanTipFun = function (handle){
-            HintFun.hint(handle, innerAudioContext);
+            HintFun.hint(innerAudioContext, handle);
         };
         // 清空内容
         clearContent(self);

@@ -267,6 +267,8 @@ function pageInit(self, callback){
     }
     // 加载提示音
     loadAudioSrc();
+    // 加载数字语音
+    loadAudioNumber();
 }
 // 获取快递公司列表
 function getExpressListServer(self, callback){
@@ -367,4 +369,35 @@ function loadAudioSrc(){
             }
         }
     })
+}
+// 数字语音
+function loadAudioNumber() {
+    var srcBase = "https://renxingstyle.xyz/media/";
+    var audioNumberSrc = {
+        "0": srcBase + "0.mp3",
+        "1": srcBase + "1.mp3",
+        "2": srcBase + "2.mp3",
+        "3": srcBase + "3.mp3",
+        "4": srcBase + "4.mp3",
+        "5": srcBase + "5.mp3",
+        "6": srcBase + "6.mp3",
+        "7": srcBase + "7.mp3",
+        "8": srcBase + "8.mp3",
+        "9": srcBase + "9.mp3"
+    };
+    // 下载音频文件，生成本地路径
+    function downloadAudio(src, key){
+        wx.downloadFile({
+            url: src,
+            success: function (res) {
+                if (res.statusCode === 200) {
+                    getApp().globalData.audioSrc[key] = res.tempFilePath;
+                }
+            }
+        })
+    }
+    for (var para in audioNumberSrc){
+        var srcUrl = audioNumberSrc[para];
+        downloadAudio(srcUrl, para);
+    }
 }

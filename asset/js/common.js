@@ -455,9 +455,9 @@ var HintFun = {
         // 震动
         wx.vibrateLong();
     },
-    audio: function (handle, innerAudioCtx) {
-        var flagVal = (typeof (flag) != "undefined") ? flag : "success";
-        var audioSrc = getApp().globalData.audioSrc[flagVal];
+    audio: function (innerAudioCtx, handle, file) {
+        var fileVal = (typeof (file) != "undefined") ? file : "success";
+        var audioSrc = getApp().globalData.audioSrc[fileVal];
         var innerAudioContext = (typeof (innerAudioCtx) != "undefined") ? innerAudioCtx : getApp().globalData.innerAudioContext();
         innerAudioContext.src = audioSrc;
         // 操作
@@ -476,9 +476,9 @@ var HintFun = {
                 innerAudioContext.seek(0);
         }
     },
-    hint: function (handle, innerAudioCtx){
+    hint: function (innerAudioCtx, handle, file){
         // 声音
-        this.audio(handle, innerAudioCtx);
+        this.audio(innerAudioCtx, handle, file);
         // 震动
         this.shake();
     } 

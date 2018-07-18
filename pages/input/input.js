@@ -9,6 +9,7 @@ var DateFun = new common.DateFun;
 var CompanyFun = new common.CompanyFun;
 var MobileFun = common.MobileFun;
 var CheckFun = common.CheckFun;
+var HintFun = common.HintFun;
 var UPNG = require('../../asset/vendor/upng/UPNG.js');
 // 设置
 var CODEOK = 200;
@@ -97,57 +98,15 @@ function indexOfArray(arr, val) {
 }
 // 提示音
 var innerAudioContext;
-var serverAudioSrc = {
-    "success": "https://renxingstyle.xyz/media/success.mp3"
-};
-var localAudioSrc = {
-    "success": ""
-};
+// 提示音操作函数
+var scanTipFun;
+var audioNumberTip;
 //系统信息
 var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
-// 下载音频文件，生成本地路径
-function downLoadAudioFile() {
-    // 正确
-    wx.downloadFile({
-        url: serverAudioSrc["success"],
-        success: function (res) {
-            if (res.statusCode == 200) {
-                localAudioSrc["success"] = res.tempFilePath;
-            }
-        }
-    })
-}
-// 扫描提示
-function scanTipFun(handle){
-    // 声音提示
-    tipVoiceFun(handle);
-    // 震动
-    wx.vibrateLong();
-}
-// 成功提示音
-function tipVoiceFun(handle) {
-    // 音源
-    var voiceSrc = localAudioSrc["success"];
-    innerAudioContext.src = voiceSrc;
-    // 操作
-    switch (handle) {
-        case "start":
-            innerAudioContext.stop();
-            innerAudioContext.seek(0);
-            innerAudioContext.play();
-            break;
-        case "pause":
-            innerAudioContext.pause();
-            break;
-        case "stop":
-        default:
-            innerAudioContext.stop();
-            innerAudioContext.seek(0);
-    }
-}
+
 // 获取请求参数
 function getInData() {
 	var inData = {};
@@ -664,10 +623,14 @@ Page({
         // 参数
         companyList = CompanyFun.list();
         companyArr = CompanyFun.arr();
-        // 下载音频文件
-        downLoadAudioFile();
         // 创建音频上下文
         innerAudioContext = wx.createInnerAudioContext();
+        scanTipFun = function (handle) {
+            HintFun.hint(innerAudioContext, handle);
+        };
+        audioNumberTip = function (handle, file) {
+            HintFun.audio(innerAudioContext, handle, file);
+        };
         // 系统信息
         wx.getSystemInfo({
             success: function (res) {
@@ -850,9 +813,15 @@ Page({
         var inValue = e.detail.value;
         inValue = common.trim(inValue);
         inValue = MobileFun.reset(inValue);
+        var oldValue = MobileFun.reset(self.data.phoneNumber);
+        // 数字语音提示
+        var curValue = inValue.slice(-1);
+        if (CheckFun.number(curValue) && (oldValue.length < inValue.length)){
+            audioNumberTip("start", curValue);
+        }
         // 输入校验
         if (inValue.length > 0) {
-            inValue = (CheckFun.number(inValue)) ? inValue : self.data.phoneNumber;
+            inValue = (CheckFun.number(inValue)) ? inValue : oldValue;
         }
         inValue = (inValue.length > 11) ? inValue.slice(0, 11) : inValue;
         var clearShow = (inValue.length > 0);
@@ -1175,12 +1144,10 @@ function recogniPhoneNumber(){
 				});
 			}
 			else {
-					
                 var canUseRecorder = wx.canIUse('getRecorderManager') && (typeof (wx.getRecorderManager().start) != null);
                 var mang = wx.getRecorderManager();
                 mang = {};
                 console.log(typeof (mang.start));
-
                 if (!canUseRecorder) {
 					// 使用 wx.startRecord
 					var recordTimer;
