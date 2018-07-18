@@ -13,11 +13,12 @@ var UPNG = require('../../asset/vendor/upng/UPNG.js');
 // 设置
 var CODEOK = 200;
 var CODEERR = 500;
-var companyList = CompanyFun.list();
-var companyArr = CompanyFun.arr();
 var recogImgOcrTimer;
 var recogImgOcrEnable = false;
 var focusStatu = -1;
+// 快递
+var companyList = [];
+var companyArr = [];
 // 快递公司 id
 function fatCompanyAutoId(id){
     var idMap = {
@@ -660,6 +661,9 @@ Page({
     },
     onLoad: function (options) {
         var self = this;
+        // 参数
+        companyList = CompanyFun.list();
+        companyArr = CompanyFun.arr();
         // 下载音频文件
         downLoadAudioFile();
         // 创建音频上下文

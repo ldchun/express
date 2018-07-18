@@ -39,7 +39,11 @@ function indexOfArray(arr, val) {
 }
 //判断是否为数组类型
 function isArray(obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
+    return Object.prototype.toString.call(obj) === '[object Array]';
+}
+//判断是否为对象
+function isObject(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]';
 }
 //扩展输入 flag：true -> 默认深度拷贝
 function extendOpt(defOpt, inOpt, flag) {
@@ -63,6 +67,38 @@ function extendOpt(defOpt, inOpt, flag) {
   }
   return defOpt;
 }
+/*** 对象操作 ***/
+function ObjectFun() {
+    /* flag：true -> 默认深度合并 */
+    this.extend = function (defObj, inObj, flag) {
+        var curFlag = ((typeof (flag) != "undefined") && !flag) ? false : true;
+        for (var para in inObj) {
+            var curObj = inObj[para];
+            if ((Object.prototype.toString.call(curObj) === '[object Object]') && curFlag) {
+                this.extend(defObj[para], curObj, curFlag);
+            }
+            else {
+                defObj[para] = curObj;
+            }
+        }
+        return defObj;
+    };
+    /* 对象拷贝 */
+    this.deepcopy = function (obj, copy) {
+        var res = copy || {};
+        for (var para in obj) {
+            if (typeof obj[para] === 'object') {
+                res[para] = (obj[para].constructor === Array) ? [] : {};
+                this.deepcopy(obj[para], res[para]);
+            } else {
+                res[para] = obj[para];
+            }
+        }
+        return res;
+    };
+}
+var objectFun = new ObjectFun();
+
 /* 提示语显示封装 */
 function wxShowToast(option) {
   var setting = { flag: "success", duration: 2000 };
@@ -300,35 +336,42 @@ var FormIdFun = {
     }
 };
 // 快递公司
-function ExpressCompanyFun(){
+function ExpressCompanyFun(hasAll){
     // 快递列表
     this.express = function () {
-        return getApp().globalData.expressList;
+        var expressList = getApp().globalData.expressList;
+        var listObj = objectFun.deepcopy(expressList, {});
+        var allOption = { id: "", name: "全部", briefname: "全部" };
+        var allObj = { "_": allOption};
+        if ((typeof (hasAll) != "undefined") && hasAll) {
+            listObj = objectFun.extend(allObj, listObj, false);
+        }
+        return listObj;
     };
 	// 获取快递信息
-	this.get = function(companyId){
-        var companyListObj = this.express();
-		return companyListObj[companyId];
+    this.get = function (value){
+        var listObj = this.express();
+        return listObj[value];
 	};
     this.arr = function (key) {
         var field = (typeof(key) != "undefined") ? key : "name";
-        var companyListObj = this.express();
-		var listArr = [];
-		for (var para in companyListObj){
-			var companyObj = companyListObj[para];
-            listArr.push(companyObj[field]);
-		}
-		return listArr;
+        var listObj = this.express();
+        var listArr = [];
+        for (var para in listObj) {
+            var listItem = listObj[para];
+            listArr.push(listItem[field]);
+        }
+        return listArr;
 	};
     this.list = function () {
-        var companyListObj = this.express();
+        var listObj = this.express();
         var listArr = [];
-        for (var para in companyListObj) {
-            var companyObj = companyListObj[para];
-            if (typeof (companyObj["id"]) == "undefined"){
-                companyObj.id = para;
+        for (var para in listObj) {
+            var listItem = listObj[para];
+            if (typeof (listItem["id"]) == "undefined") {
+                listItem.id = para;
             }
-            listArr.push(companyObj);
+            listArr.push(listItem);
         }
         return listArr;
     };

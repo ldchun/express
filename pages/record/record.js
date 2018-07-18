@@ -6,7 +6,7 @@ var AppPages = common.AppPages;
 var UserIdFun = common.UserIdFun;
 var wxShowToast = common.wxShowToast;
 var DateFun = new common.DateFun;
-var CompanyFun = new common.CompanyFun;
+var CompanyFun = new common.CompanyFun(true);
 var MobileFun = common.MobileFun;
 var CheckFun = common.CheckFun;
 // 设置
@@ -23,15 +23,8 @@ var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
 // 快递
-var companyList = CompanyFun.list();
-var companyArr = CompanyFun.arr();
-// 增加全部选项
-function addCompanyAllOption(){
-    var allOption = { id: "", name: "全部快递", briefname: "全部" };
-    companyList.unshift(allOption);
-    companyArr.unshift(allOption["name"]);
-}
-addCompanyAllOption();
+var companyList = [];
+var companyArr = [];
 //数组元素下标
 function indexOfArray(arr, val) {
     if (!Array.indexOf) {
@@ -177,7 +170,7 @@ Page({
 		loadok: 'slhide',
         tabList: ["未取", "已取", "全部"],
 		tabIndex: 0,
-        companyArray: companyArr,
+        companyArray: [],
         companyIndex: 0,
 		recordListAll: [],
 		recordListNot: [],
@@ -209,6 +202,11 @@ Page({
 	onLoad: function (options) {
 		var self = this;
         // 参数
+        companyList = CompanyFun.list();
+        companyArr = CompanyFun.arr();
+        self.setData({
+            companyArray: companyArr,
+        });
         // 快递
         if (typeof (options["companyid"]) != "undefined"){
             var companyInfo = CompanyFun.get(options["companyid"]);
