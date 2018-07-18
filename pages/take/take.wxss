@@ -9,4 +9,4 @@ page{background:#F5F8FA;}
 .onein-input{display:none;}
 .takeinfo .popinfo-bd{margin:0;}
 .takeinfo-tel{margin-bottom:5px;font-size:22px;text-align:center;}
-.info-pos{font-weight:bold;}
+.info-pos .pos-val{font-size:24px;font-weight:bold;}

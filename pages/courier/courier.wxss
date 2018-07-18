@@ -15,6 +15,6 @@
 .shop-list .shop-link{padding:10px 15px;}
 .info-item{display:inline-block;}
 .info-item ~ .info-item{margin-left:15px;}
-.shop-right{line-height:1;text-align:right;}
+.shop-right{padding:8px 0;line-height:1;text-align:right;}
 button.shop-btn{margin:0;font-size:14px;line-height:1.4;}
 .info-ft{line-height:1.2;}

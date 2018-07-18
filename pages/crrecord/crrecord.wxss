@@ -28,7 +28,7 @@
 .record-choice{padding:5px 12px;background:#FFF;}
 .choice-top{font-size:13px;}
 .choice-count{float:left;}
-.choice-time{float:right;color:#3986FE;line-height:1;font-size:14px;}
+.choice-time{float:right;min-width:100px;font-size:14px;color:#3986FE;line-height:1;text-align:right;}
 .choice-time .time-res{display:inline-block;margin-right:5px;vertical-align:middle;}
 .choice-time .time-img{display:inline-block;width:22px;height:22px;vertical-align:middle;}
 .time-picker picker-view-column{text-align:center;}

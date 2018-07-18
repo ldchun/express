@@ -65,7 +65,7 @@ function popWinShow(self, data) {
 		// 名称
 		var theCompanyId = jsonData["fastName"];
 		var companyInfo = CompanyFun.get(theCompanyId);
-        companyName = companyInfo["briefname"];
+        companyName = companyInfo["name"];
 		// 创建时间
 		var timeObj = DateFun.fat(jsonData["createTime"], { mode: "yyyymmdd hhmmss", join: "-" });
 		createTime = timeObj.val;
@@ -93,7 +93,7 @@ function popTakeOkWin(self, data) {
 		// 名称
 		var theCompanyId = jsonData["fastName"];
 		var companyInfo = CompanyFun.get(theCompanyId);
-        companyName = companyInfo["briefname"];
+        companyName = companyInfo["name"];
 		// 创建时间
 		var timeObj = DateFun.fat(jsonData["takeTime"], { mode: "yyyymmdd hhmmss", join: "-" });
 		takeTime = timeObj.val;

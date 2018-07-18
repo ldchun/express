@@ -35,7 +35,6 @@ function CountDownFun() {
         this.timer = setInterval(function () {
             var count = self.data.countDownValue;
             count = count - 1;
-            console.log(count);
             if (count < countMin) {
                 this.init(self);
             } else {
