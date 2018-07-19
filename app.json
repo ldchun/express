@@ -12,6 +12,7 @@
 		"pages/record/record",
         "pages/search/search",
 		"pages/input/input",
+        "pages/camera/camera",
         "pages/courier/courier",
         "pages/crrecord/crrecord",
         "pages/crsearch/crsearch"

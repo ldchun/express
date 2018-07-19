@@ -7,7 +7,7 @@ var AppPages = {
 	pageIndex: "/pages/index/index",
     pageHome: "/pages/home/home",
 	pageInput: "/pages/input/input",
-	pageTask: "/pages/task/task",
+    pageCamera: "/pages/camera/camera",
 	pageTake: "/pages/take/take",
 	pageReg: "/pages/reg/reg",
     pageMe: "/pages/me/me",
@@ -274,23 +274,42 @@ var Session = {
         wx.removeStorageSync(sessionkey);
     },
 };
+// session功能
+function SessionFun(field){
+    this.key = field;
+    this.isvalid = function (val) {
+        var value = (typeof (val) != "undefined") ? val : Session.get(this.key);
+        return !((value === null) || (value === undefined) || (value == ''));
+    };
+    this.get = function () {
+        var value = Session.get(this.key);
+        return this.isvalid(value) ? value : false;
+    };
+    this.set = function (val) {
+        this.clear();
+        Session.set(this.key, val);
+    };
+    this.clear = function () {
+        Session.clear(this.key);
+    }
+}
 // 用户Id操作函数
 var UserIdFun = {
-    userkey: "sessionuserid",
-    isvalid: function () {
-        var userId = Session.get(UserIdFun.userkey);
-        return (userId === null) || (userId == '') ? false : true;
+    key: "sessionuserid",
+    isvalid: function (val) {
+        var value = (typeof (val) != "undefined") ? val : Session.get(this.key);
+        return !((value === null) || (value === undefined) || (value == ''));
     },
     get: function () {
-        var userId = Session.get(UserIdFun.userkey);
-        return (userId === null) || (userId == '') ? false : userId;
+        var value = Session.get(this.key);
+        return this.isvalid(value) ? value : false;
     },
-    set: function (userId) {
-        Session.clear(UserIdFun.userkey);
-        Session.set(UserIdFun.userkey, userId);
+    set: function (val) {
+        this.clear();
+        Session.set(this.key, val);
     },
     clear: function () {
-        Session.clear(UserIdFun.userkey);
+        Session.clear(this.key);
     }
 };
 var FormIdFun = {
@@ -483,6 +502,9 @@ var HintFun = {
         this.shake();
     } 
 };
+// 图片OCR识别结果
+var ImgOCRFun = new SessionFun("imgocrvalue");
+
 /* 公共API接口定义 */
 module.exports = {
     wxShowToast: wxShowToast,
@@ -499,5 +521,6 @@ module.exports = {
     ShopFun: ShopListFun,
     MobileFun: MobileFun,
     CheckFun: CheckFun,
-    HintFun: HintFun
+    HintFun: HintFun,
+    ImgOCRFun: ImgOCRFun
 }

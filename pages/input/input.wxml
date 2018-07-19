@@ -64,36 +64,6 @@
 		<button class='slbtn btnblock' bindtap='addParcel'>完成录入</button>
 	</view>
 </view>
-<camera class="camera {{cameraShow ? 'up': ''}}" device-position="back" flash="off">
-	<cover-view class="cover">
-		<cover-view class="cover-top">
-			<cover-view class="cover-title coverbg">
-				{{companyName}}
-			</cover-view>
-			<cover-view class="flex-box cover-frame">
-				<cover-view class="flex-item frame-left coverbg"></cover-view>
-				<cover-view class="frame-screen">
-					<cover-view class="screen-sign sign-top"></cover-view>
-					<cover-view class="screen-sign sign-bottom"></cover-view>
-					<cover-view class="screen-sign sign-left"></cover-view>
-					<cover-view class="screen-sign sign-right"></cover-view>
-                    <cover-view class="screen-sign sign-line"></cover-view>
-				</cover-view>
-				<cover-view class="flex-item frame-right coverbg"></cover-view>
-			</cover-view>
-			<cover-view class="cover-more coverbg"></cover-view>
-		</cover-view>
-		<cover-view class="cover-body">
-			<cover-view class="cover-con coverbg">
-				<cover-view class="con-top"></cover-view>
-			</cover-view>
-		</cover-view>
-	</cover-view>
-    <cover-view class="cover-close">
-        <cover-image class="close-icon" bindtap="scanClose" src="../../asset/img/icon-close.png" mode="widthFix"></cover-image>
-    </cover-view>
-</camera>
-<canvas class="canvas-box" canvas-id="myCanvas"></canvas>
 <!-- 弹窗 -->
 <view class="popover {{popShow ? 'on' : ''}}" bindtap="pickerPopCancle"></view>
 <view class="popdown {{popShow ? 'on' : ''}}">
