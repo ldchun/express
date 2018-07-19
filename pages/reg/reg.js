@@ -8,7 +8,8 @@ var wxShowToast = common.wxShowToast;
 var CheckFun = common.CheckFun;
 // 设置
 var CODEOK = 200;
-var CODEERR = 500;
+var CODEERR = 505;
+var CODEWARN = 500;
 var logoImgPath = "../../asset/image/";
 var roleOptions = [
 	{ role: "shop", name: "商户", logo: logoImgPath + "icon-shopper.png" },
@@ -239,7 +240,7 @@ function submitShopReg(self, userInfo) {
 					case CODEOK:
 						wx.showModal({
 							title: '提示',
-                            content: '注册成功，欢迎来到快递智能助手！',
+                            content: '欢迎来到快递智能助手！',
 							showCancel: false,
 							success: function (res) {
 								// 跳转首页
@@ -249,11 +250,21 @@ function submitShopReg(self, userInfo) {
 							}
 						});
 						break;
+                    // 错误提示
+                    case CODEERR:
+                        wxShowToast({
+                            title: "注册失败",
+                            flag: "fail"
+                        });
+                        break;
 					default:
-						wxShowToast({
-							title: "注册失败",
-							flag: "fail"
-						});
+                        var msg = jsonData['msg'];
+                        wx.showModal({
+                            title: '提示',
+                            content: msg,
+                            showCancel: false,
+                            success: function (res) { }
+                        });
 				}
 			},
 			fail: function (err) {
@@ -383,7 +394,7 @@ function submitCourierReg(self, userInfo) {
                     case CODEOK:
                         wx.showModal({
                             title: '提示',
-                            content: '注册成功，欢迎来到快递智能助手！',
+                            content: '欢迎来到快递智能助手！',
                             showCancel: false,
                             success: function (res) {
                                 // 跳转首页
@@ -391,6 +402,13 @@ function submitCourierReg(self, userInfo) {
                                     url: AppPages.pageIndex
                                 })
                             }
+                        });
+                        break;
+                    // 错误提示
+                    case CODEERR:
+                        wxShowToast({
+                            title: "注册失败",
+                            flag: "fail"
                         });
                         break;
                     default:
