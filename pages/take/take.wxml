@@ -18,7 +18,7 @@
 			</view>
 		</view>
 		<view class='onein-input'>
-			<input type="number" class='sl-input slhide' focus="{{inputFocus}}" value="{{takeNumber}}" bindinput='inputTakeNumber' maxlength="{{inputMaxLen}}"/>
+			<input type="number" class='slhide' focus="{{inputFocus}}" value="{{takeNumber}}" bindinput='inputTakeNumber' maxlength="{{inputMaxLen}}"/>
 		</view>
 	</view>
 </view>
