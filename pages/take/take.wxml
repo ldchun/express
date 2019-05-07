@@ -17,11 +17,11 @@
 				<text class='onein-val {{inVal3Class}}'>{{inVal3}}</text>
 			</view>
 		</view>
-		<view class='onein-input'>
-			<input type="number" class='slhide' focus="{{inputFocus}}" value="{{takeNumber}}" bindinput='inputTakeNumber' maxlength="{{inputMaxLen}}"/>
-		</view>
 	</view>
 </view>
+<view class='onein-input'>
+		<input type="number" focus="{{inputFocus}}" value="{{takeNumber}}" bindinput='inputTakeNumber' maxlength="{{inputMaxLen}}" adjust-position="{{inputPos}}"/>
+	</view>
 <!-- pop -->
 <view class="popover {{popShow}}"></view>
 <view class="popup {{popShow}}">

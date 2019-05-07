@@ -6,7 +6,7 @@ page{background:#F5F8FA;}
 .onein-con .onein-item{display:inline-block;padding:0 2px;font-size:36px;vertical-align:top;}
 .onein-con .onein-item .onein-val{display:block;width:62px;height:62px;line-height:60px;border:1px solid #D2D2D2;background:#FFF;}
 .onein-item .onein-val.on{border-color:#3986FE;}
-.onein-input{display:none;}
+.onein-input{display:block;position:absolute;z-index:-1;top:100000px;opacity:0;height:0;visibility:hidden;overflow:hidden;}
 .takeinfo .popinfo-bd{margin:0;}
 .takeinfo-tel{margin-bottom:5px;font-size:22px;text-align:center;}
 .info-pos .pos-val{font-size:24px;font-weight:bold;}

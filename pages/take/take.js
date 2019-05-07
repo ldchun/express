@@ -138,6 +138,7 @@ Page({
 		popOkShow: "",
 		inputMaxLen: 4,
 		inputFocus: true,
+        inputPos:false,
 		takeNumber: "",
 		inVal0: "",
 		inVal0Class: "",
