@@ -2,41 +2,41 @@
     "pages": [
         "pages/index/index",
         "pages/home/home",
-		"pages/take/take",
-		"pages/reg/reg",
-		"pages/me/me",
-		"pages/meinfo/meinfo",
-		"pages/meedit/meedit",
+        "pages/take/take",
+        "pages/reg/reg",
+        "pages/me/me",
+        "pages/meinfo/meinfo",
+        "pages/meedit/meedit",
         "pages/mycourier/mycourier",
-		"pages/wallet/wallet",
-		"pages/record/record",
+        "pages/wallet/wallet",
+        "pages/record/record",
         "pages/search/search",
-		"pages/input/input",
+        "pages/input/input",
         "pages/camera/camera",
         "pages/courier/courier",
         "pages/crrecord/crrecord",
         "pages/crsearch/crsearch"
     ],
-	"tabBar": {
-		"color": "#999",
-		"selectedColor": "#3986FE",
-		"backgroundColor": "#FFF",
-		"borderStyle": "white",
-		"list": [
-			{
-				"pagePath": "pages/home/home",
-				"text": "首页",
-				"iconPath": "asset/img/icon_tabhome.png",
-				"selectedIconPath": "asset/img/icon_tabhome_on.png"
-			},
-			{
-				"pagePath": "pages/me/me",
-				"text": "我的",
-				"iconPath": "asset/img/icon_tabme.png",
-				"selectedIconPath": "asset/img/icon_tabme_on.png"
-			}
-		]
-	},
+    "tabBar": {
+    "color": "#999",
+    "selectedColor": "#3986FE",
+    "backgroundColor": "#FFF",
+    "borderStyle": "white",
+    "list": [
+        {
+            "pagePath": "pages/home/home",
+            "text": "首页",
+            "iconPath": "asset/img/icon_tabhome.png",
+            "selectedIconPath": "asset/img/icon_tabhome_on.png"
+        },
+        {
+            "pagePath": "pages/me/me",
+            "text": "我的",
+            "iconPath": "asset/img/icon_tabme.png",
+            "selectedIconPath": "asset/img/icon_tabme_on.png"
+        }
+    ]
+    },
     "window": {
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "快递智能助手",
@@ -49,5 +49,6 @@
         "uploadFile": 100000,
         "downloadFile": 10000
     },
-    "debug": false
+    "debug": false,
+    "sitemapLocation": "sitemap.json"
 }
