@@ -60,7 +60,7 @@
             </view>
             <view class='aipbtn' bindtouchstart='bindAipStart' bindtouchend='bindAipEnd'>
                 <image class="aipbtn-icon" src="../../asset/img/icon-huatong.png" mode="widthFix"></image>
-                <text class="aipbtn-txt">长按 说出电话号码</text>
+                <text class="aipbtn-txt">长按 说出手机号</text>
             </view>
         </view>
 	</view>
