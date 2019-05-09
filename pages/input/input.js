@@ -30,6 +30,61 @@ var sysInfo = wx.getSystemInfoSync();
 var pixelRatio = sysInfo.pixelRatio;
 var screenWidth = sysInfo.windowWidth;
 var screenHeight = sysInfo.windowHeight;
+// 录音
+var recordFun = wx.getRecorderManager();
+var recordOpt = {
+    duration: 30000,
+    sampleRate: 16000,
+    numberOfChannels: 1,
+    encodeBitRate: 48000,
+    format: 'mp3',
+    frameSize: 50
+}
+// ScopeRecord
+function checkScopeRecord(callback) {
+    callback = (typeof (callback) == 'function') ? callback : function(){};
+    // 授权
+    wx.getSetting({
+        success: function (res) {
+            if (!res.authSetting['scope.record']) {
+                // not set record
+                wx.authorize({
+                    scope: 'scope.record',
+                    success: function (res) {
+                        console.log("scope.record: ok");
+                        callback();
+                    },
+                    fail: function (err) {
+                        console.log("scope.record: fail");
+                        console.log(err);
+                        wx.showModal({
+                            title: '提示',
+                            content: '语音输入电话号码需要打开录音功能',
+                            showCancel: false,
+                            success: function (res) {
+                                wx.openSetting({
+                                    success: function (res) {
+                                        console.log("openSetting : ok");
+                                    },
+                                    fail: function (res) {
+                                        console.log("openSetting : err");
+                                    }
+                                })
+                            }
+                        })
+                    }
+                });
+            }
+            else {
+                // has set
+                callback();
+            }
+        }
+    });
+}
+function isArray(obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]';
+}
 // 获取请求参数
 function getInData() {
 	var inData = {};
@@ -419,6 +474,10 @@ Page({
         mobileFocus: false,
         parcelClearShow: false,
         mobileClearShow: false,
+        parcelPos: true,
+        mobilePos: true,
+        aipPopShow: false,
+        aipAnimShow: false,
 		batchId: "",
         companyId: "",
 		companyLogo: "",
@@ -582,8 +641,8 @@ Page({
         var clearShow = (inValue.length > 0);
         switchInputRow(self, 2);
         self.setData({
-            phoneNumber: MobileFun.fat(inValue),
-            mobileClearShow: clearShow
+            mobileClearShow: clearShow,
+            aipPopShow: true
         });
         syncFocusStatu(self, 2);
     },
@@ -591,20 +650,21 @@ Page({
         var self = this;
         var theStatu = self.data.inputStatu;
         var isInMobile = (theStatu == 2);
-        var inValue = self.data.phoneNumber;
         self.setData({
-            phoneNumber: MobileFun.fat(inValue),
-            mobileClearShow: false
+            mobileClearShow: false,
+            aipPopShow: false
         });
         switchInputRow(self, theStatu);
     },
     clearPhoneNumber: function (e) {
         var self = this;
+        switchInputRow(self, 2);
         self.setData({
             phoneNumber: "",
             mobileFocus: true,
             mobileClearShow: false
         });
+        syncFocusStatu(self, 2);
     },
     scanStart: function (e) {
         var self = this;
@@ -656,25 +716,8 @@ Page({
             phoneNumber: MobileFun.fat(inValue),
             mobileClearShow: clearShow
         });
-        if (CheckFun.phone(inValue)) {
-            // 获取位置编号
-            getParcelPosCode(self);
-        }else{
-            if (inValue.length >= 11) {
-                wx.showModal({
-                    title: '提示',
-                    content: '手机号格式错误',
-                    showCancel: false,
-                    success: function(res) {
-                        self.setData({
-                            phoneNumber: "",
-                            mobileFocus: true,
-                            mobileClearShow: false
-                        });
-                    }
-                });
-            }
-        }
+        // check finish
+        checkPhoneFinish(self);
 	},
 	addParcel: function (e) {
 		var self = this;
@@ -709,8 +752,63 @@ Page({
             // 提交服务器
             submitParcel(self);
 		} while (0);
-	}
+	},
+    bindAipStart: function (e) {
+        var self = this;
+        // 录音
+        checkScopeRecord(function(){
+            recordFun.start(recordOpt);
+            recordFun.onStart(function () {
+                console.log('recorder start');
+                wx.hideLoading();
+                aipAnimShowFun(self, true);
+            });
+            recordFun.onError(function (res) {
+                console.log(res, "recorder err");
+            })
+        });
+    },
+    bindAipEnd: function (e) {
+        var self = this;
+        recordFun.stop();
+        recordFun.onStop(function (res) {
+            console.log('recorder end');
+            aipAnimShowFun(self, false);
+            var recordFile = res.tempFilePath;
+            recordServer(self, recordFile);
+        });
+    }
 });
+// check phone finish
+function checkPhoneFinish(self){
+    var inValue = MobileFun.reset(self.data.phoneNumber);
+    if (CheckFun.phone(inValue)) {
+        // 获取位置编号
+        getParcelPosCode(self);
+    } else {
+        if (inValue.length >= 11) {
+            wx.showModal({
+                title: '提示',
+                content: '手机号格式错误',
+                showCancel: false,
+                success: function (res) {
+                    self.setData({
+                        phoneNumber: "",
+                        mobileFocus: true,
+                        mobileClearShow: false
+                    });
+                }
+            });
+        }
+    }
+}
+// aip anim
+function aipAnimShowFun(self, flag){
+    flag = (flag != undefined) ? flag : false;
+    self.setData({
+        aipAnimShow: flag
+    });
+}
 // 扫描单号
 function scanParcelNumber(self){
     wx.scanCode({
@@ -1126,7 +1224,43 @@ function recogMobileSuccess(self, data) {
 /************** 识别图像 *************/
 
 /*************** 识别语音 *******************/
-
+//
+function recordServer(self, data) {
+    wx.showLoading({
+        title: '正在识别...',
+    });
+    var uploadTask = wx.uploadFile({
+        url: Server["audioCover"] + "?openId=" + UserIdFun.get(),
+        method: "POST",
+        filePath: data,
+        name: 'audio',
+        success: function (res) {
+            wx.hideLoading();
+            var jsonData = JSON.parse(res.data);
+            var dataObj = jsonData['data'];
+            var code = parseInt(jsonData['code']);
+            switch (code) {
+                case CODEOK:
+                    var mobile = dataObj["mobile"].replace(/[^0-9]/ig, "");
+                    self.setData({
+                        phoneNumber: mobile
+                    });
+                    checkPhoneFinish(self);
+                    break;
+                default:
+                    var msg = jsonData['msg'];
+                    wxShowToast({
+                        title: "未识别到手机号码",
+                        flag: "fail"
+                    });
+            }
+        },
+        fail: function (err) {
+            wx.hideLoading();
+            console.log(err);
+        }
+    });
+}
 // 语音识别
 function recogniAudio(fileUrl, self) {
     wx.uploadFile({
@@ -1137,7 +1271,6 @@ function recogniAudio(fileUrl, self) {
         success: function (res) {
 			wx.hideLoading();
 			var jsonData = JSON.parse(res.data);
-			console.log(jsonData);
 			var dataObj = jsonData['data'];
 			var code = jsonData['code'];
 			switch (parseInt(code)) {

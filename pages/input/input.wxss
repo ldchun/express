@@ -63,3 +63,13 @@ background:#D2D2D2;border:1px solid #C2C2C2;border-left:0 none;}
 .pophd .pop-btn.btn-ok{float:right;color:#3986FE;}
 .popbd{padding:30px 15px;}
 .picker-box{text-align:center;font-size:18px;}
+/* aip */
+.field-mobile{position:relative;}
+.aippop{display:none;position:absolute;z-index:100;left:0;top:100%;width:100%;padding:10px 0;text-align:center;}
+.aippop.on{display:block;}
+.aipbtn{display:inline-block;margin:0 auto;padding:8px 20px;font-size:12px;line-height:1;text-align:center;border-radius:30px;border:1px solid #D2D2D2;box-shadow:0 0 5px rgba(0,0,0,0.1);}
+.aipbtn-icon{display:inline-block;width:22px;height:22px;vertical-align:middle;}
+.aipbtn-txt{display:inline-block;vertical-align:middle;}
+.aipbtn:active{background:#E2E2E2;}
+.aip-anim{padding:30px 10px;text-align:center;background:rgba(0,0,0,0.1);opacity:0;visibility:hidden;}
+.aip-anim.on{opacity:1;visibility:visible;}

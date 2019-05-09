@@ -49,6 +49,7 @@
         "uploadFile": 100000,
         "downloadFile": 10000
     },
+    "cloud": false,
     "debug": false,
     "sitemapLocation": "sitemap.json"
 }

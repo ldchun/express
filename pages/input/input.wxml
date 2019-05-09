@@ -34,7 +34,7 @@
             <view class="inrow-hd">
                 <image class="inrow-icon" src="../../asset/img/icon-barcode.png" mode="widthFix"></image>
             </view>
-			<input class="flex-item sl-input" type="number" value="{{parcelNumber}}" bindinput="inputParcelNumber" bindfocus="onParcelFocus" bindblur="onParcelBlur" focus="{{parcelFocus}}" placeholder="请扫描或输入单号"/>
+			<input class="flex-item sl-input" type="number" value="{{parcelNumber}}" bindinput="inputParcelNumber" bindfocus="onParcelFocus" bindblur="onParcelBlur" focus="{{parcelFocus}}" adjust-position="{{parcelPos}}" placeholder="请扫描或输入单号"/>
             <view class="input-clear {{parcelClearShow ? '' : 'slhide'}}" bindtap="clearParcelNumber">
                 <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
             </view>
@@ -43,16 +43,26 @@
     <view class="field-row textcenter {{goMobileShow ? '' : 'slhide'}}">
 		<button class='slbtn btnblock' bindtap="parcelGoMobile">下一步</button>
 	</view>
-	<view class="field-row {{mobileShow ? '' : 'slhide'}}">
+	<view class="field-row field-mobile {{mobileShow ? '' : 'slhide'}}">
 		<view class='flex-box field-con'>
             <view class="inrow-hd">
                 <image class="inrow-icon" src="../../asset/img/icon-mobile.png" mode="widthFix"></image>
             </view>
-			<input class="sl-input flex-item" type="number" value='{{phoneNumber}}' bindinput='inputPhoneNumber'  bindfocus="onMobileFocus" bindblur="onMobileBlur" focus="{{mobileFocus}}" placeholder="请扫描或输入手机号"/>
+			<input class="sl-input flex-item" type="number" value='{{phoneNumber}}' bindinput='inputPhoneNumber' bindfocus="onMobileFocus" bindblur="onMobileBlur" focus="{{mobileFocus}}" adjust-position="{{mobilePos}}" placeholder="请输入或语音说出手机号" cursor-spacing="145"/>
             <view class="input-clear {{mobileClearShow ? '' : 'slhide'}}" bindtap="clearPhoneNumber">
                 <image class="clear-icon" src="../../asset/img/icon-clear.png" mode="widthFix"></image>
             </view>
 		</view>
+        <!-- aip -->
+        <view class="aippop {{aipPopShow ? 'on' : ''}}">
+            <view class="aip-anim {{aipAnimShow ? 'on' : ''}}">
+                <view>正在聆听...</view>
+            </view>
+            <view class='aipbtn' bindtouchstart='bindAipStart' bindtouchend='bindAipEnd'>
+                <image class="aipbtn-icon" src="../../asset/img/icon-huatong.png" mode="widthFix"></image>
+                <text class="aipbtn-txt">长按 说出电话号码</text>
+            </view>
+        </view>
 	</view>
     <view class="field-row {{positionShow ? '' : 'slhide'}}">
 		<view class="inrow-pos">
