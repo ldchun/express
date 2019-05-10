@@ -199,9 +199,14 @@ function isInputMobile(self) {
 }
 // 同步光标聚焦状态
 function syncFocusStatu(self, statu){
-    // 设置
     self.setData({
         focusStatu: statu
+    });
+}
+// 设置输入步骤状态
+function setInputStatu(self, statu) {
+    self.setData({
+        inputStatu: statu
     });
 }
 // 同步录入状态
@@ -598,6 +603,7 @@ Page({
             nextGoMobile(self, false);
         }
         self.setData({
+            parcelFocus: false,
             parcelClearShow: false
         });
         switchInputRow(self, theStatu);
@@ -652,6 +658,7 @@ Page({
         var isInMobile = (theStatu == 2);
         self.setData({
             mobileClearShow: false,
+            mobileFocus: false,
             aipPopShow: false
         });
         switchInputRow(self, theStatu);
@@ -783,9 +790,15 @@ Page({
 function checkPhoneFinish(self){
     var inValue = MobileFun.reset(self.data.phoneNumber);
     if (CheckFun.phone(inValue)) {
+        self.setData({
+            phoneNumber: MobileFun.fat(inValue)
+        });
         // 获取位置编号
         getParcelPosCode(self);
     } else {
+        setInputStatu(self, 2);
+        switchInputRow(self, 2);
+        // err
         if (inValue.length >= 11) {
             wx.showModal({
                 title: '提示',
